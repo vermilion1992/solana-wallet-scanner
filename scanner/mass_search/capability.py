@@ -28,6 +28,28 @@ BIRDEYE_ENDPOINT = "https://public-api.birdeye.so/trader/gainers-losers"
 HELIUS_HISTORY_DOCS = "https://www.helius.dev/docs/rpc/gettransactionsforaddress"
 JUPITER_QUOTE_DOCS = "https://developers.jup.ag/docs/swap/v1/get-quote"
 
+# Read-only signature history is allowlisted. Signing / swap-submission is not.
+# D12-1: do not treat the substring "sign" as forbidden (getSignaturesForAddress).
+_HELIUS_READONLY_SIGNATURE_OPS = frozenset({
+    "getsignaturesforaddress",
+    "getsignaturestatuses",
+    "getsignaturestatus",
+})
+_FORBIDDEN_SIGN_TOKENS = frozenset({"sign", "signtx", "signtransaction", "signandsend", "signmessage"})
+
+
+def _forbidden_signing_or_swap_op(item):
+    if not isinstance(item, str) or not item:
+        return True
+    lowered = item.lower()
+    if lowered in _HELIUS_READONLY_SIGNATURE_OPS:
+        return False
+    if lowered == "swap":
+        return True
+    compact = lowered.replace("_", "").replace("-", "")
+    return compact in _FORBIDDEN_SIGN_TOKENS or "signtransaction" in compact or "signandsend" in compact
+
+
 REQUIRED_PROVIDER_FIELDS = (
     "provider_id",
     "allowed_operations",
@@ -243,7 +265,7 @@ def validate_live_authorization(payload):
             raise ValueError("Remaining quota must be operator-confirmed before live collection")
         if not isinstance(entry.get("allowed_operations"), list) or not entry["allowed_operations"]:
             raise ValueError("Provider allowed_operations must be a non-empty list")
-        if any(not isinstance(item, str) or "sign" in item.lower() or "swap" == item.lower() for item in entry["allowed_operations"]):
+        if any(_forbidden_signing_or_swap_op(item) for item in entry["allowed_operations"]):
             raise ValueError("Signing or swap-submission operations are not allowlisted")
     return deepcopy(payload)
 

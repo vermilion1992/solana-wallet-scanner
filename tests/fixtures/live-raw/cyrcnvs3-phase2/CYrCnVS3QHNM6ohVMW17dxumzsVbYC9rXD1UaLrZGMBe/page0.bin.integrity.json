@@ -1,0 +1,7 @@
+{
+  "kind": "raw-page-integrity-v1",
+  "original_sha256": "9d1710ebb63864ec54a5cc1b3204162dde30215bbd2f5c3ad7f1eaaf94a6cfb7",
+  "written_sha256": "9d1710ebb63864ec54a5cc1b3204162dde30215bbd2f5c3ad7f1eaaf94a6cfb7",
+  "scrubbed": false,
+  "note": "original_sha256 is SHA-256 of the provider bytes before any scrub. The written copy is redacted when a secret appeared in the body; integrity of the original capture is the pre-scrub checksum."
+}

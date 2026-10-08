@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "owner": "jXtCVtdQhrn7GAHTPKxRHM94dbnmZwpBdGbswa3EeGZ",
+        "blockUnixTime": 1900000000,
+        "txType": "swap",
+        "side": "buy",
+        "note": "ordinary-period buyer"
+      },
+      {
+        "owner": "Gygj9QQby4j2jryqyqBHvLP7ctv2SaANgh4sCb69BUpA",
+        "blockUnixTime": 1700000001,
+        "txType": "swap",
+        "side": "buy",
+        "note": "first-block; dropped when after_time is listing+1d"
+      },
+      {
+        "wallet": "9R3m89gXkYqZ1o2p3q4r5s6t7u8v9w0x1y2z3A4B5C6",
+        "blockUnixTime": 1788100000,
+        "txType": "add",
+        "note": "liquidity add; ignored"
+      }
+    ]
+  }
+}

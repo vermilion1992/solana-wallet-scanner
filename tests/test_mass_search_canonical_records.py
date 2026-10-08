@@ -86,9 +86,9 @@ def test_unwrapped_gta_is_missing_raw_wrapped_is_not():
     reasons = {row.get("reason") for row in wrapped.get("unresolved") or []}
     assert "Missing raw transaction result" not in reasons
     assert wrapped["coverage"]["failed_transactions"] == 19
-    assert wrapped["coverage"]["decoded_swaps"] == 6
+    assert wrapped["coverage"]["decoded_swaps"] == 8
     swaps = [row for row in wrapped["events"] if row.get("kind") in ("buy", "sell")]
-    assert len(swaps) == 6
+    assert len(swaps) == 8
     assert all(row.get("settlement_mint") == "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" for row in swaps)
     assert all(row.get("amount_sol") is None for row in swaps)
     assert all(row.get("classification") == "market" for row in swaps)
@@ -210,7 +210,7 @@ def test_replay_saves_honest_partial_report(store):
     assert report["classification"]["fee_totals"]["not_pnl"] is True
     assert report["classification"]["fee_totals"]["fee_lamports"] > 0
     assert any(item.get("kind") == "fees" for item in report["observations"])
-    assert report["coverage"]["decoded_swaps"] == 6
+    assert report["coverage"]["decoded_swaps"] == 8
     assert report["coverage"]["failed_transactions"] == 19
     assert report["coverage"]["not_pnl"] is True
     assert report["research_profile"]["scoped_pnl"] == "376.028087"

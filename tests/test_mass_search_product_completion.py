@@ -75,13 +75,15 @@ def test_genuine_capture_market_trades_are_usdc_not_sol_or_rewards(store):
     assert classified["counts"]["reviewed_jupiter_route"] == 6
     assert classified["counts"]["failed_on_chain"] == 19
     assert classified["counts"]["inner_pumpswap_without_reviewed_outer"] == 2
-    assert decoded["coverage"]["decoded_swaps"] == 6
-    assert len(swaps) == 6
+    assert decoded["coverage"]["decoded_swaps"] == 8
+    assert len(swaps) == 8
     assert {row["kind"] for row in swaps} == {"buy", "sell"}
     assert all(row["settlement_mint"] == USDC for row in swaps)
     assert all(row["amount_sol"] is None for row in swaps)
     assert all(row["classification"] == "market" for row in swaps)
-    assert {row["amount_usdc"] for row in swaps if row["kind"] == "buy"} == {"3000", "2000"}
+    assert {row["amount_usdc"] for row in swaps if row["kind"] == "buy"} == {
+        "3000", "2000", "2685", "1000.203704",
+    }
     result = replay_cached_history_to_report(
         store,
         address=ALLOWED_WALLET,
@@ -174,6 +176,7 @@ def test_g1_synthetic_oracle_fifo_is_unchanged():
 def test_unset_thresholds_do_not_pass():
     profile = {
         "completed_known_cost_positions": 3,
+        "sample_positions": 3,
         "scoped_pnl": "376.028087",
         "scoped_pnl_by_quote_asset": {"USDC": "376.028087"},
         "settlement_asset": "USDC",
@@ -253,12 +256,12 @@ def test_independent_reconciliation_does_not_import_app_accounting():
     assert forbidden.isdisjoint(imported)
     from tools.independent_capture_reconciliation import reconcile_g1, reconcile_rank1
     rank1 = reconcile_rank1()
-    assert rank1["market_trades"] == 6
+    assert rank1["market_trades"] == 8
     assert Decimal(rank1["fifo"]["total_profit"]) == Decimal("376.028087")
     assert len(rank1["fifo"]["unresolved_basis_sales"]) == 1
     assert len(rank1["fifo"]["known_cost_sells"]) == 1
     assert rank1["fifo"]["known_cost_sells"][0]["fee_in_pnl"] is False
-    assert len(rank1["fifo"]["open_lots"]) == 3
+    assert len(rank1["fifo"]["open_lots"]) == 5
     g1 = reconcile_g1()
     assert g1["market_trades"] == 5
     assert Decimal(g1["fifo"]["total_profit"]) == Decimal("-0.167725526")

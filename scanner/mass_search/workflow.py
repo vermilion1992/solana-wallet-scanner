@@ -23,6 +23,7 @@ from scanner.mass_search.history_ingest import replay_cached_history_to_report, 
 from scanner.mass_search.visible_report import hydrate_visible_report, persist_visible_report, visible_report_passes
 from scanner.mass_search.research_profile import (
     RESEARCH_SCREEN_DEFAULTS,
+    apply_research_window,
     build_research_profile,
     evaluate_thresholds,
     independently_audited,
@@ -124,12 +125,40 @@ def set_user_shortlist(store, address, selected=True):
     return {"address": address, "selected": bool(selected), "shortlist": sorted(user_shortlist_addresses(store))}
 
 
+def _safe_int(value):
+    from decimal import Decimal, InvalidOperation
+
+    if value in (None, ""):
+        return None
+    try:
+        parsed = Decimal(str(value).strip())
+    except (InvalidOperation, ValueError, TypeError, AttributeError):
+        return None
+    if not parsed.is_finite() or parsed != parsed.to_integral_value():
+        return None
+    return int(parsed)
+
+
+def _safe_float(value):
+    from decimal import Decimal, InvalidOperation
+
+    if value in (None, ""):
+        return None
+    try:
+        parsed = Decimal(str(value).strip())
+    except (InvalidOperation, ValueError, TypeError, AttributeError):
+        return None
+    if not parsed.is_finite():
+        return None
+    return float(parsed)
+
+
 def apply_local_filters(rows, filters, *, user_shortlist=None):
     """Cheap provider-proxy screen. Unset thresholds do not hide rows."""
     proxy = (filters or {}).get("provider_proxy") or {}
     thresholds = (filters or {}).get("thresholds") or {}
-    min_trades = proxy.get("min_provider_trade_count", thresholds.get("min_provider_trade_count"))
-    min_score = proxy.get("min_provider_score")
+    min_trades = _safe_int(proxy.get("min_provider_trade_count", thresholds.get("min_provider_trade_count")))
+    min_score = _safe_float(proxy.get("min_provider_score"))
     only_shortlist = bool(proxy.get("only_shortlist") or (filters or {}).get("only_shortlist"))
     only_captured = bool(proxy.get("only_captured") or (filters or {}).get("only_captured"))
     only_user = bool(proxy.get("only_user_shortlist"))
@@ -141,12 +170,13 @@ def apply_local_filters(rows, filters, *, user_shortlist=None):
             continue
         if only_user and row.get("address") not in (user_shortlist or set()):
             continue
-        if min_trades not in (None, ""):
-            if int(row.get("trade_count") or 0) < int(min_trades):
+        if min_trades is not None:
+            trades = _safe_int(row.get("trade_count") or 0)
+            if trades is None or trades < min_trades:
                 continue
-        if min_score not in (None, ""):
-            score = row.get("provider_score")
-            if score in (None, "") or float(score) < float(min_score):
+        if min_score is not None:
+            score = _safe_float(row.get("provider_score"))
+            if score is None or score < min_score:
                 continue
         selected.append(row)
     return selected
@@ -177,6 +207,8 @@ def _filter_effects(universe_rows, visible_rows, filters):
         })
     for key, label in (
         ("min_completed_known_cost", "Minimum completed known-cost positions"),
+        ("min_sample_positions", "Minimum sample positions"),
+        ("min_coverage_share", "Minimum coverage share (count AND value)"),
         ("min_scoped_pnl_usdc", "Minimum scoped USDC P&L"),
         ("min_scoped_pnl_sol", "Minimum scoped SOL P&L"),
         ("max_hold_t90_seconds", "Maximum hold t90"),
@@ -196,20 +228,32 @@ def _filter_effects(universe_rows, visible_rows, filters):
             "unknown_never_passes": True,
             "applies_only_to_analysed_wallets": True,
         })
+    window_days = (filters or {}).get("window_days")
+    effects.append({
+        "key": "window_days",
+        "group": "capture_window",
+        "label": "Report window days",
+        "unit": "days",
+        "value": window_days,
+        "missing": window_days in (None, ""),
+        "unknown_never_passes": True,
+        "is_not": "proof_gate",
+    })
     return effects
 
 
 def _reconstructed_pass(profile, filters):
+    """Re-evaluate current filters against reconciled authoritative values.
+
+    Unset thresholds are not applied. Stale saved threshold_results are ignored.
+    """
     thresholds = (filters or {}).get("thresholds") or {}
     if not any(value not in (None, "") for value in thresholds.values()):
         return None
-    results = (profile or {}).get("threshold_results") or {}
-    if not results:
+    judged = evaluate_thresholds(profile or {}, thresholds)
+    if not judged.get("evaluated"):
         return None
-    for row in results.values():
-        if not row.get("passed"):
-            return False
-    return True
+    return all(judged["results"][key].get("passed") for key in judged["evaluated"])
 
 
 def saved_reports(store):
@@ -334,6 +378,8 @@ def _replay_synthetic(store, entry, *, filters=None):
         entry.get("events") or [],
         corpus_kind="SYNTHETIC",
         mint=((entry.get("events") or [{}])[0] or {}).get("mint") or "SynthMint",
+        window_start=windows["report_start_inclusive"],
+        window_end=windows["report_end_exclusive"],
     )
     report = reconstructed["report"]
     report["source"] = "mass-search"
@@ -510,6 +556,17 @@ def _authoritative_saved_profile(report):
         }
 
 
+def _profile_for_view(report, filters):
+    """Apply window_days to reconstructed episodes/P&L/sample before screening."""
+    if not report:
+        return None
+    window_days = (filters or {}).get("window_days")
+    if window_days not in (None, ""):
+        clipped = apply_research_window(report, window_days)
+        return build_research_profile(clipped, filters=filters)
+    return _authoritative_saved_profile(report)
+
+
 def visible_mass_search_report(report):
     """Copy whose funnel, category, and profile follow reconciled evidence."""
     if not report:
@@ -548,7 +605,7 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
     rows = []
     for row in screened:
         report = reports.get(row["address"])
-        profile = _authoritative_saved_profile(report)
+        profile = _profile_for_view(report, filters)
         reconstructed_ok = _reconstructed_pass(profile, filters) if profile else None
         if reconstructed_ok is False:
             continue
@@ -587,7 +644,7 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
     all_classified = []
     for row in universe["rows"]:
         report = reports.get(row["address"])
-        profile = _authoritative_saved_profile(report)
+        profile = _profile_for_view(report, filters)
         funnel = classify_candidate(
             provider_rank=row["provider_rank"],
             provider_trade_count=row.get("trade_count"),
@@ -609,7 +666,7 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
         if entry["address"] in {row["address"] for row in universe["rows"]}:
             continue
         report = reports.get(entry["address"])
-        extra_profile = _authoritative_saved_profile(report)
+        extra_profile = _profile_for_view(report, filters)
         extras.append({
             "address": entry["address"],
             "provider_rank": None,
@@ -773,7 +830,7 @@ def research_screen_run(universe_rows, reports, filters):
                 "blocking_reason": labels["blocking_reason"],
             })
             continue
-        profile = _authoritative_saved_profile(report)
+        profile = _profile_for_view(report, filters)
         if not profile:
             not_executed += 1
             labels = wallet_status_fields(report, None)

@@ -60,6 +60,10 @@ def blocking_reason(report, profile, *, coverage_status, level):
     open_lots = int(profile.get("open_buys_in_sample") or 0)
     unresolved = int(profile.get("unresolved_basis_sales") or 0)
     reasons = []
+    level_reason = (level or {}).get("reason") or (level or {}).get("blocker") or ""
+    from scanner.mass_search.qualification_gates import GT_ECONOMIC_TRADES_RULE
+    if GT_ECONOMIC_TRADES_RULE in str(level_reason):
+        reasons.append(str(level_reason))
     if completed < 1:
         reasons.append("0 completed episodes")
     elif completed < MIN_SAMPLE_POSITIONS:
@@ -97,7 +101,8 @@ def blocking_reason(report, profile, *, coverage_status, level):
         return None
     if not reasons:
         reasons.append("does not meet provisional_research_lead gates")
-    return "; ".join(reasons)
+    from scanner.mass_search.qualification_gates import trade_rate_from, with_gt25_blocker
+    return with_gt25_blocker("; ".join(reasons), trade_rate_from(report, profile))
 
 
 def wallet_status_fields(report, profile=None):

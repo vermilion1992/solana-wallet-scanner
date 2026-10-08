@@ -21,14 +21,28 @@ from .plan import canonical_json
 ADAPTER_VERSION = "mass-search-adapter-v1"
 ALLOWED_BIRDEYE_HOST = "public-api.birdeye.so"
 ALLOWED_BIRDEYE_PATH = "/trader/gainers-losers"
+BIRDEYE_TOP_TRADERS_PATH = "/defi/v2/tokens/top_traders"
+BIRDEYE_TOKEN_LIST_PATH = "/defi/v3/token/list"
+BIRDEYE_FIRST_BUYERS_PATH = "/token/v1/first-buyers"
+BIRDEYE_TOKEN_TX_SEEK_PATH = "/defi/txs/token/seek_by_time"
+BIRDEYE_TOKEN_TXS_PATH = "/defi/txs/token"
+ALLOWED_BIRDEYE_PATHS = frozenset({
+    ALLOWED_BIRDEYE_PATH,
+    BIRDEYE_TOP_TRADERS_PATH,
+    BIRDEYE_TOKEN_LIST_PATH,
+    BIRDEYE_FIRST_BUYERS_PATH,
+    BIRDEYE_TOKEN_TX_SEEK_PATH,
+    BIRDEYE_TOKEN_TXS_PATH,
+})
 
 
 class SourceError(Exception):
-    def __init__(self, state, message, *, http_status=None, retryable=False):
+    def __init__(self, state, message, *, http_status=None, retryable=False, extras=None):
         super().__init__(message)
         self.state = state
         self.http_status = http_status
         self.retryable = retryable
+        self.extras = extras or {}
 
 
 def _lookup(row, path):
@@ -161,7 +175,10 @@ class BirdeyeTraderAdapter:
         if not checked.get("enabled"):
             raise SourceError("UNAUTHORIZED", checked.get("reason") or "Live authorization is disabled", retryable=False)
         for entry in checked["providers"]:
-            if entry["provider_id"] == "birdeye" and "trader_gainers_losers" in entry["allowed_operations"]:
+            if entry["provider_id"] == "birdeye" and (
+                "trader_gainers_losers" in entry["allowed_operations"]
+                or "token_top_traders" in entry["allowed_operations"]
+            ):
                 return checked, entry
         raise SourceError("UNAUTHORIZED", "Authorization does not include Birdeye trader_gainers_losers")
 
@@ -279,6 +296,7 @@ class BirdeyeTraderAdapter:
                     "limit": limit,
                 },
                 "raw_body": redact_secrets(body),
+                "raw_bytes": response.get("raw_bytes"),
             }
         except QuotaExceeded as error:
             raise SourceError("RATE_LIMITED", str(error)) from error

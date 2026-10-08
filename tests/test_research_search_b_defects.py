@@ -21,6 +21,7 @@ from scanner.mass_search.capture_catalog import (
 )
 from scanner.mass_search.g3_history import completed_episodes, decoder_events_by_mint
 from scanner.mass_search.workflow import load_ranked_universe, replay_captured_wallet
+from tests.result_relevant_fixtures import attach_result_relevant
 from scanner.storage import Store
 from tools.independent_capture_reconciliation import reconcile_address
 
@@ -160,16 +161,18 @@ def test_d4_mixed_wallet_separate_quote_asset_worksheets(tmp_path):
     sol = by_asset.get("SOL") or {}
     indep = reconcile_address(MIXED)
     assert _q(usdc["total_profit_usdc"]) == _q(indep["fifo"]["USDC"]["total_profit"])
-    assert _q(usdc["total_profit_usdc"]) == _q("50386.378661746")
-    assert int(usdc["known_cost_sales"]) == 12
-    assert int(usdc["unresolved_basis_sales"]) == 2
-    assert int(usdc.get("open_lots") or 0) == 10
+    assert _q(usdc["total_profit_usdc"]) == _q("49643.208242023")
+    assert int(usdc["known_cost_sales"]) == 13
+    # DFlow Swap (f8c69e91) reconstructs the DEW9 close 5125oxVi8HPY; one
+    # previously unbacked sale now has basis. Extra unbacked sales stay unresolved.
+    assert int(usdc["unresolved_basis_sales"]) == 4
+    assert int(usdc.get("open_lots") or 0) == 11
     assert int(sol.get("known_cost_sales") or 0) == 0
     assert int(sol.get("unresolved_basis_sales") or 0) == 0
     assert int(sol.get("open_lots") or 0) == 1
-    assert len(indep["fifo"]["USDC"]["known_cost_sells"]) == 12
-    assert len(indep["fifo"]["USDC"]["unresolved_basis_sales"]) == 2
-    assert len(indep["fifo"]["USDC"]["open_lots"]) == 10
+    assert len(indep["fifo"]["USDC"]["known_cost_sells"]) == 13
+    assert len(indep["fifo"]["USDC"]["unresolved_basis_sales"]) == 4
+    assert len(indep["fifo"]["USDC"]["open_lots"]) == 11
     assert len(indep["fifo"]["SOL"]["known_cost_sells"]) == 0
     assert len(indep["fifo"]["SOL"]["unresolved_basis_sales"]) == 0
     assert len(indep["fifo"]["SOL"]["open_lots"]) == 1
@@ -216,12 +219,13 @@ def test_d8_drafts_armed_with_approval_fields_validate():
         "config/live_authorization.ranked100-research-search-draft.json",
         "config/live_authorization.ranked100-next-candidates-draft.json",
         "config/live_authorization.ranked100-depth-biased-next-capture-draft.json",
+        "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json",
     ):
         payload = json.loads((ROOT / rel).read_text(encoding="utf-8"))
         assert payload["enabled"] is False
         payload["enabled"] = True
         payload["authorized_by_user_at"] = "2026-10-06T05:38:00Z"
-        payload["expires_at"] = "2026-10-07T05:38:00Z"
+        payload["expires_at"] = "2099-01-01T00:00:00Z"
         for entry in payload["providers"]:
             entry["existing_plan_confirmed"] = True
             entry["remaining_quota_confirmed_at"] = "2026-10-06T05:38:00Z"
@@ -510,20 +514,31 @@ def test_d15_coverage_gate_a6ps_and_synthetics(tmp_path):
         assert row["outcome"] in ("completed", "zero_qualified")
     store.close()
 
+    # Synthetics attach R with the same shares they already claimed. Missing
+    # R is blocked_unknown_denominator; that is the correct fail-close, but
+    # it is not the band this block is testing.
     pending = {
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}},
+        }),
         "worksheet": {"unresolved_basis_sales": 1},
     }
     watch = {
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0.04", "by_consideration": {"SOL": "0.04"}}},
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0.04", "by_consideration": {"SOL": "0.04"}},
+        }),
         "worksheet": {"unresolved_basis_sales": 0},
     }
     blocked = {
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0.11", "by_consideration": {"SOL": "0.11"}}},
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0.11", "by_consideration": {"SOL": "0.11"}},
+        }),
         "worksheet": {"unresolved_basis_sales": 0},
     }
     eligible = {
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}},
+        }),
         "worksheet": {"unresolved_basis_sales": 0},
     }
     assert coverage_eligibility(pending)["status"] == "coverage_eligibility_pending_reassessment"

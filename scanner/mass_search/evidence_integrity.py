@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 from copy import deepcopy
 
@@ -27,7 +28,15 @@ CREDENTIAL_KEY_RE = re.compile(
     r"^(?:x-)?(?:api[_-]?key|authorization|password|secret|credential|bearer)$",
     re.I,
 )
-SECRET_QUERY_RE = re.compile(r"(?i)(?:api[_-]?key|access_token|secret)=([^&\s]+)")
+SECRET_QUERY_RE = re.compile(
+    r"(?i)(?:api[_-]?key|access_token|secret|authorization)=([^&\s\"']+)"
+)
+SECRET_ENV_NAMES = (
+    "BIRDEYE_API_KEY",
+    "HELIUS_API_KEY",
+    "HELIUS_KEY",
+    "HELIUS_API_KEYS",
+)
 PRESERVED_KEYS = frozenset({
     "preTokenBalances",
     "postTokenBalances",
@@ -75,6 +84,21 @@ def is_public_program_value(value):
     return value.startswith("Tokenkeg") or value.startswith("TokenzQd")
 
 
+def secret_env_values():
+    values = []
+    for name in SECRET_ENV_NAMES:
+        raw = os.environ.get(name)
+        if not raw:
+            continue
+        parts = [raw]
+        if "," in raw:
+            parts.extend(item.strip() for item in raw.split(","))
+        for item in parts:
+            if item and len(item) >= 8:
+                values.append(item)
+    return values
+
+
 def is_secret_string(value):
     if not isinstance(value, str) or len(value) < 8:
         return False
@@ -82,7 +106,27 @@ def is_secret_string(value):
         return False
     if SECRET_QUERY_RE.search(value):
         return True
-    return False
+    return any(secret in value for secret in secret_env_values())
+
+
+def redact_text(value):
+    """Scrub secrets from any string that will be logged, printed, or saved."""
+    if value is None:
+        return value
+    if not isinstance(value, str):
+        try:
+            text = str(value)
+        except Exception:
+            return "[REDACTED]"
+    else:
+        text = value
+    text = SECRET_QUERY_RE.sub(
+        lambda match: match.group(0).split("=", 1)[0] + "=" + REDACTED, text
+    )
+    for secret in secret_env_values():
+        if secret and secret in text:
+            text = text.replace(secret, REDACTED)
+    return text
 
 
 def redact_secrets(value):
@@ -97,9 +141,29 @@ def redact_secrets(value):
         return cleaned
     if isinstance(value, list):
         return [redact_secrets(item) for item in value]
-    if is_secret_string(value):
-        return SECRET_QUERY_RE.sub(lambda match: match.group(0).split("=", 1)[0] + "=" + REDACTED, value)
+    if isinstance(value, str):
+        return redact_text(value)
     return value
+
+
+def scrub_bytes(data, extra_secrets=None):
+    """Redact secrets in raw bytes. Returns (written_bytes, original_sha256, scrubbed)."""
+    raw = data if isinstance(data, (bytes, bytearray)) else bytes(data)
+    original = hashlib.sha256(raw).hexdigest()
+    try:
+        text = raw.decode("utf-8")
+        encoding = "utf-8"
+    except UnicodeDecodeError:
+        text = raw.decode("latin-1")
+        encoding = "latin-1"
+    redacted = redact_text(text)
+    for secret in extra_secrets or ():
+        if secret and len(str(secret)) >= 8 and str(secret) in redacted:
+            redacted = redacted.replace(str(secret), REDACTED)
+    if redacted == text:
+        return bytes(raw), original, False
+    written = redacted.encode(encoding)
+    return written, original, True
 
 
 def _hash_payload(value):
