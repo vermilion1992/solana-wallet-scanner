@@ -68,13 +68,17 @@ def _small_sol_swap(wallet, sig, block_time, token=TOKEN_X, token_in=True):
         "blockTime": block_time,
         "transaction": {
             "signatures": [sig],
-            "message": {"accountKeys": [wallet, "11111111111111111111111111111111"]},
+            "message": {
+                "header": {"numRequiredSignatures": 1},
+                "accountKeys": [wallet, "11111111111111111111111111111111"],
+            },
         },
         "meta": {
             "err": None,
             "fee": fee,
             "preBalances": [pre_sol, 1],
             "postBalances": [post_sol, 1],
+            "logMessages": ["Program log: Instruction: Swap"],
             "preTokenBalances": [
                 {"owner": wallet, "mint": token, "uiTokenAmount": {"amount": pre_token}},
             ],
@@ -137,7 +141,10 @@ def test_d9_3_unwraps_nested_gta_and_transaction_meta():
         "blockTime": stamp,
         "transaction": {
             "signatures": ["meta-nested"],
-            "message": {"accountKeys": [wallet, "11111111111111111111111111111111"]},
+            "message": {
+                "header": {"numRequiredSignatures": 1},
+                "accountKeys": [wallet, "11111111111111111111111111111111"],
+            },
             "meta": inner["meta"],
         },
     }
