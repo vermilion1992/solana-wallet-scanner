@@ -145,6 +145,7 @@ from scanner.mass_search.seed_sources import (
     TOKEN_INTERSECT_SEASONED,
     cheap_prescreen_decision,
     cheap_prescreen_enabled,
+    nansen_high_frequency_drop,
     cost_per_audit_worthy,
     densest_utc_day_bounds,
     estimate_seed_plan,
@@ -152,7 +153,9 @@ from scanner.mass_search.seed_sources import (
     helius_triage_enabled,
     history_span_days,
     intersect_token_cohorts,
+    load_known_wallets_from_outputs,
     nansen_billing_from_headers,
+    nansen_leaderboard_page_count,
     nansen_date_range_from_bounds,
     nansen_first_funder_supported,
     nansen_leaderboard_body,
@@ -194,17 +197,21 @@ AUTHORIZATION_ID_NEXT = "live-e2e-proof-2026-10-09-mitch"
 AUTHORIZATION_ID_11 = "live-e2e-proof-2026-10-11-mitch"
 AUTHORIZATION_ID_12 = "live-e2e-proof-2026-10-12-mitch"
 AUTHORIZATION_ID_13 = "live-e2e-proof-2026-10-13-mitch"
+AUTHORIZATION_ID_14 = "live-e2e-proof-2026-10-14-mitch"
 DRAFT_REL = "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json"
 DRAFT_REL_NEXT = "config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json"
 DRAFT_REL_11 = "config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json"
 DRAFT_REL_12 = "config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json"
 DRAFT_REL_13 = "config/live_authorization.live-e2e-proof-2026-10-13-mitch-draft.json"
+DRAFT_REL_14 = "config/live_authorization.live-e2e-proof-2026-10-14-mitch-draft.json"
 DRAFT_PATH = ROOT / DRAFT_REL
-# --live accepts the 2026-10-12 and 2026-10-13 drafts. 07, 09 and 11 are retired.
-# Dry-run may still load a retired draft.
+# --live accepts the 2026-10-12, 2026-10-13 and 2026-10-14 drafts.
+# 07, 09 and 11 are retired. Dry-run may still load a retired draft.
+# Each authorization_id has its own ledger subdirectory under the pinned home.
 LIVE_KNOWN_DRAFTS = {
     AUTHORIZATION_ID_12: DRAFT_REL_12,
     AUTHORIZATION_ID_13: DRAFT_REL_13,
+    AUTHORIZATION_ID_14: DRAFT_REL_14,
 }
 RETIRED_LIVE_DRAFTS = {
     AUTHORIZATION_ID: DRAFT_REL,
@@ -220,14 +227,15 @@ PINNED_DRAFT_HASHES = {
     AUTHORIZATION_ID_11: "a2b6b4b53717f9d7dcb5f0f9a60bd073274af4e810aae3943af7edb9d003512b",
     AUTHORIZATION_ID_12: "65b14ccd9e60e453760a1d1da55c825d1083c86c416bc8957985b361fc483270",
     AUTHORIZATION_ID_13: "e9629ca44a48671bb9a61c1b3c2ec19a42aa5338b1fc53e00c55498fe3254a2e",
+    AUTHORIZATION_ID_14: "4d3c5ad01fea6c99ee51f0c8e59519206f31edb7d1de1717aa8e1805fc56c50d",
 }
 HARD_CEILINGS = {
     "birdeye_requests": 40,
     "birdeye_units": 1400,
     "helius_requests": 3000,
     "helius_units": 30000,
-    "nansen_requests": 20,
-    "nansen_units": 100,
+    "nansen_requests": 60,
+    "nansen_units": 300,
     "leaderboard_requests": 0,
     "leaderboard_units": 0,
 }
@@ -1189,6 +1197,56 @@ def apply_cheap_prescreen_phase1(config, state):
     return dropped
 
 
+def apply_nansen_vendor_prefilter(config, state):
+    """Drop-only Nansen high-frequency filter. Missing fields never pass a wallet."""
+    dropped = []
+    kept = []
+    log = []
+    if config.get("wallets_supplied") and config.get("wallets"):
+        pool = list(config.get("wallets") or [])
+    else:
+        pool = list(state.get("wallets") or config.get("wallets") or [])
+    for address in pool:
+        if ((state.get("phase2") or {}).get(address) or {}).get("done"):
+            kept.append(address)
+            continue
+        meta = (state.get("seed_metadata") or {}).get(address) or {}
+        sources = list(meta.get("seed_sources") or [])
+        if meta.get("primary_seed_source") != SEED_NANSEN and SEED_NANSEN not in sources:
+            kept.append(address)
+            continue
+        vendor = meta.get("vendor_metrics") or {}
+        decisions = []
+        timeframes = meta.get("timeframes") or {}
+        if timeframes:
+            for tf, payload in timeframes.items():
+                vm = dict(vendor)
+                if isinstance(payload, dict) and payload.get("vendor_metrics"):
+                    vm.update(payload.get("vendor_metrics") or {})
+                decisions.append(nansen_high_frequency_drop(vm, timeframe=tf))
+        else:
+            decisions.append(nansen_high_frequency_drop(vendor, timeframe=meta.get("timeframe")))
+        hit = next((item for item in decisions if item.get("dropped")), None)
+        if hit:
+            dropped.append(address)
+            row = {"address": address, **hit}
+            state.setdefault("nansen_prefilter_dropped", {})[address] = row
+            log.append(row)
+        else:
+            kept.append(address)
+    config["wallets"] = kept
+    state["wallets"] = kept
+    state["nansen_prefilter_dropped_addresses"] = list(dropped)
+    if log and config.get("output_dir"):
+        _write_json(Path(config["output_dir"]) / "NANSEN_PREFILTER_DROPPED.json", {
+            "dropped": log,
+            "count": len(log),
+            "can_only_drop": True,
+            "seed_is_not": "evidence",
+        })
+    return dropped
+
+
 def wallet_triage_requests(state, address, *, triage=False):
     """Requests already counted against --per-wallet-cap from phase 2."""
     row = ((state or {}).get("phase2") or {}).get(address) or {}
@@ -1213,12 +1271,116 @@ def phase3_remaining_budget(config, state, address, *, triage=False):
     return max(0, int(cap) - used)
 
 
+def history_to_first_enabled(config):
+    return bool(
+        (config or {}).get("history_to_first")
+        or ((config or {}).get("bounds") or {}).get("history_to_first")
+        or (config or {}).get("history_start_unix") is not None
+    )
+
+
+def phase3_needs_more_pages(config, state, address, *, triage=False):
+    """True when a higher --per-wallet-cap can continue from the saved cursor."""
+    cursor = ((state or {}).get("phase3") or {}).get(address) or {}
+    if not cursor:
+        return True
+    if cursor.get("early_stop_bot_rate"):
+        return False
+    reason = cursor.get("history_complete_reason")
+    if reason in (
+        "wallet_created_in_range",
+        "no_leftover_pagination_token",
+        "gt_25_economic_trades_in_one_day",
+    ):
+        return False
+    if cursor.get("history_complete") and not cursor.get("leftover_pagination_token"):
+        return False
+    remaining = phase3_remaining_budget(config, state, address, triage=triage)
+    if remaining == 0:
+        return False
+    if not cursor.get("done"):
+        return True
+    if reason == "per_wallet_cap":
+        return True
+    if cursor.get("leftover_pagination_token"):
+        return True
+    return remaining not in (0,)
+
+
+def oldest_tx_unix(records):
+    oldest = None
+    for row in records or []:
+        if not isinstance(row, dict):
+            continue
+        raw = unwrap_gta_record(row)
+        stamp = raw.get("blockTime") or raw.get("timestamp")
+        if stamp is None:
+            tx = raw.get("transaction") if isinstance(raw.get("transaction"), dict) else {}
+            stamp = tx.get("blockTime") or tx.get("timestamp")
+        if type(stamp) is int:
+            oldest = stamp if oldest is None else min(oldest, stamp)
+    return oldest
+
+
+def window_reach_from_oldest(oldest, bounds):
+    """Oldest captured tx vs each report-window start. Cap/early-stop must not force false."""
+    if oldest is None or not bounds:
+        return {
+            "history_reached_window_start": False,
+            "window_start_reached": {},
+            "oldest_captured_block_time": oldest,
+        }
+    report_end = int(bounds.get("report_end_unix") or 0)
+    report_start = int(bounds.get("report_start_unix") or 0)
+    primary_days = int(bounds.get("report_window_days") or bounds.get("window_days") or 30)
+    flags = {}
+    for days in sorted({30, 90, primary_days}):
+        if days == primary_days and report_start:
+            start = report_start
+        else:
+            start = report_end - int(days) * 86400
+        flags[str(days)] = bool(oldest <= start)
+    return {
+        "history_reached_window_start": bool(flags.get(str(primary_days), oldest <= report_start)),
+        "window_start_reached": flags,
+        "oldest_captured_block_time": oldest,
+    }
+
+
+def load_phase3_captured_records(config, address):
+    root = Path((config or {}).get("output_dir") or "") / f"raw/phase3/{address}"
+    records = []
+    if not root.is_dir():
+        return records
+    for path in sorted(root.glob("page*.bin"), key=page_sort_key):
+        try:
+            body = json.loads(path.read_bytes())
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            continue
+        result = body.get("result") if isinstance(body, dict) else None
+        data = result.get("data") if isinstance(result, dict) else (result if isinstance(result, list) else None)
+        if isinstance(data, list):
+            records.extend(row for row in data if isinstance(row, dict))
+    return records
+
+
+def apply_window_reach(cursor, records, bounds):
+    reach = window_reach_from_oldest(oldest_tx_unix(records), bounds)
+    cursor["history_reached_window_start"] = reach["history_reached_window_start"]
+    cursor["window_start_reached"] = reach["window_start_reached"]
+    if reach.get("oldest_captured_block_time") is not None:
+        cursor["oldest_captured_block_time"] = reach["oldest_captured_block_time"]
+    return cursor
+
+
 def phase3_planned_pages(config, state, address, estimated_pages, *, triage=False):
     already = wallet_phase3_requests(state, address)
     needed = max(0, int(estimated_pages) - already)
     remaining = phase3_remaining_budget(config, state, address, triage=triage)
     if remaining is None:
         return needed
+    if history_to_first_enabled(config):
+        return remaining
     return min(needed, remaining)
 
 
@@ -1350,6 +1512,8 @@ def plan_request_counts(config, state=None):
         nansen_profile_cap=config.get("nansen_profile_cap"),
         nansen_request_cap=(config.get("caps") or {}).get("nansen_requests"),
         nansen_unit_cap=(config.get("caps") or {}).get("nansen_units"),
+        nansen_leaderboard_pages=config.get("nansen_leaderboard_pages"),
+        birdeye_retry_headroom=BIRDEYE_RATE_LIMIT_RETRIES,
     )
     if 1 in phases and (discovery or not wallets):
         birdeye_requests = seed_plan["totals"]["birdeye_requests"]
@@ -1439,8 +1603,10 @@ def plan_request_counts(config, state=None):
                     "minimum 2, then clips each wallet to the remaining "
                     "--per-wallet-cap after triage requests already counted "
                     "against that same cap (typically 3) and pages already fetched. "
-                    "A leftover paginationToken is not the end unless first-funding "
-                    "is proven. Units are the documented worst case "
+                    "With --history-to-first the plan is the remaining per-wallet "
+                    "cap (a strict upper bound of runtime, which pages until that "
+                    "cap). A leftover paginationToken is not the end unless "
+                    "first-funding is proven. Units are the documented worst case "
                     "(100 credits / 1000 txs) per estimated page."
                 ),
             },
@@ -2178,6 +2344,107 @@ def _verify_saved_page(path, relative=None, expected_sha=None, *, require_ledger
     return raw, data, token
 
 
+def _split_concatenated_json(raw):
+    """Split newline-joined JSON objects from a prior seed-source capture."""
+    text = raw.decode("utf-8") if isinstance(raw, (bytes, bytearray)) else str(raw)
+    parts = []
+    decoder = json.JSONDecoder()
+    index = 0
+    length = len(text)
+    while index < length:
+        while index < length and text[index].isspace():
+            index += 1
+        if index >= length:
+            break
+        payload, end = decoder.raw_decode(text, index)
+        parts.append(payload)
+        index = end
+    return parts
+
+
+def _verify_imported_seed_file(path):
+    path = Path(path)
+    if not path.is_file() or path.stat().st_size == 0:
+        raise SourceError("MISSING_CAPTURE", f"imported seed page missing: {path}")
+    raw = path.read_bytes()
+    file_sha = _sha256_bytes(raw)
+    sidecar = path.with_name(path.name + ".integrity.json")
+    if not sidecar.is_file():
+        raise SourceError("MISSING_CAPTURE", f"integrity receipt missing for imported page: {path}")
+    try:
+        integrity = json.loads(sidecar.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise SourceError("MISSING_CAPTURE", f"integrity receipt unreadable: {path}") from error
+    written = integrity.get("written_sha256")
+    if written != file_sha:
+        raise SourceError("MISSING_CAPTURE", f"imported page hash mismatch: {path}")
+    try:
+        pages = _split_concatenated_json(raw)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise SourceError("MISSING_CAPTURE", f"imported page is not JSON: {path}") from error
+    if not pages:
+        raise SourceError("MISSING_CAPTURE", f"imported page has no JSON objects: {path}")
+    return raw, pages, file_sha
+
+
+def _token_intersect_tokens_from_import(config, root):
+    tokens = list(config.get("birdeye_tokens") or [])
+    if tokens:
+        return tokens
+    root = Path(root)
+    for candidate in (root / "STATE.json", root / "state.json"):
+        if not candidate.is_file():
+            continue
+        try:
+            payload = json.loads(candidate.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            continue
+        progress = ((payload.get("seed_source_progress") or {}).get(SEED_TOKEN_INTERSECT) or {})
+        if progress.get("tokens"):
+            return list(progress["tokens"])
+        for row in (payload.get("discoveries") or {}).values():
+            if isinstance(row, dict) and row.get("seed_source") == SEED_TOKEN_INTERSECT and row.get("tokens"):
+                return list(row["tokens"])
+    return []
+
+
+def _import_token_intersect_pages(config):
+    """Reuse a prior run's paid token_intersect pages. Integrity sidecar required."""
+    seen = set()
+    imported = []
+    tokens = []
+    for root in config.get("import_raw_dirs") or []:
+        root = Path(root)
+        candidates = []
+        if root.is_file() and "token-intersect" in root.name:
+            candidates.append(root)
+        elif root.is_dir():
+            named = root / "raw" / "phase1" / "token-intersect.bin"
+            if named.is_file():
+                candidates.append(named)
+            candidates.extend(sorted(p for p in root.rglob("token-intersect*.bin") if p.is_file()))
+        for candidate in candidates:
+            resolved = str(candidate.resolve())
+            if resolved in seen:
+                continue
+            raw, pages, digest = _verify_imported_seed_file(candidate)
+            seen.add(resolved)
+            imported.append({"path": candidate, "raw": raw, "pages": pages, "sha256": digest})
+            if not tokens:
+                tokens = _token_intersect_tokens_from_import(config, root if root.is_dir() else root.parent)
+    if not imported:
+        return None
+    raw_parts = []
+    bodies = []
+    for item in imported:
+        for page in item["pages"]:
+            if not isinstance(page, dict):
+                raise SourceError("MISSING_CAPTURE", f"imported TI page is not an object: {item['path']}")
+            bodies.append(page)
+            raw_parts.append(json.dumps(page, separators=(",", ":")).encode())
+    return {"raw_parts": raw_parts, "bodies": bodies, "tokens": tokens, "imported": imported}
+
+
 def _import_paid_page(config, store, phase, address, page_index, expected_sha):
     """Copy a previously paid page into this output dir by verified ledger sha."""
     relative = f"raw/phase{phase}/{address}/page{page_index}.bin"
@@ -2428,7 +2695,17 @@ async def _birdeye_seed_call_once(store, grant, config, state, recorder, *, path
             "units": units, "state": "planned", "discovery_identity": identity,
             "path": path,
         })
-        response = await recorder.birdeye("GET", path, params)
+        try:
+            response = await recorder.birdeye("GET", path, params)
+        except Exception:
+            _put_receipt(config, store, grant, token_key, {
+                "provider": "birdeye", "wallet": wallet, "phase": 1, "page": page,
+                "units": units, "state": "failed", "discovery_identity": identity,
+                "path": path,
+            })
+            _account_spend(state, provider="birdeye", units=units, phase=1)
+            _account_source_spend(state, source, provider="birdeye", units=units)
+            raise
         _account_spend(state, provider="birdeye", units=units, phase=1)
         _account_source_spend(state, source, provider="birdeye", units=units)
         return response
@@ -2571,50 +2848,59 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
         }
     raw_parts = []
     extras = {}
-    seen = set()
+    exclude = set(config.get("exclude_known_wallets") or [])
+    exclude |= load_known_wallets_from_outputs(config.get("exclude_known_from") or [])
+    seen = set(exclude)
     selected = []
     date_from, date_to = nansen_date_range_from_bounds(config.get("bounds"))
+    pages_per_tf = nansen_leaderboard_page_count(config.get("nansen_leaderboard_pages"))
     try:
-        for page, timeframe in enumerate(NANSEN_TIMEFRAMES):
-            body = nansen_leaderboard_body(timeframe=timeframe, page=1, per_page=50)
-            response = await _nansen_seed_call(
-                store, grant, config, state, recorder,
-                path=NANSEN_LEADERBOARD_PATH,
-                body=body,
-                operation="smart_money_pnl_leaderboard",
-                units=NANSEN_LEADERBOARD_UNITS,
-                wallet=f"_leaderboard_{timeframe}",
-                page=page,
-                identity=identity,
-            )
-            raw_parts.append(response.get("raw_bytes") or b"{}")
-            for row in select_nansen_wallets(
-                nansen_leaderboard_rows(response.get("body")),
-                timeframe=timeframe,
-                seen=seen,
-            ):
-                selected.append(row)
-                existing = extras.get(row["address"]) or {}
-                timeframes = dict(existing.get("timeframes") or {})
-                timeframes[str(timeframe)] = {
-                    "rank": row.get("rank"),
-                    "selection_reason": row.get("selection_reason"),
-                    "vendor_metrics": row.get("vendor_metrics"),
-                    "billing": response.get("billing"),
-                    "timeframe": timeframe,
-                }
-                if row["address"] not in extras:
-                    extras[row["address"]] = {
+        page = 0
+        for timeframe in NANSEN_TIMEFRAMES:
+            for page_num in range(1, pages_per_tf + 1):
+                left = remaining_caps(config, state["spend"])
+                if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_LEADERBOARD_UNITS:
+                    break
+                body = nansen_leaderboard_body(timeframe=timeframe, page=page_num, per_page=50)
+                response = await _nansen_seed_call(
+                    store, grant, config, state, recorder,
+                    path=NANSEN_LEADERBOARD_PATH,
+                    body=body,
+                    operation="smart_money_pnl_leaderboard",
+                    units=NANSEN_LEADERBOARD_UNITS,
+                    wallet=f"_leaderboard_{timeframe}_p{page_num}",
+                    page=page,
+                    identity=identity,
+                )
+                page += 1
+                raw_parts.append(response.get("raw_bytes") or b"{}")
+                rows = nansen_leaderboard_rows(response.get("body"))
+                if not rows:
+                    break
+                for row in select_nansen_wallets(rows, timeframe=timeframe, seen=seen):
+                    selected.append(row)
+                    existing = extras.get(row["address"]) or {}
+                    timeframes = dict(existing.get("timeframes") or {})
+                    timeframes[str(timeframe)] = {
                         "rank": row.get("rank"),
                         "selection_reason": row.get("selection_reason"),
                         "vendor_metrics": row.get("vendor_metrics"),
-                        "timeframe": timeframe,
                         "billing": response.get("billing"),
-                        "timeframes": timeframes,
+                        "timeframe": timeframe,
+                        "page": page_num,
                     }
-                else:
-                    extras[row["address"]]["timeframes"] = timeframes
-        profile_page = len(NANSEN_TIMEFRAMES)
+                    if row["address"] not in extras:
+                        extras[row["address"]] = {
+                            "rank": row.get("rank"),
+                            "selection_reason": row.get("selection_reason"),
+                            "vendor_metrics": row.get("vendor_metrics"),
+                            "timeframe": timeframe,
+                            "billing": response.get("billing"),
+                            "timeframes": timeframes,
+                        }
+                    else:
+                        extras[row["address"]]["timeframes"] = timeframes
+        profile_page = page
         profile_cap = config.get("nansen_profile_cap")
         profiled = 0
         for row in selected:
@@ -2665,6 +2951,7 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
         "enabled": True,
     }
     _merge_discovery_wallets(config, state, addresses, source=SEED_NANSEN, extras=extras)
+    apply_nansen_vendor_prefilter(config, state)
     save_state(config["output_dir"], state)
     return {
         "addresses": addresses,
@@ -2678,8 +2965,111 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
     }
 
 
+def _token_intersect_from_imported(config, state, identity, imported):
+    """Rebuild token_intersect seeds from verified prior-run pages. No HTTP."""
+    tokens = list(imported.get("tokens") or config.get("birdeye_tokens") or [])
+    now = utc_now_unix()
+    bodies = list(imported.get("bodies") or [])
+    raw_parts = list(imported.get("raw_parts") or [])
+    appearances = []
+    tx_bodies = []
+    for body in bodies:
+        if token_tx_items(body):
+            tx_bodies.append(body)
+        elif body.get("success") and isinstance((body.get("data") or {}), dict) and (
+            (body.get("data") or {}).get("items") or (body.get("data") or {}).get("tokens")
+        ):
+            continue
+        else:
+            tx_bodies.append(body)
+    if tokens:
+        idx = 0
+        chosen = [{"address": token, "listing_time": now - (40 * 86400), "role": "imported"} for token in tokens]
+        for token_row in chosen:
+            token = token_row["address"]
+            listing = token_row["listing_time"]
+            after_first_block = int(listing) + FIRST_BLOCK_EXCLUSION_SECONDS
+            windows = ordinary_windows(listing)
+            for _window_index in range(TOKEN_INTERSECT_WINDOWS):
+                if idx >= len(tx_bodies):
+                    break
+                items = token_tx_items(tx_bodies[idx])
+                idx += 1
+                windowed = False
+                for window in windows:
+                    owners = token_tx_owners(
+                        items,
+                        token=token,
+                        window=window["name"],
+                        after_time=window["after_time"],
+                        before_time=window["before_time"],
+                    )
+                    if owners:
+                        windowed = True
+                        appearances.extend(owners)
+                if not windowed:
+                    appearances.extend(token_tx_owners(
+                        items, token=token, window="imported", after_time=after_first_block,
+                    ))
+    else:
+        chosen = []
+        for body in tx_bodies:
+            appearances.extend(token_tx_owners(token_tx_items(body), window="imported"))
+    selected = intersect_token_cohorts(appearances)
+    extras = {
+        row["address"]: {
+            "rank": row.get("rank"),
+            "selection_reason": row.get("selection_reason"),
+            "tokens": row.get("tokens"),
+            "cohort_count": row.get("cohort_count"),
+            "imported_from_prior_run": True,
+        }
+        for row in selected
+    }
+    addresses = [row["address"] for row in selected]
+    digest = _save_seed_raw_parts(config, identity, SEED_TOKEN_INTERSECT, raw_parts)
+    state.setdefault("discoveries", {})[identity] = {
+        "addresses": list(addresses),
+        "sha256": digest,
+        "count": len(addresses),
+        "tokens": [row.get("address") for row in chosen],
+        "paid_pages": 0,
+        "imported_pages": len(raw_parts),
+        "imported": True,
+        "partial": False,
+        "seed_source": SEED_TOKEN_INTERSECT,
+        "seed_is_not": "evidence",
+    }
+    state.setdefault("seed_source_progress", {})[SEED_TOKEN_INTERSECT] = {
+        "paid_pages": 0,
+        "imported_pages": len(raw_parts),
+        "addresses": list(addresses),
+        "partial": False,
+        "imported": True,
+        "seed_source": SEED_TOKEN_INTERSECT,
+    }
+    _merge_discovery_wallets(config, state, addresses, source=SEED_TOKEN_INTERSECT, extras=extras)
+    save_state(config["output_dir"], state)
+    return {
+        "addresses": addresses,
+        "sha256": digest,
+        "count": len(addresses),
+        "discovery_identity": identity,
+        "pool_size": len(state.get("wallets") or []),
+        "paid_pages": 0,
+        "imported_pages": len(raw_parts),
+        "imported": True,
+        "partial": False,
+        "seed_source": SEED_TOKEN_INTERSECT,
+        "seed_is_not": "evidence",
+    }
+
+
 async def _phase1_token_intersect(store, grant, config, state, recorder, identity):
     """Seasoned-token ordinary-period buyers, intersected across >=3 cohorts."""
+    imported = _import_token_intersect_pages(config)
+    if imported:
+        return _token_intersect_from_imported(config, state, identity, imported)
     tokens = list(config.get("birdeye_tokens") or [])
     raw_parts = []
     now = utc_now_unix()
@@ -3239,7 +3629,6 @@ async def phase2_prescreen(store, grant, config, state, recorder):
                     sample_records.extend(records)
                     seed_source = seed_fields_for_wallet(state, address).get("seed_source") or "helius_triage"
                     _account_source_spend(state, seed_source, provider="helius", units=FULL_100_UNITS)
-                    _account_source_spend(state, "helius_triage", provider="helius", units=FULL_100_UNITS)
             except SourceError as error:
                 if getattr(error, "state", None) in ("WALLET_CAP", "MISSING_CAPTURE", "UNRECEIPTED_PAGE"):
                     row = {
@@ -3467,23 +3856,12 @@ async def phase3_history(store, grant, config, state, recorder):
     for address in kept:
         cursor = (state.get("phase3") or {}).get(address) or {"pages": 0, "requests": 0, "done": False}
         remaining = phase3_remaining_budget(config, state, address, triage=triage)
-        history_finished = bool(
-            cursor.get("history_complete")
-            or cursor.get("window_covered")
-            or cursor.get("early_stop_bot_rate")
-            or cursor.get("history_complete_reason") in (
-                "wallet_created_in_range",
-                "no_leftover_pagination_token",
-                "gt_25_economic_trades_in_one_day",
-            )
-        )
-        if cursor.get("done") and history_finished:
+        if cursor.get("done") and not phase3_needs_more_pages(config, state, address, triage=triage):
+            captured = load_phase3_captured_records(config, address)
+            apply_window_reach(cursor, captured, bounds)
             pages[address] = cursor
             continue
-        if cursor.get("done") and remaining == 0:
-            pages[address] = cursor
-            continue
-        if cursor.get("done") and remaining not in (None, 0) and not history_finished:
+        if cursor.get("done") and remaining not in (0,):
             cursor = dict(cursor)
             cursor["done"] = False
         token = cursor.get("pagination_token")
@@ -3497,7 +3875,8 @@ async def phase3_history(store, grant, config, state, recorder):
                 cursor["history_complete_reason"] = "per_wallet_cap"
                 cursor["leftover_pagination_token"] = bool(token)
                 cursor["window_covered"] = False
-                cursor["history_reached_window_start"] = False
+                captured = load_phase3_captured_records(config, address)
+                apply_window_reach(cursor, captured, bounds)
                 break
             options = gta_options(
                 details="full",
@@ -3521,6 +3900,8 @@ async def phase3_history(store, grant, config, state, recorder):
                     )
                     cursor["leftover_pagination_token"] = bool(token)
                     cursor["window_covered"] = False
+                    captured = load_phase3_captured_records(config, address)
+                    apply_window_reach(cursor, captured, bounds)
                     break
                 raise
             cursor["pages"] += 1
@@ -3548,15 +3929,12 @@ async def phase3_history(store, grant, config, state, recorder):
                 cursor["early_stop_bot_rate"] = True
                 cursor["leftover_pagination_token"] = bool(token)
                 cursor["window_covered"] = False
-                cursor["history_reached_window_start"] = False
+                captured = load_phase3_captured_records(config, address) + list(records)
+                apply_window_reach(cursor, captured, bounds)
                 cursor["max_economic_trades_in_one_day"] = rate["max"]
                 cursor["max_economic_trades_on"] = rate["max_on"]
                 break
-            oldest = None
-            for row in records:
-                stamp = row.get("blockTime") or row.get("timestamp") or ((row.get("transaction") or {}).get("blockTime"))
-                if type(stamp) is int:
-                    oldest = stamp if oldest is None else min(oldest, stamp)
+            oldest = oldest_tx_unix(records)
             limit = int(options.get("limit") or GTA_MAX_LIMIT)
             short_page = len(records) < limit
             created = assess_history_completeness(
@@ -3573,7 +3951,8 @@ async def phase3_history(store, grant, config, state, recorder):
             if covered or config["dry_run"] or hit_page_cap:
                 cursor["done"] = True
                 cursor["window_covered"] = bool(covered)
-                cursor["history_reached_window_start"] = bool(covered or reached_bound)
+                captured = load_phase3_captured_records(config, address) + list(records)
+                apply_window_reach(cursor, captured, bounds)
                 cursor["leftover_pagination_token"] = bool(token)
                 cursor["history_complete"] = bool(created["history_complete"]) and not hit_page_cap
                 if hit_page_cap and token:
@@ -4103,6 +4482,14 @@ def validate_config(raw):
     import_raw = raw.get("import_raw_dir") or raw.get("import_raw_dirs") or []
     if isinstance(import_raw, str):
         import_raw = [part.strip() for part in import_raw.split(",") if part.strip()]
+    exclude_from = raw.get("exclude_known_from") or []
+    if isinstance(exclude_from, str):
+        exclude_from = [part.strip() for part in exclude_from.split(",") if part.strip()]
+    raw["exclude_known_from"] = list(exclude_from)
+    exclude_wallets = raw.get("exclude_known_wallets") or []
+    if isinstance(exclude_wallets, str):
+        exclude_wallets = [part.strip() for part in exclude_wallets.split(",") if part.strip()]
+    raw["exclude_known_wallets"] = list(exclude_wallets)
     window_days = 30 if raw.get("window_days") is None else int(raw.get("window_days"))
     report_window_days = raw.get("report_window_days")
     if report_window_days not in (None, ""):
@@ -4171,6 +4558,13 @@ def validate_config(raw):
         "nansen_profile_cap": (
             int(raw["nansen_profile_cap"]) if raw.get("nansen_profile_cap") not in (None, "") else None
         ),
+        "nansen_leaderboard_pages": (
+            int(raw["nansen_leaderboard_pages"])
+            if raw.get("nansen_leaderboard_pages") not in (None, "")
+            else 1
+        ),
+        "exclude_known_from": list(raw.get("exclude_known_from") or []),
+        "exclude_known_wallets": list(raw.get("exclude_known_wallets") or []),
         "resume": bool(raw.get("resume")),
         "explicit_retry": bool(raw.get("explicit_retry")),
         "birdeye_limit": int(raw.get("birdeye_limit") or BIRDEYE_DEFAULT_LIMIT),
@@ -4290,6 +4684,7 @@ async def run_live_e2e(raw):
             if 1 in config["phases"] and (1 not in done or (config.get("discovery") and not discovery_done)):
                 state["phase1"] = await phase1_discovery(store, config["grant"], config, state, recorder)
                 apply_cheap_prescreen_phase1(config, state)
+                apply_nansen_vendor_prefilter(config, state)
                 state["phases_done"] = sorted(done | {1})
                 done = set(state["phases_done"])
                 save_state(output_dir, state)
@@ -4327,10 +4722,12 @@ async def run_live_e2e(raw):
                 state["phases_done"] = sorted(done | {2})
                 done = set(state["phases_done"])
                 save_state(output_dir, state)
+            apply_nansen_vendor_prefilter(config, state)
             wanted3 = phase3_wallets(config, state)
+            triage = helius_triage_enabled(config.get("seed_sources"))
             phase3_pending = [
                 addr for addr in wanted3
-                if not ((state.get("phase3") or {}).get(addr) or {}).get("done")
+                if phase3_needs_more_pages(config, state, addr, triage=triage)
             ]
             if 3 in config["phases"] and (3 not in done or phase3_pending):
                 state["phase3_result"] = await phase3_history(store, config["grant"], config, state, recorder)
@@ -4498,6 +4895,20 @@ def build_arg_parser():
         dest="nansen_profile_cap",
         type=int,
         help="Max Nansen pnl-summary calls after the two leaderboard pages. Plan equals this bound.",
+    )
+    parser.add_argument(
+        "--nansen-leaderboard-pages",
+        dest="nansen_leaderboard_pages",
+        type=int,
+        default=1,
+        help="Leaderboard pages per timeframe (90d/180d). Plan is timeframes × pages.",
+    )
+    parser.add_argument(
+        "--exclude-known-from",
+        dest="exclude_known_from",
+        action="append",
+        default=[],
+        help="Prior run output dir or STATE.json; skip already-known Nansen wallets.",
     )
     parser.add_argument("--max-birdeye-requests", dest="max_birdeye_requests", type=int)
     parser.add_argument("--max-birdeye-units", dest="max_birdeye_units", type=int)

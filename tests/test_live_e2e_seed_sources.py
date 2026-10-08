@@ -171,19 +171,20 @@ def test_new_draft_grant_is_disabled_and_hashed():
     assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_13] == digest
     assert HARD_CEILINGS["birdeye_units"] == 1400
     assert HARD_CEILINGS["helius_units"] == 30000
-    assert HARD_CEILINGS["nansen_units"] == 100
+    assert HARD_CEILINGS["nansen_units"] == 300
+    assert HARD_CEILINGS["nansen_requests"] == 60
     assert HARD_CEILINGS["leaderboard_requests"] == 0
 
 
 def test_plan_estimates_per_source():
     tokens = [JUP, BONK, USDC]
     intersect = estimate_seed_plan([SEED_TOKEN_INTERSECT], tokens=tokens, discovery=True)
-    assert intersect["totals"]["birdeye_requests"] == 9
-    assert intersect["totals"]["birdeye_units"] == 90
+    assert intersect["totals"]["birdeye_requests"] == 11
+    assert intersect["totals"]["birdeye_units"] == 110
     assert intersect["seed_is_not"] == "evidence"
     listed = estimate_seed_plan([SEED_TOKEN_INTERSECT], discovery=True)
-    assert listed["totals"]["birdeye_requests"] == 1 + 10 * 3
-    assert listed["totals"]["birdeye_units"] == 60 + 300
+    assert listed["totals"]["birdeye_requests"] == 1 + 10 * 3 + 2
+    assert listed["totals"]["birdeye_units"] == 60 + 300 + 120
     disabled = estimate_seed_plan([SEED_NANSEN], discovery=True, nansen_enabled=False)
     assert disabled["totals"]["nansen_requests"] == 0
     assert disabled["per_source"][SEED_NANSEN]["enabled"] is False
@@ -213,7 +214,7 @@ def test_plan_estimates_per_source():
         "nansen_enabled": False,
     })
     assert plan["seed_sources"] == [SEED_TOKEN_INTERSECT]
-    assert plan["totals"]["birdeye_requests"] == 9
+    assert plan["totals"]["birdeye_requests"] == 11
     assert plan["totals"]["helius_requests"] == 3
     assert plan["per_phase"]["2"]["requests"] == 3
     assert plan["seed_plan"]["seed_is_not"] == "evidence"

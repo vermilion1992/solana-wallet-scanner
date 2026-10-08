@@ -806,42 +806,135 @@ def economic_trade_rate(events):
     return _rate_from_by_day(by_day, incomplete_uncounted=incomplete)
 
 
+def _unwrap_raw_record(record):
+    """GTA/RPC body. Nested raw/result wrappers must not hide meta."""
+    if not isinstance(record, dict):
+        return {}
+    if "transaction" in record or isinstance(record.get("meta"), dict):
+        return record
+    raw = record.get("raw")
+    if isinstance(raw, dict):
+        result = raw.get("result")
+        if isinstance(result, dict) and ("transaction" in result or isinstance(result.get("meta"), dict)):
+            return result
+        if "transaction" in raw or isinstance(raw.get("meta"), dict):
+            return raw
+    result = record.get("result")
+    if isinstance(result, dict) and ("transaction" in result or isinstance(result.get("meta"), dict)):
+        return result
+    return record
+
+
+def _record_meta(record):
+    meta = record.get("meta")
+    if isinstance(meta, dict):
+        return meta
+    tx = record.get("transaction")
+    if isinstance(tx, dict) and isinstance(tx.get("meta"), dict):
+        return tx["meta"]
+    return None
+
+
 def _tx_account_keys(record):
     tx = record.get("transaction") if isinstance(record.get("transaction"), dict) else {}
     msg = tx.get("message") if isinstance(tx.get("message"), dict) else {}
     keys = []
     for key in msg.get("accountKeys") or []:
         keys.append(key["pubkey"] if isinstance(key, dict) else key)
-    meta = record.get("meta") if isinstance(record.get("meta"), dict) else {}
+    meta = _record_meta(record) or {}
     loaded = meta.get("loadedAddresses") or {}
     keys.extend(list(loaded.get("writable") or []))
     keys.extend(list(loaded.get("readonly") or []))
     return keys
 
 
+def _token_balance_owner(balance, keys):
+    owner = balance.get("owner")
+    if owner:
+        return owner
+    index = balance.get("accountIndex")
+    if type(index) is int and 0 <= index < len(keys):
+        return keys[index]
+    return None
+
+
+def _parsed_wallet_token_deltas(meta, address):
+    """Fallback when token-balance meta is empty: parsed inner SPL transfers."""
+    deltas = Counter()
+    if not isinstance(meta, dict) or not address:
+        return deltas
+    instructions = []
+    for group in meta.get("innerInstructions") or []:
+        if isinstance(group, dict):
+            instructions.extend(group.get("instructions") or [])
+        elif isinstance(group, list):
+            instructions.extend(group)
+    for ix in instructions:
+        if not isinstance(ix, dict):
+            continue
+        parsed = ix.get("parsed")
+        if not isinstance(parsed, dict):
+            continue
+        if parsed.get("type") not in ("transfer", "transferChecked"):
+            continue
+        info = parsed.get("info") if isinstance(parsed.get("info"), dict) else {}
+        mint = info.get("mint")
+        amount = info.get("amount")
+        if amount in (None, ""):
+            token_amount = info.get("tokenAmount")
+            if isinstance(token_amount, dict):
+                amount = token_amount.get("amount")
+        if not mint or amount in (None, ""):
+            continue
+        try:
+            qty = int(amount)
+        except (TypeError, ValueError):
+            continue
+        authority = info.get("authority") or info.get("owner")
+        if authority == address:
+            deltas[mint] -= qty
+        dest_owner = info.get("destinationOwner")
+        if dest_owner == address or info.get("destination") == address:
+            deltas[mint] += qty
+    return deltas
+
+
 def wallet_asset_deltas(record, address):
-    """Net wallet asset deltas. SOL nets native+fee+wSOL; rent/fee noise is dropped."""
+    """Net wallet asset deltas. SOL nets native+fee+wSOL.
+
+    A non-quote token leg plus any non-zero fee-adjusted SOL is a
+    SOL-quoted swap, including sub-0.003 SOL fills the 3e6 noise floor
+    used to drop. That floor stays only for SOL-only or SOL↔stable
+    legs (fee/rent dust). Nested GTA wrappers and transaction.meta
+    are unwrapped. Empty token-balance meta falls back to parsed
+    inner SPL transfers. All captured records count, not only the
+    report window.
+    """
     if not isinstance(record, dict) or not address:
         return None
-    meta = record.get("meta")
+    raw = _unwrap_raw_record(record)
+    meta = _record_meta(raw)
     if not isinstance(meta, dict) or meta.get("err") is not None:
         return None
+    keys = _tx_account_keys(raw)
     deltas = Counter()
     for balance in meta.get("preTokenBalances") or []:
-        if not isinstance(balance, dict) or balance.get("owner") != address:
+        if not isinstance(balance, dict) or _token_balance_owner(balance, keys) != address:
             continue
         mint = balance.get("mint")
         amount = ((balance.get("uiTokenAmount") or {}).get("amount"))
         if mint and amount not in (None, ""):
             deltas[mint] -= int(amount)
     for balance in meta.get("postTokenBalances") or []:
-        if not isinstance(balance, dict) or balance.get("owner") != address:
+        if not isinstance(balance, dict) or _token_balance_owner(balance, keys) != address:
             continue
         mint = balance.get("mint")
         amount = ((balance.get("uiTokenAmount") or {}).get("amount"))
         if mint and amount not in (None, ""):
             deltas[mint] += int(amount)
-    keys = _tx_account_keys(record)
+    if not any(qty for qty in deltas.values()):
+        for mint, qty in _parsed_wallet_token_deltas(meta, address).items():
+            deltas[mint] += qty
     wallet_index = keys.index(address) if address in keys else None
     native = 0
     if wallet_index is not None:
@@ -853,7 +946,8 @@ def wallet_asset_deltas(record, address):
     wrapped = deltas.pop(WSOL_MINT, 0)
     sol = native + fee + wrapped
     legs = {mint: qty for mint, qty in deltas.items() if qty}
-    if abs(sol) > RAW_SOL_NOISE_LAMPORTS:
+    has_non_quote = any(mint not in RAW_QUOTE_ASSETS for mint in legs)
+    if sol and (has_non_quote or abs(sol) > RAW_SOL_NOISE_LAMPORTS):
         legs["SOL"] = sol
     return legs
 
@@ -877,20 +971,29 @@ def raw_economic_keys_for_tx(record, address):
     return len(tokens) if tokens else 1
 
 
+def _record_unix(record):
+    raw = _unwrap_raw_record(record) if isinstance(record, dict) else {}
+    stamp = raw.get("blockTime") or raw.get("block_time") or raw.get("timestamp")
+    if stamp is None:
+        tx = raw.get("transaction") if isinstance(raw.get("transaction"), dict) else {}
+        stamp = tx.get("blockTime") or tx.get("timestamp")
+    if stamp is None and isinstance(record, dict):
+        stamp = record.get("blockTime") or record.get("block_time") or record.get("timestamp")
+    return _event_unix({"timestamp": stamp})
+
+
 def raw_economic_trades_by_utc_day(records, address):
-    """Independent raw-tx bot-rate. Decoder-blind venues still count."""
+    """Independent raw-tx bot-rate over all captured records (not a window)."""
     counts = Counter()
     incomplete = 0
     for record in records or []:
         if not isinstance(record, dict):
             continue
-        n_keys = raw_economic_keys_for_tx(record, address)
+        raw = _unwrap_raw_record(record)
+        n_keys = raw_economic_keys_for_tx(raw, address)
         if n_keys <= 0:
             continue
-        stamp = record.get("blockTime")
-        if stamp is None:
-            stamp = record.get("block_time") or record.get("timestamp")
-        unix = _event_unix({"timestamp": stamp})
+        unix = _record_unix(record)
         if unix is None:
             incomplete += n_keys
             continue

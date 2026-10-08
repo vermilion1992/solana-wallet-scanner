@@ -10,6 +10,7 @@ must never produce a dummy live call.
 """
 from __future__ import annotations
 
+import json
 from collections import defaultdict
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -471,11 +472,26 @@ def leaderboard_not_viable_reason():
     )
 
 
-def estimate_nansen_profiler_count(*, profile_cap=None, request_cap=None, unit_cap=None, already_requests=0, already_units=0):
+def nansen_leaderboard_page_count(pages=None):
+    try:
+        return max(1, int(pages or 1))
+    except (TypeError, ValueError):
+        return 1
+
+
+def estimate_nansen_profiler_count(
+    *,
+    profile_cap=None,
+    request_cap=None,
+    unit_cap=None,
+    already_requests=0,
+    already_units=0,
+    leaderboard_pages=1,
+):
     """Upper bound on pnl-summary calls. Runtime must not exceed this."""
-    leaderboard_req = len(NANSEN_TIMEFRAMES)
+    leaderboard_req = len(NANSEN_TIMEFRAMES) * nansen_leaderboard_page_count(leaderboard_pages)
     leaderboard_units = leaderboard_req * NANSEN_LEADERBOARD_UNITS
-    worst = NANSEN_LEADERBOARD_PER_PAGE * len(NANSEN_TIMEFRAMES)
+    worst = NANSEN_LEADERBOARD_PER_PAGE * leaderboard_req
     profile_n = worst
     if profile_cap is not None:
         profile_n = min(profile_n, max(0, int(profile_cap)))
@@ -499,6 +515,8 @@ def estimate_seed_plan(
     nansen_profile_cap=None,
     nansen_request_cap=None,
     nansen_unit_cap=None,
+    nansen_leaderboard_pages=1,
+    birdeye_retry_headroom=2,
 ):
     """Dry-run request/credit estimates per selected source. No HTTP.
 
@@ -518,26 +536,32 @@ def estimate_seed_plan(
     helius_triage_requests = 0
     helius_triage_units = 0
     run_discovery = discovery or not wallets
+    try:
+        retry_headroom = max(0, int(birdeye_retry_headroom or 0))
+    except (TypeError, ValueError):
+        retry_headroom = 0
     if run_discovery and SEED_BIRDEYE_TOP in sources:
         if birdeye_top_mode == "top-traders":
             token_n = max(len(tokens), 1)
-            birdeye_requests += token_n
-            birdeye_units += token_n * 35
+            birdeye_requests += token_n + retry_headroom
+            birdeye_units += token_n * 35 + retry_headroom * 35
             per_source[SEED_BIRDEYE_TOP] = {
                 "provider": "birdeye",
-                "requests": token_n,
-                "units": token_n * 35,
+                "requests": token_n + retry_headroom,
+                "units": token_n * 35 + retry_headroom * 35,
                 "billing_unit": "birdeye_compute_unit",
+                "retry_headroom_requests": retry_headroom,
                 "note": "top-traders 35 CU per token via --discovery-source top-traders.",
             }
         else:
-            birdeye_requests += 1
-            birdeye_units += 30
+            birdeye_requests += 1 + retry_headroom
+            birdeye_units += 30 + retry_headroom * 30
             per_source[SEED_BIRDEYE_TOP] = {
                 "provider": "birdeye",
-                "requests": 1,
-                "units": 30,
+                "requests": 1 + retry_headroom,
+                "units": 30 + retry_headroom * 30,
                 "billing_unit": "birdeye_compute_unit",
+                "retry_headroom_requests": retry_headroom,
                 "note": "Default gainers-losers 30 CU. top-traders is 35 CU/token via --discovery-source.",
             }
     if run_discovery and SEED_TOKEN_INTERSECT in sources:
@@ -545,25 +569,35 @@ def estimate_seed_plan(
         list_req = 0 if tokens else 1
         tx_req = token_n * TOKEN_INTERSECT_WINDOWS * TOKEN_INTERSECT_PAGES_PER_WINDOW
         units = (0 if tokens else BIRDEYE_TOKEN_LIST_UNITS) + tx_req * BIRDEYE_TOKEN_TXS_UNITS
-        birdeye_requests += list_req + tx_req
-        birdeye_units += units
+        try:
+            retry_headroom = max(0, int(birdeye_retry_headroom or 0))
+        except (TypeError, ValueError):
+            retry_headroom = 0
+        retry_units = retry_headroom * (
+            BIRDEYE_TOKEN_LIST_UNITS if list_req else BIRDEYE_TOKEN_TXS_UNITS
+        )
+        birdeye_requests += list_req + tx_req + retry_headroom
+        birdeye_units += units + retry_units
         per_source[SEED_TOKEN_INTERSECT] = {
             "provider": "birdeye",
-            "requests": list_req + tx_req,
-            "units": units,
+            "requests": list_req + tx_req + retry_headroom,
+            "units": units + retry_units,
             "billing_unit": "birdeye_compute_unit",
             "token_list_requests": list_req,
             "token_tx_requests": tx_req,
+            "retry_headroom_requests": retry_headroom,
             "note": SEED_CU_DOCS[SEED_TOKEN_INTERSECT]["note"],
         }
     if run_discovery and SEED_NANSEN in sources:
         if nansen_enabled:
-            leaderboard_req = len(NANSEN_TIMEFRAMES)
+            pages = nansen_leaderboard_page_count(nansen_leaderboard_pages)
+            leaderboard_req = len(NANSEN_TIMEFRAMES) * pages
             leaderboard_units = leaderboard_req * NANSEN_LEADERBOARD_UNITS
             profile_n = estimate_nansen_profiler_count(
                 profile_cap=nansen_profile_cap,
                 request_cap=nansen_request_cap,
                 unit_cap=nansen_unit_cap,
+                leaderboard_pages=pages,
             )
             nansen_requests += leaderboard_req + profile_n
             nansen_units += leaderboard_units + profile_n * NANSEN_PROFILER_UNITS
@@ -574,11 +608,14 @@ def estimate_seed_plan(
                 "billing_unit": "nansen_credit",
                 "timeframes": list(NANSEN_TIMEFRAMES),
                 "leaderboard_requests": leaderboard_req,
+                "leaderboard_pages": pages,
                 "profiler_requests": profile_n,
                 "profile_cap": nansen_profile_cap,
                 "note": (
-                    f"{leaderboard_req} leaderboard calls (90d/180d) plus up to "
+                    f"{leaderboard_req} leaderboard calls "
+                    f"({len(NANSEN_TIMEFRAMES)} timeframes × {pages} page(s)) plus up to "
                     f"{profile_n} profiler pnl-summary calls (1 credit). "
+                    "Already-known wallets from --exclude-known-from are skipped. "
                     "Plan is a strict upper bound of runtime; set "
                     "--nansen-profile-cap to pin the profiler count."
                 ),
@@ -892,6 +929,89 @@ def select_early_buyers_sold_well(rows, *, token=None):
     return []
 
 
+NANSEN_HOLD_FIELDS = (
+    "avg_hold_time",
+    "average_hold_time",
+    "avg_holding_time",
+    "hold_time",
+    "median_hold_time",
+    "avg_hold_seconds",
+    "average_holding_period",
+    "hold_time_seconds",
+    "avg_hold_time_seconds",
+    "avg_hold_time_ms",
+    "median_hold_seconds",
+)
+
+
+def nansen_high_frequency_drop(vendor_metrics, *, timeframe=None):
+    """Drop-only vendor pre-filter. Missing fields never pass a wallet.
+
+    Uses leaderboard/profiler trade counts and holding-time fields when
+    present. Absence of those fields is not a pass; it is simply no drop.
+    """
+    metrics = dict(vendor_metrics or {})
+    profiler = metrics.get("profiler_pnl_summary")
+    if isinstance(profiler, dict):
+        metrics = {**metrics, **profiler}
+    reasons = []
+    evidence = {}
+    trades = _as_number(
+        metrics.get("n_trades")
+        if metrics.get("n_trades") is not None
+        else metrics.get("trade_count")
+        if metrics.get("trade_count") is not None
+        else metrics.get("num_trades")
+        if metrics.get("num_trades") is not None
+        else metrics.get("trades")
+    )
+    days = _as_number(timeframe)
+    if days is None:
+        days = _as_number(metrics.get("timeframe")) or Decimal("90")
+    if days <= 0:
+        days = Decimal("90")
+    if trades is not None:
+        rate = (trades / days).quantize(Decimal("0.0001"))
+        evidence["n_trades"] = str(trades)
+        evidence["timeframe_days"] = str(days)
+        evidence["implied_trades_per_day"] = str(rate)
+        if rate > CHEAP_MAX_TRADES_PER_DAY:
+            reasons.append(
+                f"nansen_vendor_gt_25_trades_per_day:{rate}/d over {days}d ({trades} trades)"
+            )
+    hold = None
+    hold_field = None
+    for field in NANSEN_HOLD_FIELDS:
+        if metrics.get(field) in (None, ""):
+            continue
+        hold = _as_number(metrics.get(field))
+        if hold is not None:
+            hold_field = field
+            break
+    if hold is not None and hold_field:
+        name = hold_field.lower()
+        seconds = hold
+        if "ms" in name or "millis" in name:
+            seconds = hold / Decimal("1000")
+        elif "minute" in name:
+            seconds = hold * Decimal("60")
+        elif "hour" in name:
+            seconds = hold * Decimal("3600")
+        elif hold > Decimal("100000"):
+            seconds = hold / Decimal("1000")
+        evidence[hold_field] = str(hold)
+        evidence["hold_seconds"] = str(seconds)
+        if seconds <= Decimal("300"):
+            reasons.append(f"nansen_vendor_short_hold:{hold_field}={hold}")
+    return {
+        "dropped": bool(reasons),
+        "drop_reasons": reasons,
+        "evidence": evidence,
+        "can_only_drop": True,
+        "seed_is_not": "evidence",
+    }
+
+
 def cheap_prescreen_decision(signals, *, max_trades_per_day=None, min_history_days=None):
     """Legacy helper. Prefer helius_triage_decision for new runs."""
     max_rate = Decimal(str(max_trades_per_day or CHEAP_MAX_TRADES_PER_DAY))
@@ -1080,6 +1200,62 @@ def record_seed_metadata(state, address, source, extra=None):
             meta[key] = value
     state["seed_metadata"][address] = meta
     return meta
+
+
+def _wallets_from_payload(payload):
+    found = []
+    if isinstance(payload, list):
+        for item in payload:
+            if isinstance(item, str) and item:
+                found.append(item)
+            elif isinstance(item, dict):
+                addr = item.get("address") or item.get("wallet") or item.get("wallet_address")
+                if addr:
+                    found.append(addr)
+        return found
+    if not isinstance(payload, dict):
+        return found
+    for key in ("wallets", "addresses"):
+        value = payload.get(key)
+        if isinstance(value, list):
+            found.extend(_wallets_from_payload(value))
+    for key in ("phase2", "phase3", "phase4", "discoveries", "seed_metadata"):
+        value = payload.get(key)
+        if isinstance(value, dict):
+            found.extend(value.keys())
+            for row in value.values():
+                if isinstance(row, dict):
+                    found.extend(_wallets_from_payload(row))
+    return found
+
+
+def load_known_wallets_from_outputs(paths):
+    """Addresses already seen in prior run outputs. Used to buy only fresh Nansen seeds."""
+    from pathlib import Path
+
+    known = set()
+    for raw in paths or []:
+        path = Path(raw)
+        candidates = []
+        if path.is_file():
+            candidates.append(path)
+        elif path.is_dir():
+            for name in ("STATE.json", "state.json", "wallets.json"):
+                candidate = path / name
+                if candidate.is_file():
+                    candidates.append(candidate)
+            phase4 = path / "phase4.json"
+            if phase4.is_file():
+                candidates.append(phase4)
+        for candidate in candidates:
+            try:
+                payload = json.loads(candidate.read_text(encoding="utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                continue
+            for address in _wallets_from_payload(payload):
+                if isinstance(address, str) and len(address) >= 32:
+                    known.add(address)
+    return known
 
 
 def seed_fields_for_wallet(state, address):
