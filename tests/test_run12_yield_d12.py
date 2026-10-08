@@ -96,6 +96,7 @@ def test_d12_4_trader_address_and_pre_rank():
     tokens = select_discovery_tokens(limit=5)
     assert tokens[0] == DISCOVERY_LIQUID_MINTS[0]
     assert len(tokens) == 5
+    assert select_discovery_tokens(limit=0) == []
     seen = {}
     first = select_tgm_wallets([row], token=tokens[0], seen=seen, billing={"X-Nansen-Credits-Cost": "5"})
     again = select_tgm_wallets([row], token=tokens[1], seen=seen, billing={"X-Nansen-Credits-Cost": "5"})

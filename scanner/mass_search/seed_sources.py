@@ -1236,6 +1236,8 @@ def select_discovery_tokens(*, configured=None, observed=None, limit=200):
         cap = max(0, int(limit or 0))
     except (TypeError, ValueError):
         cap = 0
+    if cap == 0:
+        return []
     ordered = []
     seen = set()
     for mint in list(configured or []) + list(observed or []) + list(DISCOVERY_LIQUID_MINTS):
