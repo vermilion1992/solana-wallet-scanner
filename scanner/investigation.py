@@ -1202,6 +1202,22 @@ def _system_transfer_from_wallet(instruction, address, keys):
     return False
 
 
+def _system_transfer_to_wallet(instruction, address, keys):
+    parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+    info = parsed.get('info') if isinstance(parsed, dict) else None
+    kind = parsed.get('type') if isinstance(parsed, dict) else None
+    if kind == 'transfer' and isinstance(info, dict) and info.get('destination') == address:
+        return True
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return False
+    if len(payload) >= 4 and int.from_bytes(payload[:4], 'little') == 2:
+        return len(accounts) > 1 and accounts[1] == address
+    return False
+
+
 def _token_hop_fields(instruction, keys):
     parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
     kind = parsed.get('type') if isinstance(parsed, dict) else None
@@ -1260,7 +1276,10 @@ def _jup_hop_children_ok(inners, start, owned, address, keys):
         if program in TOKEN_IDS:
             if not _hop_token_op_ok(instruction, owned, address, keys):
                 return False
-        elif program == SYSTEM_ID and _system_transfer_from_wallet(instruction, address, keys):
+        elif program == SYSTEM_ID and (
+            _system_transfer_from_wallet(instruction, address, keys)
+            or _system_transfer_to_wallet(instruction, address, keys)
+        ):
             return False
     return True
 
@@ -1444,7 +1463,8 @@ def _peel_fee_sol_residue(assets):
         return Decimal(0)
     sol = assets.get('SOL', Decimal(0))
     others = [qty for mint, qty in assets.items() if mint != 'SOL' and qty != 0]
-    if len(others) >= 2 and sol != 0 and abs(sol) <= Decimal(NET_BALANCE_COST_SOL_LAMPORTS):
+    # Inflows are never fees. Peel only a cost-sized SOL *outflow* residue.
+    if len(others) >= 2 and sol < 0 and abs(sol) <= Decimal(NET_BALANCE_COST_SOL_LAMPORTS):
         assets.pop('SOL', None)
         return sol
     return Decimal(0)
@@ -1676,13 +1696,16 @@ def _token_transfer_leg(instruction, keys, mints):
 
 
 def _net_balance_route_accounts(raw, keys):
-    """Accounts of each net-balance outer plus every inner CPI under it."""
+    """Outer net-balance program accounts only.
+
+    Inner CPI counterparties are not swap legs. A co-signed third party that
+    appears only on a nested System/Token transfer must fail closed.
+    """
     accounts = set()
     message = ((raw.get('transaction') or {}).get('message')
                if isinstance(raw.get('transaction'), dict) else {}) or {}
-    meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
     outers = message.get('instructions') or []
-    for idx, instruction in enumerate(outers):
+    for instruction in outers:
         if not isinstance(instruction, dict):
             continue
         try:
@@ -1695,17 +1718,6 @@ def _net_balance_route_accounts(raw, keys):
             continue
         accounts.add(program)
         accounts.update(_instruction_account_keys(instruction, keys))
-        for group in meta.get('innerInstructions') or []:
-            if not isinstance(group, dict) or group.get('index') != idx:
-                continue
-            for inner in group.get('instructions') or []:
-                if not isinstance(inner, dict):
-                    continue
-                try:
-                    accounts.add(_program(inner, keys))
-                except (ValueError, TypeError, KeyError, IndexError):
-                    pass
-                accounts.update(_instruction_account_keys(inner, keys))
     return accounts
 
 
@@ -1739,8 +1751,8 @@ def _non_route_wallet_flow(raw, address, keys):
                 continue
             source, dest, lamports = leg
             if dest in owned and source not in owned:
-                if not _counterparty_allowed(source, owned, route_accounts) and lamports > NET_BALANCE_COST_SOL_LAMPORTS:
-                    return True
+                # System inbound is never a swap leg (unwrap is closeAccount).
+                return True
             continue
         if program not in TOKEN_IDS:
             continue
@@ -1749,7 +1761,7 @@ def _non_route_wallet_flow(raw, address, keys):
             continue
         source, dest, qty, mint = leg
         if dest in owned and source not in owned:
-            if not _counterparty_allowed(source, owned, route_accounts) and qty > Decimal(1):
+            if not _counterparty_allowed(source, owned, route_accounts):
                 return True
         elif source in owned and dest not in owned:
             continue
@@ -1774,9 +1786,8 @@ def _route_wallet_flows(raw, address, keys):
             if not leg:
                 continue
             source, dest, lamports = leg
-            if dest in owned and source in route_accounts and source not in owned:
-                sol += lamports
-                saw = True
+            if dest in owned and source not in owned:
+                continue
             elif source in owned and dest in route_accounts and dest not in owned:
                 sol -= lamports
                 saw = True
@@ -1798,16 +1809,123 @@ def _route_wallet_flows(raw, address, keys):
     return saw, sol, tokens
 
 
+def _unknown_inner_touches_wallet(raw, address, keys):
+    """True when a non-reviewed inner program touches a wallet-owned account."""
+    if not isinstance(raw, dict) or not address or not keys:
+        return False
+    owned = {address, *_owned_token_accounts(raw, address, keys)}
+    meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
+    for group in meta.get('innerInstructions') or []:
+        if not isinstance(group, dict):
+            continue
+        for instruction in group.get('instructions') or []:
+            if not isinstance(instruction, dict):
+                continue
+            try:
+                program = _program(instruction, keys)
+            except (ValueError, TypeError, KeyError, IndexError):
+                continue
+            if program in REVIEWED_INNER_PROGRAMS:
+                continue
+            if _instruction_account_keys(instruction, keys).intersection(owned):
+                return True
+    return False
+
+
+def _hop_counterparty_sol_gain(raw, address, keys):
+    """SOL that landed on a prop-AMM hop program or its non-owned accounts.
+
+    A hop that takes native SOL must show that SOL on a hop counterparty.
+    Written as a hop-inner account walk, not the auditor's program-id
+    balance-sheet pass.
+    """
+    if not isinstance(raw, dict) or not address or not keys:
+        return Decimal(0)
+    owned = {address, *_owned_token_accounts(raw, address, keys)}
+    counterparties = set()
+    meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
+    message = ((raw.get('transaction') or {}).get('message')
+               if isinstance(raw.get('transaction'), dict) else {}) or {}
+    outers = message.get('instructions') or []
+    for group in meta.get('innerInstructions') or []:
+        if not isinstance(group, dict):
+            continue
+        outer_index = group.get('index')
+        outer_program = None
+        if (type(outer_index) is int and not isinstance(outer_index, bool)
+                and 0 <= outer_index < len(outers) and isinstance(outers[outer_index], dict)):
+            try:
+                outer_program = _program(outers[outer_index], keys)
+            except (ValueError, TypeError, KeyError, IndexError):
+                outer_program = None
+        if outer_program not in NET_BALANCE_SWAP_PROGRAMS:
+            continue
+        for instruction in group.get('instructions') or []:
+            if not isinstance(instruction, dict) or instruction.get('stackHeight') != 2:
+                continue
+            try:
+                program = _program(instruction, keys)
+            except (ValueError, TypeError, KeyError, IndexError):
+                continue
+            if program in _INNER_INFRA:
+                continue
+            touched = _instruction_account_keys(instruction, keys)
+            if not touched.intersection(owned):
+                continue
+            counterparties.add(program)
+            counterparties.update(touched - owned)
+    if not counterparties:
+        return Decimal(0)
+    pre = meta.get('preBalances') or []
+    post = meta.get('postBalances') or []
+    gained = Decimal(0)
+    for account in counterparties:
+        try:
+            index = keys.index(account)
+        except ValueError:
+            continue
+        if index >= len(pre) or index >= len(post):
+            continue
+        try:
+            delta = Decimal(str(post[index])) - Decimal(str(pre[index]))
+        except (InvalidOperation, ValueError, TypeError, OverflowError):
+            continue
+        if delta > 0:
+            gained += delta
+    return gained
+
+
 def _route_flow_disagrees_with_wallet(raw, address, keys, assets):
     """Reconcile route transfers against the wallet net. Disagree → fail closed."""
     saw, route_sol, route_tokens = _route_wallet_flows(raw, address, keys)
+    hop_gain = _hop_counterparty_sol_gain(raw, address, keys)
+    if hop_gain:
+        route_sol -= hop_gain
+        saw = True
+        # hop_gain is raw lamports on the hop account. Wallet assets already
+        # added meta.fee back; align the documented take with that convention.
+        meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
+        fee = meta.get('fee') if type(meta.get('fee')) is int and not isinstance(meta.get('fee'), bool) else 0
+        if keys and keys[0] == address and fee:
+            route_sol += Decimal(fee)
     if not saw:
         return True
     wallet_sol = Decimal(assets.get('SOL', 0) or 0)
     route_sol += route_tokens.pop(WSOL, Decimal(0))
+    # An unknown prop-AMM hop that moved native SOL without a visible
+    # counterparty take is not a documented swap leg (H5).
+    if (
+        hop_gain == 0
+        and wallet_sol != 0
+        and route_sol == 0
+        and _net_balance_unknown_inner_blocks(raw, address, keys) is False
+        and _unknown_inner_touches_wallet(raw, address, keys)
+    ):
+        return True
     # Extra outbound tips make wallet SOL more negative (conservative).
     # Fail only when the wallet net is more profitable than the route.
-    if wallet_sol > route_sol + Decimal(NET_BALANCE_COST_SOL_LAMPORTS):
+    # Fees are meta.fee + verified tip only. Any extra inbound SOL is profit.
+    if wallet_sol > route_sol:
         return True
     # Same rule for tokens: fee-sized extra outbound (C7) is conservative.
     # Extra inbound or a smaller sell than the route overstates profit.

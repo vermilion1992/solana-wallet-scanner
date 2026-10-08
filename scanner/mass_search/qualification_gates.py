@@ -17,7 +17,7 @@ from statistics import median
 
 ACCOUNTING_POLICY_VERSION = (
     "completed-episode-ledger-v1+asset-atomic-v1+coverage-count-and-value-v1+"
-    "audit-1to1-v1+result-relevant-coverage-v1+gt15-v1"
+    "audit-1to1-v1+result-relevant-coverage-v1+gt15-v1+dc-verify-c85388e-v1"
 )
 
 # Asset-specific atomic units. Tolerances are integer atomics, then converted.
@@ -590,48 +590,57 @@ def coverage_shares(report, profile=None):
         or (report or {}).get("result_relevant")
         or (profile or {}).get("result_relevant")
     )
-    if relevant is not None:
-        if relevant.get("empty") or relevant.get("size") == 0 or relevant.get("denominator") == 0:
-            count_share = value_share = mandatory = None
-        else:
-            count_share, value_share, mandatory = _shares_from_unsupported(
-                relevant.get("unsupported_swap_share") or relevant
-            )
-            if relevant.get("count_share") is not None:
-                count_share = _decimal(relevant.get("count_share"))
-            if relevant.get("value_share") is not None:
-                value_share = _decimal(relevant.get("value_share"))
-            if count_share is not None and value_share is not None:
-                mandatory = min(count_share, value_share)
-        version = relevant.get("version") or COVERAGE_GATE_VERSION
+    if relevant is None:
         return {
-            "coverage_count_share": _display_decimal(count_share),
-            "coverage_value_share": _display_decimal(value_share),
-            "coverage_mandatory_share": _display_decimal(mandatory),
+            "coverage_count_share": None,
+            "coverage_value_share": None,
+            "coverage_mandatory_share": None,
             "coverage_historical_share": None,
             "coverage_count_share_whole_span": _display_decimal(whole_count),
             "coverage_value_share_whole_span": _display_decimal(whole_value),
             "coverage_mandatory_share_whole_span": _display_decimal(whole_mandatory),
-            "coverage_gate_version": version,
-            "result_relevant_size": relevant.get("size"),
-            "result_relevant_lineage_mints": list(relevant.get("lineage_mints") or []),
-            "count_share": count_share,
-            "value_share": value_share,
-            "mandatory_share": mandatory,
+            "coverage_gate_version": None,
+            "count_share": None,
+            "value_share": None,
+            "mandatory_share": None,
             "denominator_includes_unsupported_suspected_trading": True,
+            "missing_result_relevant": True,
         }
+    version = relevant.get("version")
+    version_ok = version == COVERAGE_GATE_VERSION
+    if (
+        not version_ok
+        or relevant.get("empty")
+        or relevant.get("size") == 0
+        or relevant.get("denominator") == 0
+    ):
+        count_share = value_share = mandatory = None
+    else:
+        count_share, value_share, mandatory = _shares_from_unsupported(
+            relevant.get("unsupported_swap_share") or relevant
+        )
+        if relevant.get("count_share") is not None:
+            count_share = _decimal(relevant.get("count_share"))
+        if relevant.get("value_share") is not None:
+            value_share = _decimal(relevant.get("value_share"))
+        if count_share is not None and value_share is not None:
+            mandatory = min(count_share, value_share)
     return {
-        "coverage_count_share": _display_decimal(whole_count),
-        "coverage_value_share": _display_decimal(whole_value),
-        "coverage_mandatory_share": _display_decimal(whole_mandatory),
+        "coverage_count_share": _display_decimal(count_share),
+        "coverage_value_share": _display_decimal(value_share),
+        "coverage_mandatory_share": _display_decimal(mandatory),
         "coverage_historical_share": None,
         "coverage_count_share_whole_span": _display_decimal(whole_count),
         "coverage_value_share_whole_span": _display_decimal(whole_value),
-        "coverage_gate_version": None,
-        "count_share": whole_count,
-        "value_share": whole_value,
-        "mandatory_share": whole_mandatory,
+        "coverage_mandatory_share_whole_span": _display_decimal(whole_mandatory),
+        "coverage_gate_version": version,
+        "result_relevant_size": relevant.get("size"),
+        "result_relevant_lineage_mints": list(relevant.get("lineage_mints") or []),
+        "count_share": count_share,
+        "value_share": value_share,
+        "mandatory_share": mandatory,
         "denominator_includes_unsupported_suspected_trading": True,
+        "coverage_version_mismatch": not version_ok,
     }
 
 
@@ -659,7 +668,14 @@ def mandatory_coverage_gate(report, profile=None, *, min_share=None):
         or (report or {}).get("result_relevant")
         or (profile or {}).get("result_relevant")
     )
-    if relevant is not None and (relevant.get("empty") or relevant.get("size") == 0 or relevant.get("denominator") == 0):
+    from scanner.mass_search.result_relevant_coverage import COVERAGE_GATE_VERSION as _RR_VERSION
+    if relevant is None:
+        passed = False
+        reason = "missing result-relevant set"
+    elif relevant.get("version") != _RR_VERSION:
+        passed = False
+        reason = "coverage_gate_version mismatch"
+    elif relevant.get("empty") or relevant.get("size") == 0 or relevant.get("denominator") == 0:
         passed = False
         reason = "empty result-relevant set"
     else:
@@ -1324,7 +1340,7 @@ def _is_lp_or_rent_or_tip_non_trade(record, address, material, token_downs, toke
             return True
     # Tip + airdrop: token up, SOL down at or below the tip cutoff, no stable.
     # Apply only when there is no reviewed swap instruction.
-    if not has_swap_ix and token_ups and quote_downs and not token_downs:
+    if not has_swap_ix and not swap_log and token_ups and quote_downs and not token_downs:
         if not stable_down and 0 < sol_down <= RAW_TIP_SOL_LAMPORTS:
             return True
     return False
@@ -1369,6 +1385,7 @@ def raw_economic_keys_for_tx(record, address):
         stable_down = any(material.get(mint, 0) < 0 for mint in (USDC_MINT, USDT_MINT))
         if (
             not _has_reviewed_swap_instruction(record)
+            and not _has_swap_like_log(record)
             and not stable_down
             and 0 < sol_down <= RAW_TIP_SOL_LAMPORTS
         ):

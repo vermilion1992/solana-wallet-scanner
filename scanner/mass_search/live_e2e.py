@@ -4645,9 +4645,11 @@ def _stamp_readable_first(row, records, address, config, *, decoded=None):
         row, records, address, decoded=decoded,
         threshold=config.get("readable_share_threshold"),
     )
-    if row.get("bot") or row.get("drop_reason") == GT_ECONOMIC_TRADES_RULE:
+    if attached.get("dropped") is True or row.get("bot"):
         attached["funnel_decision"] = "dropped"
-        attached["funnel_reason"] = GT_ECONOMIC_TRADES_RULE
+        attached["funnel_reason"] = (
+            attached.get("drop_reason") or row.get("drop_reason") or GT_ECONOMIC_TRADES_RULE
+        )
     attached["nansen_realized_pnl_usd"] = (
         attached.get("nansen_realized_pnl_usd")
         or ((attached.get("vendor_metrics") or {}).get("realized_pnl_usd"))

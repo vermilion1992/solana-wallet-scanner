@@ -46,7 +46,7 @@ def tree_hash(root: Path) -> str:
 
 
 @pytest.fixture(autouse=True)
-def no_network(monkeypatch):
+def no_network(monkeypatch, tmp_path_factory):
     def boom(*a, **k):
         raise RuntimeError("NETWORK BLOCKED")
     monkeypatch.setattr(socket.socket, "connect", boom)
@@ -56,6 +56,11 @@ def no_network(monkeypatch):
     monkeypatch.setenv("SCANNER_BIRDEYE_BACKOFF_SEC", "0")
     monkeypatch.setenv("SCANNER_BIRDEYE_MIN_INTERVAL_SEC", "0")
     monkeypatch.setenv("SCANNER_HELIUS_MIN_INTERVAL_SEC", "0")
+    isolated = tmp_path_factory.mktemp("scanner-live-ledger-home")
+    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(isolated))
+    monkeypatch.delenv("SCANNER_LIVE_LEDGER_DIR", raising=False)
+    global REAL_SCANNER
+    REAL_SCANNER = isolated
 
 
 @pytest.fixture

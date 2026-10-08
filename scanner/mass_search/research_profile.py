@@ -750,7 +750,17 @@ def _episode_ledger_from_report(report):
                 missing = False
                 dirty = False
                 for ev in episode_events:
-                    if ev.get("unresolved_basis") or ev.get("not_clean_episode") or ev.get("opening_inventory_consumed"):
+                    if (
+                        ev.get("unresolved_basis")
+                        or ev.get("not_clean_episode")
+                        or ev.get("opening_inventory_consumed")
+                        or ev.get("partial_known_cost")
+                        or ev.get("quarantined")
+                        or ev.get("transfer_in_zero_basis")
+                        or ev.get("undecoded_buy")
+                        or ev.get("kind") == "undecoded_buy"
+                        or ev.get("whole_sale_pnl_resolved") is False
+                    ):
                         dirty = True
                         break
                     priced = quote_consideration(ev)

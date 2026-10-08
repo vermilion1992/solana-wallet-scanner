@@ -342,6 +342,10 @@ def walk_ranked(rows, *, n, cap=None):
             unscreened.append({**row, "funnel_status": UNSCREENED, "funnel_reason": "cap_reached"})
             continue
         examined += 1
+        # DC-8: Phase-2 drop wins over a 0.97 keep stamp.
+        if row.get("dropped") is True:
+            dropped.append({**row, "funnel_status": DROP})
+            continue
         decision = row.get("funnel_decision") or row.get("decision") or DROP
         if decision == KEEP:
             kept.append({**row, "funnel_status": KEEP})

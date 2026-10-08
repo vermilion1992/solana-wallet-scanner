@@ -133,6 +133,12 @@ def _jup6_hop_tx(
             },
         ])
     fee = 5000
+    pre_balances = [sol_out + fee, 2_039_280, 2_039_280] + [0] * (len(keys) - 3)
+    post_balances = [fee, 2_039_280, 2_039_280] + [0] * (len(keys) - 3)
+    # Document the hop SOL take on the hop program account so a lamport-only
+    # wallet credit cannot understate cost (DC-9 H5).
+    hop_idx = keys.index(hop_amm)
+    post_balances[hop_idx] = sol_out
     raw = {
         "transaction": {
             "signatures": [signature],
@@ -149,8 +155,8 @@ def _jup6_hop_tx(
         "meta": {
             "err": None,
             "fee": fee,
-            "preBalances": [sol_out + fee, 2_039_280, 2_039_280] + [0] * (len(keys) - 3),
-            "postBalances": [fee, 2_039_280, 2_039_280] + [0] * (len(keys) - 3),
+            "preBalances": pre_balances,
+            "postBalances": post_balances,
             "preTokenBalances": [{
                 "accountIndex": 1,
                 "mint": USDC,

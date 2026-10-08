@@ -434,10 +434,19 @@ PUMP_NON_SWAP_DISCS = frozenset(
 # v3 / probe counter: swap-type log or instruction name. Unknown venues that
 # log Swap/Buy/Sell/Route still count when the wallet signed and a wallet-owned
 # token balance changed.
-SWAP_LOG_RE = re.compile(
-    r"Instruction: (?:\w*Swap\w*|Buy\w*|Sell\w*|\w*Route\w*|Fill\w*|\w*Exact\w*In\w*|\w*Exact\w*Out\w*)|SwapEvent",
-    re.I,
-)
+_AUDITOR_SWAP_LOG_ATOMS = frozenset({
+    "swap", "buy", "sell", "route", "fill", "swapevent", "exactin", "exactout",
+})
+
+
+def _auditor_log_looks_like_swap(text):
+    """Word-atom scan. Not the app's SWAP_LIKE_LOG_RE."""
+    for line in str(text or "").splitlines():
+        tail = line.rsplit(":", 1)[-1] if ":" in line else line
+        atom = "".join(ch for ch in tail.lower() if ch.isalnum())
+        if any(token in atom for token in _AUDITOR_SWAP_LOG_ATOMS):
+            return True
+    return False
 SWAP_IX_NAME_RE = re.compile(
     r"^(?:\w*Swap\w*|Buy\w*|Sell\w*|\w*Route\w*|Fill\w*|\w*Exact\w*In\w*|\w*Exact\w*Out\w*)$",
     re.I,
@@ -1053,8 +1062,16 @@ def _jup_hop_children_ok(inners, start, owned, address, keys):
         if program in TOKEN_PROGRAMS:
             if not _hop_token_op_ok(instruction, owned, address, keys):
                 return False
-        elif program == SYSTEM and _system_transfer_from_wallet(instruction, address, keys):
-            return False
+        elif program == SYSTEM:
+            # Hop SOL movement is never a swap leg. Written as a dest/src pair
+            # check, not the app's from-wallet helper.
+            parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
+            info = parsed.get("info") if isinstance(parsed, dict) else None
+            if isinstance(info, dict) and (
+                info.get("source") == address or info.get("destination") == address
+            ):
+                return False
+            return False if _system_transfer_from_wallet(instruction, address, keys) else True
     return True
 
 
@@ -1089,6 +1106,24 @@ def _jupiter_hop_inner_ok(raw, address, keys):
             if not _jup_hop_children_ok(inners, idx + 1, owned, address, keys):
                 return False
     return True
+
+
+def _auditor_unknown_inner_touches_wallet(raw, address, keys):
+    """True when a nested non-reviewed program touches wallet assets.
+
+    Uses `_iter_instructions` (not the app's inner-group loop).
+    """
+    accounts = _token_accounts(raw, address, keys)
+    wallet_assets = {address, *accounts}
+    for _outer, _path, instruction, nested in _iter_instructions(raw):
+        if not nested:
+            continue
+        program = _program(instruction, keys)
+        if not program or program in REVIEWED_INNER_PROGRAMS:
+            continue
+        if _touched_accounts(instruction, keys).intersection(wallet_assets):
+            return True
+    return False
 
 
 def _net_balance_unknown_inner_blocks(raw, keys, address):
@@ -1356,8 +1391,7 @@ def _route_cpi_wallet_flows(raw, address, keys):
                         continue
                     source, dest, lamports = leg
                     if dest in owned and source not in owned:
-                        sol += lamports
-                        saw = True
+                        continue
                     elif source in owned and dest not in owned:
                         sol -= lamports
                         saw = True
@@ -1409,9 +1443,53 @@ def _route_cpi_wallet_flows(raw, address, keys):
     return saw, sol, tokens
 
 
+def _auditor_prop_amm_native_taken(raw, keys):
+    """SOL that appeared on unknown-inner *program* pubkeys.
+
+    Balance-sheet over program ids only — not the app's hop-account walk.
+    """
+    if not isinstance(raw, dict) or not keys:
+        return Decimal("0")
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    programs = set()
+    for group in meta.get("innerInstructions") or []:
+        if not isinstance(group, dict):
+            continue
+        for instruction in group.get("instructions") or []:
+            if not isinstance(instruction, dict) or instruction.get("stackHeight") != 2:
+                continue
+            program = _program(instruction, keys)
+            if program and program not in _INNER_INFRA:
+                programs.add(program)
+    if not programs:
+        return Decimal("0")
+    pre = meta.get("preBalances") or []
+    post = meta.get("postBalances") or []
+    taken = Decimal("0")
+    for index, account in enumerate(keys):
+        if account not in programs or index >= len(pre) or index >= len(post):
+            continue
+        try:
+            delta = Decimal(str(post[index])) - Decimal(str(pre[index]))
+        except (InvalidOperation, ValueError, TypeError, OverflowError):
+            continue
+        if delta > 0:
+            taken += delta
+    return taken
+
+
 def _route_cpi_disagrees_with_wallet(raw, address, keys):
     """Fail closed when route CPI sums disagree with wallet balance deltas."""
     saw, cpi_sol, cpi_tokens = _route_cpi_wallet_flows(raw, address, keys)
+    taken = _auditor_prop_amm_native_taken(raw, keys)
+    if taken:
+        cpi_sol -= taken
+        saw = True
+        # taken is raw hop-program lamports; `_native_delta` already added fee.
+        meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+        fee = meta.get("fee") if isinstance(meta.get("fee"), int) else 0
+        if keys and keys[0] == address and fee:
+            cpi_sol += Decimal(fee)
     if not saw:
         return True
     token_deltas, _pre, _post = _owned_token_deltas(raw, address)
@@ -1424,9 +1502,18 @@ def _route_cpi_disagrees_with_wallet(raw, address, keys):
     if abs(settlement) <= NET_BALANCE_SOL_DUST_LAMPORTS:
         settlement = Decimal("0")
     cpi_sol += cpi_tokens.pop(WSOL, Decimal("0"))
+    # Unknown hop with native SOL and no program-account take is not a swap leg.
+    if (
+        taken == 0
+        and settlement != 0
+        and cpi_sol == 0
+        and _auditor_unknown_inner_touches_wallet(raw, address, keys)
+        and _jupiter_hop_inner_ok(raw, address, keys)
+    ):
+        return True
     # Extra tips make settlement more negative. Fail only when the wallet
     # net is more profitable than the route CPI sum.
-    if settlement > cpi_sol + NET_BALANCE_COST_SOL_LAMPORTS:
+    if settlement > cpi_sol:
         return True
     for mint in set(cpi_tokens) | set(token_deltas):
         if mint in (None, WSOL):
@@ -1434,6 +1521,25 @@ def _route_cpi_disagrees_with_wallet(raw, address, keys):
         wallet_qty = token_deltas.get(mint, Decimal("0"))
         route_qty = cpi_tokens.get(mint, Decimal("0"))
         if wallet_qty > route_qty + Decimal("1"):
+            return True
+    return False
+
+
+def _auditor_system_credit_to_wallet(raw, address, keys):
+    """True when any System transfer credits the wallet.
+
+    Distinct from the app's route-account set: this is a flat scan of every
+    parsed/compiled System transfer. Unwrap is closeAccount, not System.
+    """
+    owned = _lifecycle_owned_accounts(raw, address, keys)
+    for _outer, _path, instruction, _nested in _iter_instructions(raw):
+        if _program(instruction, keys) != SYSTEM:
+            continue
+        leg = _system_transfer_leg(instruction, keys)
+        if not leg:
+            continue
+        source, dest, _lamports = leg
+        if dest in owned and source not in owned:
             return True
     return False
 
@@ -1459,6 +1565,8 @@ def _net_balance_reconstruct(raw, address, keys):
         return None
     if _route_cpi_disagrees_with_wallet(raw, address, keys):
         return None
+    if _auditor_system_credit_to_wallet(raw, address, keys):
+        return None
     inner_venues = _net_inner_venues(raw, keys, program)
     accounts = _token_accounts(raw, address, keys)
     native, paid = _native_delta(raw, address, keys)
@@ -1475,7 +1583,7 @@ def _net_balance_reconstruct(raw, address, keys):
     if (
         other_funding <= 0
         and len(others) >= 2
-        and settlement != 0
+        and settlement < 0
         and abs(settlement) <= NET_BALANCE_COST_SOL_LAMPORTS
     ):
         settlement = Decimal("0")
@@ -1839,6 +1947,14 @@ def _fifo_timestamp_in_window(timestamp):
 
 
 def _losing_drop(mint, pnl, asset, timestamp, reason):
+    # DC-10: a missing timestamp stays fail-closed with the original reason.
+    if timestamp is None:
+        return {
+            "mint": mint,
+            "timestamp": timestamp,
+            **_profit_fields(pnl, asset),
+            "reason": reason,
+        }
     in_window = _fifo_timestamp_in_window(timestamp)
     return {
         "mint": mint,
@@ -2237,7 +2353,7 @@ def _has_lp_signal(body, meta):
 
 def _has_swap_signal(body, pubkeys, meta, changed):
     logs = " ".join(meta.get("logMessages") or [])
-    swap_log = bool(SWAP_LOG_RE.search(logs))
+    swap_log = _auditor_log_looks_like_swap(logs)
     swap_ix = False
     saw_reviewed = False
     for ix in _all_instructions(body, meta):
@@ -2409,7 +2525,10 @@ def _auditor_block_time(record, raw):
 
 
 def _auditor_touched_mints(raw, address):
-    """Independent mint-set reader. None means the set cannot be proved."""
+    """Owner-field mint set. Does not use the app's key-index path.
+
+    Wallet-not-in-keys still reads owner rows. Malformed rows return None.
+    """
     if not isinstance(raw, dict) or not address:
         return None
     meta = raw.get("meta")
@@ -2419,28 +2538,31 @@ def _auditor_touched_mints(raw, address):
     post_token = meta.get("postTokenBalances")
     if not isinstance(pre_token, list) or not isinstance(post_token, list):
         return None
-    for row in (*pre_token, *post_token):
-        if not isinstance(row, dict):
-            return None
-        amount = (row.get("uiTokenAmount") or {}).get("amount")
-        if row.get("mint") in (None, "") or amount in (None, ""):
-            return None
+    pre, post = {}, {}
+    for rows, dest in ((pre_token, pre), (post_token, post)):
+        for row in rows:
+            if not isinstance(row, dict):
+                return None
+            amount = (row.get("uiTokenAmount") or {}).get("amount")
+            mint = row.get("mint")
+            if mint in (None, "") or amount in (None, ""):
+                return None
+            if row.get("owner") != address:
+                continue
+            try:
+                dest[mint] = dest.get(mint, Decimal("0")) + Decimal(str(amount))
+            except (InvalidOperation, ValueError, TypeError, OverflowError):
+                return None
+    touched = {mint for mint in set(pre) | set(post) if pre.get(mint, Decimal("0")) != post.get(mint, Decimal("0"))}
     keys = _keys(raw)
-    if address not in keys:
-        return None
-    index = keys.index(address)
-    pre_native = meta.get("preBalances")
-    post_native = meta.get("postBalances")
-    if not isinstance(pre_native, list) or not isinstance(post_native, list):
-        return None
-    if index >= len(pre_native) or index >= len(post_native):
-        return None
-    token_deltas, _pre, _post = _owned_token_deltas(raw, address)
-    touched = {mint for mint, qty in token_deltas.items() if qty != 0}
-    native, _paid = _native_delta(raw, address, keys)
-    wsol = token_deltas.get(WSOL, Decimal("0"))
-    if native + wsol != 0:
-        touched.add("SOL")
+    if address in keys:
+        native, _paid = _native_delta(raw, address, keys)
+        wsol = Decimal("0")
+        token_deltas, _pre, _post = _owned_token_deltas(raw, address)
+        wsol = token_deltas.get(WSOL, Decimal("0"))
+        if native + wsol != 0:
+            touched.add("SOL")
+        touched.update(mint for mint, qty in token_deltas.items() if qty != 0)
     return frozenset(touched)
 
 
@@ -2520,19 +2642,39 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
         mints = _auditor_touched_mints(raw, address)
         reconstructed = by_sig.get(signature) or []
         swap_like = _auditor_swap_like(raw, address, reconstructed)
-        reasons = []
+        meta = raw.get("meta") if isinstance(raw, dict) else {}
+        failed = isinstance(meta, dict) and meta.get("err") is not None
         in_report = timestamp is not None and start <= timestamp < end
         before_end = timestamp is not None and timestamp < end
-        outside = timestamp is not None and not in_report
-        if timestamp is None:
-            reasons.append("unknown_timestamp")
-        if in_report and swap_like:
-            reasons.append("in_window_swap_like")
-        if before_end and mints is not None and (mints - AUDITOR_QUOTE_MINTS) & lineage:
-            reasons.append("lineage_touch")
-        if (outside or timestamp is None) and mints is None:
-            reasons.append("unreadable_unknown_mints")
-        if not reasons:
+        # Independent include rule (not the app reason ladder):
+        # failed txs are idle; reconstructed always; swap-like only in-window
+        # (out-of-window non-lineage swaps stay out); lineage / unknown mints
+        # / in-window unexplained native still enter.
+        include = False
+        if failed:
+            include = False
+        elif reconstructed:
+            include = True
+        elif in_report and swap_like:
+            include = True
+        elif timestamp is None:
+            include = True
+        elif before_end and mints is not None and (mints - AUDITOR_QUOTE_MINTS) & lineage:
+            include = True
+        elif mints is None:
+            include = True
+        elif in_report and mints - AUDITOR_QUOTE_MINTS:
+            include = True
+        elif in_report and "SOL" in mints:
+            keys = _keys(raw) if isinstance(raw, dict) else []
+            native, _paid = _native_delta(raw, address, keys) if keys else (Decimal("0"), False)
+            try:
+                fee = Decimal(str((meta or {}).get("fee") or 0))
+            except (InvalidOperation, ValueError, TypeError, OverflowError):
+                fee = Decimal("0")
+            if native + fee != 0:
+                include = True
+        if not include:
             continue
         signatures.append(signature)
         if reconstructed:
@@ -2545,7 +2687,8 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
                     decoded_value["USDT"] += abs(Decimal(str(trade["consideration_usdt"])))
                 elif trade.get("consideration_sol") not in (None, ""):
                     decoded_value["SOL"] += abs(Decimal(str(trade["consideration_sol"])))
-        elif swap_like or mints is None:
+        else:
+            # DC-2: every included row is counted, including lineage-only.
             unsupported_n += 1
             token_deltas, _pre, _post = _owned_token_deltas(raw, address) if isinstance(raw, dict) else ({}, {}, {})
             usdc = abs(token_deltas.get(USDC, Decimal("0")))

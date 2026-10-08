@@ -28,6 +28,7 @@ from scanner.mass_search.qualification_gates import (
     raw_economic_trades_by_utc_day,
 )
 from scanner.mass_search.record_breakdown import partition_records
+from scanner.mass_search.result_relevant_coverage import build_result_relevant
 from scanner.mass_search.seed_sources import (
     _dex_trade_timestamp,
     dex_trades_per_utc_day,
@@ -429,13 +430,19 @@ def test_d377_1_usdt_dust_cannot_raise_coverage():
         })
     start = datetime.fromtimestamp(stamp - 3600, tz=timezone.utc).isoformat()
     end = datetime.fromtimestamp(stamp + 4000, tz=timezone.utc).isoformat()
-    breakdown = partition_records(records, {"events": decoded, "unresolved": []}, wallet, window_start=start, window_end=end)
+    decoded_blob = {"events": decoded, "unresolved": []}
+    breakdown = partition_records(records, decoded_blob, wallet, window_start=start, window_end=end)
+    breakdown["result_relevant"] = build_result_relevant(
+        records, decoded_blob, wallet, report_start=start, report_end=end,
+        ledger=[{"mint": MINT}],
+    )
     shares = breakdown["unsupported_swap_share_in_window"]["by_consideration"]
     assert "SOL" in shares
     assert Decimal(str(shares["SOL"])) > Decimal("0")
     gate = mandatory_coverage_gate({"record_breakdown": breakdown}, min_share=Decimal("0.95"))
     assert gate.get("passed") is not True
     cov = coverage_shares({"record_breakdown": breakdown})
+    assert cov["value_share"] is not None
     assert cov["value_share"] < Decimal("0.99")
 
 

@@ -15,7 +15,7 @@ to R can only lower coverage. PRODUCT_READY stays false.
 """
 from __future__ import annotations
 
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 from scanner.mass_search.canonical_records import unwrap_gta_record
 from scanner.mass_search.record_breakdown import (
@@ -79,8 +79,13 @@ def _in_report(timestamp, start, end):
     )
 
 
-def wallet_touched_mints(raw, address):
-    """Owned mints with a nonzero wallet delta, or None if unreadably ambiguous."""
+def _tx_failed(raw):
+    meta = raw.get("meta") if isinstance(raw, dict) else None
+    return isinstance(meta, dict) and meta.get("err") is not None
+
+
+def _owner_token_maps(raw, address):
+    """Owner-keyed mint→amount maps. None if any token row is unreadable."""
     if not isinstance(raw, dict) or not address:
         return None
     meta = raw.get("meta")
@@ -90,24 +95,84 @@ def wallet_touched_mints(raw, address):
     post_token = meta.get("postTokenBalances")
     if not isinstance(pre_token, list) or not isinstance(post_token, list):
         return None
-    for row in (*pre_token, *post_token):
-        if not isinstance(row, dict):
-            return None
-        amount = (row.get("uiTokenAmount") or {}).get("amount")
-        if row.get("mint") in (None, "") or amount in (None, ""):
-            return None
-    keys = _account_keys(raw)
-    if address not in keys:
+    pre, post = {}, {}
+    for sign, rows, dest in ((-1, pre_token, pre), (1, post_token, post)):
+        del sign
+        for row in rows:
+            if not isinstance(row, dict):
+                return None
+            amount = (row.get("uiTokenAmount") or {}).get("amount")
+            mint = row.get("mint")
+            if mint in (None, "") or amount in (None, ""):
+                return None
+            if row.get("owner") != address:
+                continue
+            try:
+                dest[mint] = dest.get(mint, Decimal("0")) + Decimal(str(amount))
+            except (InvalidOperation, ValueError, TypeError, OverflowError):
+                return None
+    return pre, post
+
+
+def wallet_touched_mints(raw, address):
+    """Owned mints with a nonzero wallet delta, or None if unreadably ambiguous.
+
+    Wallet-not-in-keys still reads owner-keyed token rows (keeper fills and
+    ATA airdrops). Native SOL is only visible when the wallet is in keys.
+    Malformed token rows stay None (fail closed).
+    """
+    maps = _owner_token_maps(raw, address)
+    if maps is None:
         return None
-    index = keys.index(address)
+    pre, post = maps
+    touched = {mint for mint in set(pre) | set(post) if pre.get(mint, Decimal("0")) != post.get(mint, Decimal("0"))}
+    keys = _account_keys(raw) if isinstance(raw, dict) else []
+    if address in keys:
+        try:
+            deltas = _owned_asset_deltas(raw, address, keys)
+        except Exception:
+            return None
+        return frozenset(mint for mint, qty in deltas.items() if qty != 0)
+    return frozenset(touched)
+
+
+def _native_unexplained_by_fee(raw, address, keys):
+    """True when native SOL movement is not exactly the paid meta.fee."""
+    if address not in (keys or []):
+        return False
+    meta = raw.get("meta") if isinstance(raw, dict) else {}
+    if not isinstance(meta, dict):
+        return True
     pre_native = meta.get("preBalances")
     post_native = meta.get("postBalances")
     if not isinstance(pre_native, list) or not isinstance(post_native, list):
-        return None
+        return True
+    index = keys.index(address)
     if index >= len(pre_native) or index >= len(post_native):
-        return None
-    deltas = _owned_asset_deltas(raw, address, keys)
-    return frozenset(mint for mint, qty in deltas.items() if qty != 0)
+        return True
+    try:
+        delta = Decimal(str(post_native[index])) - Decimal(str(pre_native[index]))
+        fee = Decimal(str(meta.get("fee") or 0))
+    except Exception:
+        return True
+    return delta + fee != 0
+
+
+def _positively_non_economic(raw, address, keys, mints, swap_like, decoded_kinds):
+    """True only when the tx is proved idle (fee-only, failed, or zero deltas)."""
+    if _tx_failed(raw):
+        return True
+    if swap_like or decoded_kinds:
+        return False
+    if mints is None:
+        return False
+    if mints - QUOTE_MINTS:
+        return False
+    if "SOL" in (mints or ()) and _native_unexplained_by_fee(raw, address, keys):
+        return False
+    if any(mint in (USDC, USDT, WSOL) for mint in (mints or ())):
+        return False
+    return True
 
 
 def lineage_mints(*, decoded_events=None, episodes=None, ledger=None, report_start=None, report_end=None):
@@ -169,6 +234,7 @@ def relevant_membership(records, decoded, address, *, report_start, report_end, 
         mints = wallet_touched_mints(raw, address)
         swap_like = _swap_like(raw, address, keys, kinds)
         reasons = []
+        failed = _tx_failed(raw)
         in_report = _in_report(timestamp, start, end)
         before_end = timestamp is not None and (end is None or timestamp < end)
         outside = timestamp is not None and start is not None and end is not None and not in_report
@@ -180,8 +246,18 @@ def relevant_membership(records, decoded, address, *, report_start, report_end, 
             reasons.append("in_window_swap_like")
         if before_end and mints is not None and (mints - QUOTE_MINTS) & set(lineage):
             reasons.append("lineage_touch")
-        if (outside or timestamp is None) and mints is None:
-            reasons.append("unreadable_unknown_mints")
+        # DC-1: any in-window tx that touches the wallet and is not proved
+        # non-economic is unreadable. Failed txs are non-economic.
+        if in_report and not failed and not _positively_non_economic(
+            raw, address, keys, mints, swap_like, kinds,
+        ):
+            if "in_window_swap_like" not in reasons:
+                reasons.append("unreadable_in_window")
+        # Unknown mint sets stay in R except out-of-window spam that is
+        # proved idle or whose mints are known and not lineage (DC-11).
+        if mints is None and not failed and (outside or timestamp is None or in_report):
+            if "unreadable_in_window" not in reasons and "in_window_swap_like" not in reasons:
+                reasons.append("unreadable_unknown_mints")
         in_r = bool(reasons)
         rows.append({
             "signature": signature,
@@ -253,9 +329,7 @@ def coverage_over_relevant(records, decoded, address, membership):
         keys = _account_keys(raw) if isinstance(raw, dict) else []
         kinds = member.get("decoded_kinds") or []
         decoded_trade = any(kind in ("buy", "sell", "conversion") for kind in kinds)
-        unreadable = not member.get("mints_known")
-        if not (decoded_trade or member.get("swap_like") or unreadable):
-            continue
+        # DC-2: every member of R is counted. Lineage-only rows are unsupported.
         event = (decoded_by_sig.get(signature) or [None])[0]
         legs = _consideration_legs(raw, address, keys, event)
         if decoded_trade:
