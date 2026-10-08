@@ -864,6 +864,12 @@ def replay_cached_history_to_report(
             "shortlist_rank": 1,
             "visible_report": False,
         }
+        from .result_relevant_coverage import attach_result_relevant
+        attach_result_relevant(
+            report, wrapped, decoded, address,
+            report_start=window_start,
+            report_end=window_end,
+        )
         store.put("reports", report["id"], report)
         return {
             "run_id": run["run_id"],
@@ -1034,6 +1040,13 @@ def replay_cached_history_to_report(
     report["in_window_swaps"] = breakdown["in_window_swaps"]
     report["unsupported_swap_share_in_window"] = breakdown["unsupported_swap_share_in_window"]
     report["in_window_span"] = breakdown["in_window_span"]
+    from .result_relevant_coverage import attach_result_relevant
+    attach_result_relevant(
+        report, wrapped, decoded, address,
+        report_start=window_start,
+        report_end=window_end,
+        episodes=episodes,
+    )
     report["conversions"] = [row for row in (decoded.get("events") or []) if row.get("kind") == "conversion"]
     report["visible_report"] = visible_report_allowed(
         worksheet=production or worksheet,

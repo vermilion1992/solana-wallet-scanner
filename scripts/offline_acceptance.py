@@ -63,6 +63,7 @@ MANDATORY = [
     "tests/test_jup6_hop_and_fifo_window.py",
     "tests/test_router_review_pack.py",
     "tests/test_d377_verify_fixes.py",
+    "tests/test_result_relevant_coverage.py",
 ]
 FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL", "NANSEN_API_KEY")
 

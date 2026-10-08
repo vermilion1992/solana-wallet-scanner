@@ -2378,6 +2378,222 @@ def episode_net_totals(episodes):
     return None, "mixed", canonical
 
 
+AUDITOR_COVERAGE_GATE_VERSION = "result-relevant-v1"
+AUDITOR_QUOTE_MINTS = frozenset({WSOL, USDC, USDT, "SOL"})
+
+
+def _auditor_record_signature(record, raw):
+    signature = record.get("signature") if isinstance(record, dict) else None
+    if isinstance(raw, dict):
+        signature = signature or raw.get("signature")
+        tx = raw.get("transaction") if isinstance(raw.get("transaction"), dict) else {}
+        sigs = tx.get("signatures") or []
+        if not signature and sigs:
+            signature = sigs[0]
+    return signature
+
+
+def _auditor_block_time(record, raw):
+    for source in (raw, record):
+        if not isinstance(source, dict):
+            continue
+        stamp = source.get("blockTime")
+        if isinstance(stamp, (int, float)) and not isinstance(stamp, bool):
+            return int(stamp)
+    return None
+
+
+def _auditor_touched_mints(raw, address):
+    """Independent mint-set reader. None means the set cannot be proved."""
+    if not isinstance(raw, dict) or not address:
+        return None
+    meta = raw.get("meta")
+    if not isinstance(meta, dict):
+        return None
+    pre_token = meta.get("preTokenBalances")
+    post_token = meta.get("postTokenBalances")
+    if not isinstance(pre_token, list) or not isinstance(post_token, list):
+        return None
+    for row in (*pre_token, *post_token):
+        if not isinstance(row, dict):
+            return None
+        amount = (row.get("uiTokenAmount") or {}).get("amount")
+        if row.get("mint") in (None, "") or amount in (None, ""):
+            return None
+    keys = _keys(raw)
+    if address not in keys:
+        return None
+    index = keys.index(address)
+    pre_native = meta.get("preBalances")
+    post_native = meta.get("postBalances")
+    if not isinstance(pre_native, list) or not isinstance(post_native, list):
+        return None
+    if index >= len(pre_native) or index >= len(post_native):
+        return None
+    token_deltas, _pre, _post = _owned_token_deltas(raw, address)
+    touched = {mint for mint, qty in token_deltas.items() if qty != 0}
+    native, _paid = _native_delta(raw, address, keys)
+    wsol = token_deltas.get(WSOL, Decimal("0"))
+    if native + wsol != 0:
+        touched.add("SOL")
+    return frozenset(touched)
+
+
+def _auditor_has_non_infra_outer(raw, keys):
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    for instruction in message.get("instructions") or []:
+        if not isinstance(instruction, dict):
+            continue
+        program = _program(instruction, keys)
+        if program and program not in _INNER_INFRA:
+            return True
+    return False
+
+
+def _auditor_opposite_deltas(raw, address, keys):
+    token_deltas, _pre, _post = _owned_token_deltas(raw, address)
+    native, _paid = _native_delta(raw, address, keys)
+    wsol = token_deltas.pop(WSOL, Decimal("0"))
+    sol = native + wsol
+    deltas = dict(token_deltas)
+    if sol != 0:
+        deltas["SOL"] = sol
+    positives = [mint for mint, qty in deltas.items() if qty > 0]
+    negatives = [mint for mint, qty in deltas.items() if qty < 0]
+    return bool(positives and negatives)
+
+
+def _auditor_swap_like(raw, address, reconstructed):
+    if reconstructed:
+        return True
+    if not isinstance(raw, dict):
+        return False
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    if meta.get("err") is not None:
+        return False
+    keys = _keys(raw)
+    return _auditor_has_non_infra_outer(raw, keys) and _auditor_opposite_deltas(raw, address, keys)
+
+
+def _auditor_lineage_mints(trades, episodes, report_start, report_end):
+    lineage = set()
+    for trade in trades or []:
+        mint = trade.get("mint")
+        if not mint or mint in AUDITOR_QUOTE_MINTS:
+            continue
+        if trade.get("kind") not in ("sell", "flatten"):
+            continue
+        timestamp = trade.get("timestamp")
+        if timestamp is not None and report_start <= timestamp < report_end:
+            lineage.add(mint)
+    for item in episodes or []:
+        mint = item.get("mint")
+        if mint and mint not in AUDITOR_QUOTE_MINTS:
+            lineage.add(mint)
+    return frozenset(lineage)
+
+
+def result_relevant_coverage(address, records, trades, episodes, report_start=None, report_end=None):
+    """Independent R. Sums reconstructed trades vs unreadables; does not import the app."""
+    start = REPORT_START if report_start is None else report_start
+    end = REPORT_END if report_end is None else report_end
+    by_sig = {}
+    for trade in trades or []:
+        signature = trade.get("signature")
+        if signature:
+            by_sig.setdefault(signature, []).append(trade)
+    lineage = _auditor_lineage_mints(trades, episodes, start, end)
+    signatures = []
+    decoded_n = 0
+    unsupported_n = 0
+    decoded_value = {"SOL": Decimal("0"), "USDC": Decimal("0"), "USDT": Decimal("0")}
+    unsupported_value = {"SOL": Decimal("0"), "USDC": Decimal("0"), "USDT": Decimal("0")}
+    for record in records or []:
+        raw = _unwrap(record)
+        signature = _auditor_record_signature(record, raw)
+        timestamp = _auditor_block_time(record, raw)
+        mints = _auditor_touched_mints(raw, address)
+        reconstructed = by_sig.get(signature) or []
+        swap_like = _auditor_swap_like(raw, address, reconstructed)
+        reasons = []
+        in_report = timestamp is not None and start <= timestamp < end
+        before_end = timestamp is not None and timestamp < end
+        outside = timestamp is not None and not in_report
+        if timestamp is None:
+            reasons.append("unknown_timestamp")
+        if in_report and swap_like:
+            reasons.append("in_window_swap_like")
+        if before_end and mints is not None and (mints - AUDITOR_QUOTE_MINTS) & lineage:
+            reasons.append("lineage_touch")
+        if (outside or timestamp is None) and mints is None:
+            reasons.append("unreadable_unknown_mints")
+        if not reasons:
+            continue
+        signatures.append(signature)
+        if reconstructed:
+            decoded_n += 1
+            for trade in reconstructed[:1]:
+                asset = trade.get("settlement_asset") or "SOL"
+                if asset == "USDC" and trade.get("consideration_usdc") not in (None, ""):
+                    decoded_value["USDC"] += abs(Decimal(str(trade["consideration_usdc"])))
+                elif asset == "USDT" and trade.get("consideration_usdt") not in (None, ""):
+                    decoded_value["USDT"] += abs(Decimal(str(trade["consideration_usdt"])))
+                elif trade.get("consideration_sol") not in (None, ""):
+                    decoded_value["SOL"] += abs(Decimal(str(trade["consideration_sol"])))
+        elif swap_like or mints is None:
+            unsupported_n += 1
+            token_deltas, _pre, _post = _owned_token_deltas(raw, address) if isinstance(raw, dict) else ({}, {}, {})
+            usdc = abs(token_deltas.get(USDC, Decimal("0")))
+            usdt = abs(token_deltas.get(USDT, Decimal("0")))
+            native, _paid = _native_delta(raw, address, _keys(raw)) if isinstance(raw, dict) else (Decimal("0"), False)
+            wsol = token_deltas.get(WSOL, Decimal("0"))
+            sol = abs(native + wsol) / LAMPORTS
+            if usdc >= Decimal("1000000"):
+                unsupported_value["USDC"] += usdc / Decimal("1000000")
+            if usdt >= Decimal("1000000"):
+                unsupported_value["USDT"] += usdt / Decimal("1000000")
+            if sol > Decimal("0.003"):
+                unsupported_value["SOL"] += sol
+    denom = decoded_n + unsupported_n
+    empty = not signatures or denom == 0
+    by_count = None if not denom else _canonical(Decimal(unsupported_n) / Decimal(denom))
+    by_consideration = {}
+    value_shares = []
+    for asset in ("SOL", "USDC", "USDT"):
+        total = decoded_value[asset] + unsupported_value[asset]
+        if total:
+            share = unsupported_value[asset] / total
+            by_consideration[asset] = _canonical(share)
+            value_shares.append(Decimal("1") - share)
+    count_share = None if by_count is None else Decimal("1") - Decimal(str(by_count))
+    value_share = min(value_shares) if value_shares else None
+    gate_passed = (
+        not empty
+        and count_share is not None
+        and value_share is not None
+        and count_share >= Decimal("0.99")
+        and value_share >= Decimal("0.99")
+    )
+    return {
+        "version": AUDITOR_COVERAGE_GATE_VERSION,
+        "signatures": [item for item in signatures if item],
+        "size": len([item for item in signatures if item]),
+        "empty": empty,
+        "lineage_mints": sorted(lineage),
+        "unsupported_swap_share": {"by_count": by_count, "by_consideration": by_consideration},
+        "coverage_count_share": None if empty else _canonical(count_share) if count_share is not None else None,
+        "coverage_value_share": None if empty else _canonical(value_share) if value_share is not None else None,
+        "count_share": None if empty else count_share,
+        "value_share": None if empty else value_share,
+        "gate_passed": gate_passed,
+        "decoded_n": decoded_n,
+        "unsupported_n": unsupported_n,
+        "denominator": denom,
+        "method": "reconstructed_trades_vs_unreadables_and_owned_deltas",
+        "PRODUCT_READY": False,
+    }
+
+
 def audit_address(address, pages):
     records = _load_pages(address, pages)
     trades = []
@@ -2409,6 +2625,7 @@ def audit_address(address, pages):
     by_day = combined_economic_trades_by_utc_day(trades, records, address)
     max_day = max(by_day.values()) if by_day else 0
     max_on = max(by_day, key=lambda item: (by_day[item], item)) if by_day else None
+    relevant = result_relevant_coverage(address, records, trades, episodes)
     return {
         "address": address,
         "records": len(records),
@@ -2428,6 +2645,7 @@ def audit_address(address, pages):
         "known_cost_sales": known_sales,
         "episodes": episodes,
         "reconstructed_mints": reconstructed_mints,
+        "result_relevant": relevant,
         "imports_scanner": False,
         "source": "raw_instructions_balances_ownership_pinned_interfaces",
         "PRODUCT_READY": False,

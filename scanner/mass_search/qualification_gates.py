@@ -17,7 +17,7 @@ from statistics import median
 
 ACCOUNTING_POLICY_VERSION = (
     "completed-episode-ledger-v1+asset-atomic-v1+coverage-count-and-value-v1+"
-    "audit-1to1-v1"
+    "audit-1to1-v1+result-relevant-coverage-v1"
 )
 
 # Asset-specific atomic units. Tolerances are integer atomics, then converted.
@@ -548,16 +548,11 @@ def bindable_independent_audit(audit, fingerprint, ledger=None):
     return bound
 
 
-def coverage_shares(report, profile=None):
-    """Count and value coverage. Denominator includes unsupported suspected trading."""
-    breakdown = (report or {}).get("record_breakdown") or {}
-    shares = breakdown.get("unsupported_swap_share_in_window") or {}
-    if not shares and profile:
-        shares = profile.get("unsupported_swap_share_in_window") or {}
-    by_count = _decimal(shares.get("by_count"))
+def _shares_from_unsupported(shares):
+    by_count = _decimal((shares or {}).get("by_count"))
     count_share = (Decimal("1") - by_count) if by_count is not None else None
     value_coverages = []
-    for value in (shares.get("by_consideration") or {}).values():
+    for value in ((shares or {}).get("by_consideration") or {}).values():
         amount = _decimal(value)
         if amount is not None:
             value_coverages.append(Decimal("1") - amount)
@@ -565,16 +560,68 @@ def coverage_shares(report, profile=None):
     mandatory = None
     if count_share is not None and value_share is not None:
         mandatory = min(count_share, value_share)
-    elif count_share is not None:
-        mandatory = None
+    return count_share, value_share, mandatory
+
+
+def coverage_shares(report, profile=None):
+    """Count and value coverage. Gate uses result-relevant R when present.
+
+    Whole-span shares stay on the report so old and new numbers are never mixed.
+    Missing value coverage is not treated as 100%. Empty R blocks.
+    """
+    from scanner.mass_search.result_relevant_coverage import COVERAGE_GATE_VERSION
+
+    breakdown = (report or {}).get("record_breakdown") or {}
+    whole = breakdown.get("unsupported_swap_share_in_window") or {}
+    if not whole and profile:
+        whole = profile.get("unsupported_swap_share_in_window") or {}
+    whole_count, whole_value, whole_mandatory = _shares_from_unsupported(whole)
+    relevant = (
+        breakdown.get("result_relevant")
+        or (report or {}).get("result_relevant")
+        or (profile or {}).get("result_relevant")
+    )
+    if relevant is not None:
+        if relevant.get("empty") or relevant.get("size") == 0 or relevant.get("denominator") == 0:
+            count_share = value_share = mandatory = None
+        else:
+            count_share, value_share, mandatory = _shares_from_unsupported(
+                relevant.get("unsupported_swap_share") or relevant
+            )
+            if relevant.get("count_share") is not None:
+                count_share = _decimal(relevant.get("count_share"))
+            if relevant.get("value_share") is not None:
+                value_share = _decimal(relevant.get("value_share"))
+            if count_share is not None and value_share is not None:
+                mandatory = min(count_share, value_share)
+        version = relevant.get("version") or COVERAGE_GATE_VERSION
+        return {
+            "coverage_count_share": _display_decimal(count_share),
+            "coverage_value_share": _display_decimal(value_share),
+            "coverage_mandatory_share": _display_decimal(mandatory),
+            "coverage_historical_share": None,
+            "coverage_count_share_whole_span": _display_decimal(whole_count),
+            "coverage_value_share_whole_span": _display_decimal(whole_value),
+            "coverage_mandatory_share_whole_span": _display_decimal(whole_mandatory),
+            "coverage_gate_version": version,
+            "result_relevant_size": relevant.get("size"),
+            "result_relevant_lineage_mints": list(relevant.get("lineage_mints") or []),
+            "count_share": count_share,
+            "value_share": value_share,
+            "mandatory_share": mandatory,
+            "denominator_includes_unsupported_suspected_trading": True,
+        }
     return {
-        "coverage_count_share": _display_decimal(count_share),
-        "coverage_value_share": _display_decimal(value_share),
-        "coverage_mandatory_share": _display_decimal(mandatory),
+        "coverage_count_share": _display_decimal(whole_count),
+        "coverage_value_share": _display_decimal(whole_value),
+        "coverage_mandatory_share": _display_decimal(whole_mandatory),
         "coverage_historical_share": None,
-        "count_share": count_share,
-        "value_share": value_share,
-        "mandatory_share": mandatory,
+        "coverage_count_share_whole_span": _display_decimal(whole_count),
+        "coverage_value_share_whole_span": _display_decimal(whole_value),
+        "coverage_gate_version": None,
+        "count_share": whole_count,
+        "value_share": whole_value,
+        "mandatory_share": whole_mandatory,
         "denominator_includes_unsupported_suspected_trading": True,
     }
 
@@ -597,21 +644,48 @@ def mandatory_coverage_gate(report, profile=None, *, min_share=None):
     shares = coverage_shares(report, profile)
     count_share = shares["count_share"]
     value_share = shares["value_share"]
-    passed = (
-        count_share is not None
-        and value_share is not None
-        and count_share >= threshold
-        and value_share >= threshold
+    reason = None
+    relevant = (
+        ((report or {}).get("record_breakdown") or {}).get("result_relevant")
+        or (report or {}).get("result_relevant")
+        or (profile or {}).get("result_relevant")
     )
+    if relevant is not None and (relevant.get("empty") or relevant.get("size") == 0 or relevant.get("denominator") == 0):
+        passed = False
+        reason = "empty result-relevant set"
+    else:
+        passed = (
+            count_share is not None
+            and value_share is not None
+            and count_share >= threshold
+            and value_share >= threshold
+        )
+        if not passed:
+            reason = (
+                "coverage gate requires count AND value; missing value share"
+                if value_share is None or count_share is None
+                else "coverage gate requires count AND value"
+            )
+    audit = (report or {}).get("independent_audit") or {}
+    app_r = relevant
+    aud_r = audit.get("result_relevant") if isinstance(audit, dict) else None
+    if app_r is not None and aud_r is not None:
+        app_sigs = set(app_r.get("signatures") or [])
+        aud_sigs = set(aud_r.get("signatures") or [])
+        if app_sigs != aud_sigs:
+            passed = False
+            reason = "app and auditor disagree on result-relevant membership"
+        else:
+            app_pass = app_r.get("gate_passed")
+            aud_pass = aud_r.get("gate_passed")
+            if app_pass is not None and aud_pass is not None and bool(app_pass) != bool(aud_pass):
+                passed = False
+                reason = "app and auditor disagree on result-relevant pass/fail"
     return _json_safe_gate({
         **shares,
         "threshold": _display_decimal(threshold),
         "passed": passed,
-        "reason": None if passed else (
-            "coverage gate requires count AND value; missing value share"
-            if value_share is None or count_share is None
-            else "coverage gate requires count AND value"
-        ),
+        "reason": reason,
     })
 
 

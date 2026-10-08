@@ -895,6 +895,7 @@ def attach_live_independent_audit(report, profile, records, address):
             trades.append(event)
     episodes, unresolved, known_sales, omitted_losing = auditor._fifo(trades)
     net, unit, by_unit = auditor.episode_net_totals(episodes)
+    relevant = auditor.result_relevant_coverage(address, records, trades, episodes)
     ledger = list((profile or {}).get("completed_episode_ledger") or [])
     fingerprint = (profile or {}).get("audit_fingerprint")
     app_net = (profile or {}).get("completed_episode_net")
@@ -915,6 +916,7 @@ def attach_live_independent_audit(report, profile, records, address):
         "dropped_losers": bool(omitted_losing),
         "omitted_losing_all": omitted_losing,
         "reconstructed_trades": len(trades),
+        "result_relevant": relevant,
         "source": "live_phase4_independent_episode_audit",
         "economic_trades_by_utc_day": auditor.combined_economic_trades_by_utc_day(trades, records, address),
         "PRODUCT_READY": False,
@@ -1241,14 +1243,30 @@ def qualification_level(report, profile):
 def _coverage_fields(report):
     """Count and value stay separate; the mandatory gate is their conjunction."""
     shares = coverage_shares(report)
-    return {
+    fields = {
         "coverage_count_share": shares["coverage_count_share"],
         "coverage_value_share": shares["coverage_value_share"],
         "coverage_mandatory_share": shares["coverage_mandatory_share"],
         "coverage_historical_share": None,
         "decoder_coverage_share": shares["coverage_count_share"],
         "coverage_denominator_includes_unsupported_suspected_trading": True,
+        "coverage_gate_version": shares.get("coverage_gate_version"),
+        "coverage_count_share_whole_span": shares.get("coverage_count_share_whole_span"),
+        "coverage_value_share_whole_span": shares.get("coverage_value_share_whole_span"),
+        "result_relevant_size": shares.get("result_relevant_size"),
+        "result_relevant_lineage_mints": shares.get("result_relevant_lineage_mints"),
     }
+    relevant = ((report or {}).get("record_breakdown") or {}).get("result_relevant") or (report or {}).get("result_relevant")
+    if relevant is not None:
+        fields["result_relevant"] = {
+            "version": relevant.get("version"),
+            "size": relevant.get("size"),
+            "lineage_mints": list(relevant.get("lineage_mints") or []),
+            "signatures": list(relevant.get("signatures") or []),
+            "empty": relevant.get("empty"),
+            "gate_passed": relevant.get("gate_passed"),
+        }
+    return fields
 
 
 def _coverage_share(report):
