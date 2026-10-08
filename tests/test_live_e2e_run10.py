@@ -174,14 +174,32 @@ def test_d10_6_one_wallet_failure_does_not_block_phase4(tmp_path, monkeypatch):
         "phase2": {},
         "seed_metadata": {},
     }
-    real = L.replay_cached_history_to_report
-
     def boom(*args, **kwargs):
-        if kwargs.get("address") == big:
+        address = kwargs.get("address")
+        if address == big:
             raise sqlite3.DataError("string or blob too big")
-        return real(*args, **kwargs)
+        return {
+            "report": {
+                "id": f"stub-{address}",
+                "address": address,
+                "window": {"start": "2026-01-01T00:00:00Z", "end": "2026-10-01T00:00:00Z"},
+                "metrics": {},
+                "record_breakdown": {
+                    "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {}},
+                },
+            }
+        }
 
     monkeypatch.setattr(L, "replay_cached_history_to_report", boom)
+    monkeypatch.setattr(L, "decode_supported_swaps", lambda *args, **kwargs: {"events": [], "unresolved": []})
+    monkeypatch.setattr(L, "inject_undecoded_buy_taints", lambda decoded, *args, **kwargs: decoded)
+    monkeypatch.setattr(L, "build_research_profile", lambda *args, **kwargs: {
+        "qualification_level": "insufficient_evidence",
+        "completed_trades": 0,
+    })
+    monkeypatch.setattr(L, "attach_live_independent_audit", lambda *args, **kwargs: {
+        "status": "not_independently_audited",
+    })
     store = Store(tmp_path / "store")
     result = L.phase4_offline(store, cfg, state)
     store.close()
