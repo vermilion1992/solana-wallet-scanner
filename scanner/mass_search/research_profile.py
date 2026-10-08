@@ -1008,11 +1008,15 @@ def apply_blocked_headline_pnl(profile, report):
     profile["completed_episode_net_unit"] = None
     profile["scoped_pnl"] = None
     profile["scoped_pnl_unit"] = None
+    profile["scoped_pnl_by_quote_asset"] = {}
     profile["headline_includes_losing_episodes"] = False
     profile["headline_pnl_blocked"] = True
     if isinstance(report, dict):
         report["completed_episode_net"] = None
         report["completed_episode_net_unit"] = None
+        report["scoped_pnl"] = None
+        report["scoped_pnl_unit"] = None
+        report["scoped_pnl_by_quote_asset"] = {}
         report["headline_includes_losing_episodes"] = False
         report["headline_pnl_blocked"] = True
     return profile
@@ -2247,6 +2251,17 @@ def evaluate_thresholds(profile, thresholds):
             unset.append(key)
             continue
         if key in ("min_scoped_pnl_sol", "min_scoped_pnl_usdc"):
+            if profile.get("headline_pnl_blocked"):
+                results[key] = {
+                    "state": "FAIL",
+                    "passed": False,
+                    "applied": True,
+                    "actual": None,
+                    "threshold": str(raw),
+                    "note": "blocked or overstated headline cannot pass min P&L",
+                }
+                evaluated.append(key)
+                continue
             completed = int(profile.get("completed_known_cost_positions") or 0)
             if completed < 1:
                 results[key] = {

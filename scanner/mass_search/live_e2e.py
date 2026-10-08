@@ -75,6 +75,7 @@ from scanner.mass_search.adapters import (
     SourceError,
 )
 from scanner.mass_search.bundle_detect import detect_bundle_or_distribution
+from scanner.mass_search.canonical_records import canonical_decode_records
 from scanner.mass_search.capability import LIVE_AUTH_SCHEMA, redact_secrets, utc_now, validate_live_authorization
 from scanner.mass_search.evidence_integrity import redact_text, sanitize_jsonrpc_body, scrub_bytes
 from scanner.mass_search.g3_history import inject_undecoded_buy_taints
@@ -1172,9 +1173,10 @@ def assess_history_completeness(records, leftover_token, *, address, cap_truncat
     """
     stamp, pre = oldest_native_prebalance(records, address)
     created_in_range = pre == 0
-    # Helius can still return a pagination token after the wallet's first tx.
-    # Once first-funding is proven, no earlier history remains.
-    leftover = bool(leftover_token) and not created_in_range
+    # A leftover pagination token means Helius still has an earlier page.
+    # Native preBalance 0 never proves the start of history and never
+    # clears leftover.
+    leftover = bool(leftover_token)
     unknown = mints_sold_without_acquisition(records, address)
     base = {
         "wallet_created_in_range": created_in_range,
@@ -1185,11 +1187,11 @@ def assess_history_completeness(records, leftover_token, *, address, cap_truncat
     }
     if cap_truncated:
         return {**base, "history_complete": False, "history_complete_reason": "cap_truncated"}
-    if page_cap_hit and leftover:
+    if leftover and page_cap_hit:
         return {**base, "history_complete": False, "history_complete_reason": "page_cap_with_leftover_token"}
     if unknown:
         return {**base, "history_complete": False, "history_complete_reason": "unknown_basis_sale"}
-    if leftover and not created_in_range:
+    if leftover:
         return {
             **base,
             "history_complete": False,
@@ -1197,9 +1199,7 @@ def assess_history_completeness(records, leftover_token, *, address, cap_truncat
         }
     if created_in_range:
         return {**base, "history_complete": True, "history_complete_reason": "wallet_created_in_range"}
-    if not leftover:
-        return {**base, "history_complete": True, "history_complete_reason": "no_leftover_pagination_token"}
-    return {**base, "history_complete": False, "history_complete_reason": "unproven"}
+    return {**base, "history_complete": True, "history_complete_reason": "no_leftover_pagination_token"}
 
 
 def seed_counterparties_from_records(records, address):
@@ -2510,9 +2510,15 @@ def _nansen_timeout_was_billed(billing):
         return None
 
 
-def _nansen_call_stem(operation, wallet, page, identity):
+def _nansen_body_digest(body):
+    blob = json.dumps(body or {}, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+def _nansen_call_stem(operation, wallet, page, identity, body=None):
+    body_digest = _nansen_body_digest(body)
     digest = hashlib.sha256(
-        f"{identity}:{operation}:{wallet}:{page}".encode("utf-8")
+        f"{identity}:{operation}:{wallet}:{page}:{body_digest}".encode("utf-8")
     ).hexdigest()[:16]
     return f"{operation}-{digest}"
 
@@ -2525,9 +2531,9 @@ def _nansen_parse_rows(path, body):
     return []
 
 
-def _persist_nansen_paid(config, state, *, operation, wallet, page, identity, response, parsed_rows):
+def _persist_nansen_paid(config, state, *, operation, wallet, page, identity, response, parsed_rows, body=None, path=None):
     """Write one paid Nansen response and its parsed rows as soon as it arrives."""
-    stem = _nansen_call_stem(operation, wallet, page, identity)
+    stem = _nansen_call_stem(operation, wallet, page, identity, body=body)
     raw = response.get("raw_bytes") or b"{}"
     digest = _save_raw(config["output_dir"], f"raw/phase1/nansen-paid/{stem}.bin", raw)
     sidecar = {
@@ -2535,6 +2541,9 @@ def _persist_nansen_paid(config, state, *, operation, wallet, page, identity, re
         "wallet": wallet,
         "page": page,
         "identity": identity,
+        "path": path,
+        "body_sha256": _nansen_body_digest(body),
+        "dry_run": bool(config.get("dry_run")),
         "rows": list(parsed_rows or []),
         "billing": response.get("billing"),
         "sha256": digest,
@@ -2548,6 +2557,8 @@ def _persist_nansen_paid(config, state, *, operation, wallet, page, identity, re
         "page": page,
         "identity": identity,
         "sha256": digest,
+        "body_sha256": sidecar["body_sha256"],
+        "dry_run": sidecar["dry_run"],
         "row_count": len(parsed_rows or []),
         "replayable": True,
     }
@@ -2555,25 +2566,29 @@ def _persist_nansen_paid(config, state, *, operation, wallet, page, identity, re
     return sidecar
 
 
-def _load_nansen_paid(config, *, operation, wallet, page, identity):
-    stem = _nansen_call_stem(operation, wallet, page, identity)
+def _load_nansen_paid(config, *, operation, wallet, page, identity, body=None):
+    stem = _nansen_call_stem(operation, wallet, page, identity, body=body)
     path = Path(config["output_dir"]) / f"raw/phase1/nansen-paid/{stem}.bin"
     rows_path = path.with_name(path.name.replace(".bin", ".rows.json"))
     if not path.is_file() or path.stat().st_size == 0:
         return None
     raw = path.read_bytes()
     try:
-        body = json.loads(raw.decode("utf-8"))
+        parsed_body = json.loads(raw.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError):
         return None
     sidecar = _read_json(rows_path) if rows_path.is_file() else {}
     return {
         "status": sidecar.get("status") or 200,
-        "body": body,
+        "body": parsed_body,
         "fetched_at": sidecar.get("fetched_at") or utc_now(),
         "raw_bytes": raw,
         "billing": sidecar.get("billing"),
-        "replayed_from_receipt": True,
+        "replayed_from_receipt": False,
+        "dry_run": bool(sidecar.get("dry_run")),
+        "body_sha256": sidecar.get("body_sha256"),
+        "sha256": sidecar.get("sha256") or _sha256_bytes(raw),
+        "operation": sidecar.get("operation") or operation,
         "rows": list((sidecar or {}).get("rows") or []),
     }
 
@@ -3575,6 +3590,7 @@ async def _phase2_economic_probe_over_days(store, grant, config, state, transpor
             phase=2, page_index=page_index,
         )
         records = [row for row in (page.get("records") or []) if isinstance(row, dict)]
+        from scanner.mass_search.canonical_records import canonical_decode_records
         decoded = decode_supported_swaps(canonical_decode_records(records), address)
         rate = combined_economic_trade_rate(
             events=decoded.get("events") if isinstance(decoded, dict) else None,
@@ -3759,15 +3775,42 @@ async def _birdeye_seed_call_once(store, grant, config, state, recorder, *, path
 async def _nansen_seed_call(store, grant, config, state, recorder, *, path, body, operation, units, wallet, page, identity, timeout=None):
     """Ledgered, grant-gated Nansen POST. Resume reuses a paid response; never re-buys."""
     _validate_nansen_request(path, body)
-    token_key = _rid(config, "nansen", wallet=wallet, phase=1, page=page, cursor=f"{identity}:{path}:{wallet}")
-    saved = _load_nansen_paid(config, operation=operation, wallet=wallet, page=page, identity=identity)
-    if saved:
-        return saved
+    body_digest = _nansen_body_digest(body)
+    token_key = _rid(
+        config, "nansen", wallet=wallet, phase=1, page=page,
+        cursor=f"{identity}:{path}:{wallet}:{body_digest}",
+    )
+    saved = _load_nansen_paid(
+        config, operation=operation, wallet=wallet, page=page, identity=identity, body=body,
+    )
+    if config.get("dry_run"):
+        if saved:
+            saved["replayed_from_receipt"] = True
+            return saved
+    else:
+        existing = load_receipt(store, token_key)
+        if receipt_is_spent(existing) and existing.get("state") == "consumed":
+            if saved and not saved.get("dry_run"):
+                file_sha = saved.get("sha256") or _sha256_bytes(saved.get("raw_bytes") or b"")
+                receipt_sha = existing.get("sha256")
+                receipt_body = existing.get("body_sha256")
+                receipt_op = existing.get("operation")
+                if (
+                    receipt_sha
+                    and receipt_sha == file_sha
+                    and (not receipt_body or receipt_body == body_digest)
+                    and (not receipt_op or receipt_op == operation)
+                ):
+                    saved["replayed_from_receipt"] = True
+                    return saved
+            raise SourceError(
+                "MISSING_CAPTURE",
+                "paid Nansen response missing for consumed receipt; refusing re-buy",
+            )
+        # Live never reuses a planted or dry-run file without a matching receipt.
+        saved = None
     existing = load_receipt(store, token_key)
     if receipt_is_spent(existing) and existing.get("state") == "consumed":
-        saved = _load_nansen_paid(config, operation=operation, wallet=wallet, page=page, identity=identity)
-        if saved:
-            return saved
         raise SourceError(
             "MISSING_CAPTURE",
             "paid Nansen response missing for consumed receipt; refusing re-buy",
@@ -3781,13 +3824,15 @@ async def _nansen_seed_call(store, grant, config, state, recorder, *, path, body
         _put_receipt(config, store, grant, token_key, {
             "provider": "nansen", "wallet": wallet, "phase": 1, "page": page,
             "units": units, "state": "planned", "discovery_identity": identity,
-            "path": path, "body": body,
+            "path": path, "body": body, "operation": operation,
+            "body_sha256": body_digest,
         })
         response = await recorder.nansen("POST", path, body)
         parsed = _nansen_parse_rows(path, response.get("body"))
         _persist_nansen_paid(
             config, state, operation=operation, wallet=wallet, page=page,
             identity=identity, response=response, parsed_rows=parsed,
+            body=body, path=path,
         )
         _account_spend(state, provider="nansen", units=units, phase=1)
         _account_source_spend(state, SEED_NANSEN, provider="nansen", units=units)
@@ -3808,6 +3853,7 @@ async def _nansen_seed_call(store, grant, config, state, recorder, *, path, body
             "provider": "nansen", "wallet": wallet, "phase": 1, "page": page,
             "units": units, "state": "dispatched", "reservation_id": reservation,
             "discovery_identity": identity, "path": path, "body": body,
+            "operation": operation, "body_sha256": body_digest,
         })
         response = await _live_nansen("POST", path, body, timeout=timeout)
         store.settle(reservation, charge=True)
@@ -3815,11 +3861,13 @@ async def _nansen_seed_call(store, grant, config, state, recorder, *, path, body
         _persist_nansen_paid(
             config, state, operation=operation, wallet=wallet, page=page,
             identity=identity, response=response, parsed_rows=parsed,
+            body=body, path=path,
         )
         _put_receipt(config, store, grant, token_key, {
             "provider": "nansen", "wallet": wallet, "phase": 1, "page": page,
             "units": units, "state": "consumed", "reservation_id": reservation,
             "discovery_identity": identity, "path": path,
+            "operation": operation, "body_sha256": body_digest,
             "billing": response.get("billing"),
             "sha256": _sha256_bytes(response.get("raw_bytes") or b""),
         })
@@ -5193,7 +5241,7 @@ async def _phase2_one_wallet(
                 "first_sig_unix": screen.get("first_sig_unix"),
                 "requests": cheap["requests"],
                 "can_only_drop_or_defer": True,
-                "cannot_fail_bot_rule": bool(screen.get("cannot_fail_bot_rule")),
+                "cannot_fail_bot_rule": False,
                 "helius_signatures": cheap.get("credit_note"),
                 **seed_fields_for_wallet(state, address),
             }
@@ -5579,9 +5627,13 @@ async def phase3_history(store, grant, config, state, recorder):
             )
             reached_bound = oldest is not None and oldest <= bounds["history_start_unix"]
             no_more = not records or not token
-            created_complete = bool(created["wallet_created_in_range"]) and (short_page or not records)
+            created_complete = (
+                bool(created["wallet_created_in_range"])
+                and (short_page or not records)
+                and not token
+            )
             covered = no_more or created_complete or (
-                reached_bound and created["wallet_created_in_range"]
+                reached_bound and created["wallet_created_in_range"] and not token
             )
             used_after = int(cursor.get("requests") or 0) + wallet_triage_requests(state, address, triage=triage)
             hit_page_cap = page_cap is not None and used_after >= int(page_cap)
@@ -5590,16 +5642,19 @@ async def phase3_history(store, grant, config, state, recorder):
                 cursor["window_covered"] = bool(covered)
                 captured = load_phase3_captured_records(config, address) + list(records)
                 apply_window_reach(cursor, captured, bounds)
-                cursor["leftover_pagination_token"] = bool(token) and not created["wallet_created_in_range"]
-                if created["wallet_created_in_range"] and created["history_complete"]:
+                cursor["leftover_pagination_token"] = bool(token)
+                if token:
+                    cursor["history_complete"] = False
+                    cursor["history_complete_reason"] = (
+                        "page_cap_with_leftover_token" if hit_page_cap
+                        else "pagination_token_remaining_earlier_history"
+                    )
+                elif created["wallet_created_in_range"] and created["history_complete"]:
                     cursor["history_complete"] = True
                     cursor["history_complete_reason"] = created["history_complete_reason"]
-                elif hit_page_cap and token:
+                elif hit_page_cap:
                     cursor["history_complete"] = False
                     cursor["history_complete_reason"] = "per_wallet_cap"
-                elif token and not created["wallet_created_in_range"]:
-                    cursor["history_complete"] = False
-                    cursor["history_complete_reason"] = "pagination_token_remaining_earlier_history"
                 else:
                     cursor["history_complete"] = bool(created["history_complete"])
                     cursor["history_complete_reason"] = created["history_complete_reason"]

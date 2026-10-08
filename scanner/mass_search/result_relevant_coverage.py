@@ -29,6 +29,108 @@ from scanner.mass_search.record_breakdown import (
     _owned_asset_deltas,
     _unix,
 )
+from scanner.mass_search.verified_costs import is_verified_tip_account
+
+SYSTEM_PROGRAM = "11111111111111111111111111111111"
+RENT_EXEMPT_BASE = 890880
+RENT_EXEMPT_PER_BYTE = 6960
+LAMPORTS = Decimal("1000000000")
+
+
+def _rent_exempt_minimum_lamports(space):
+    try:
+        space_n = int(space)
+    except (TypeError, ValueError):
+        return None
+    if space_n < 0:
+        return None
+    return RENT_EXEMPT_BASE + RENT_EXEMPT_PER_BYTE * space_n
+
+
+def _iter_coverage_instructions(raw):
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    yield from message.get("instructions") or []
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    for group in meta.get("innerInstructions") or []:
+        if isinstance(group, dict):
+            yield from group.get("instructions") or []
+
+
+def _proven_excluded_sol_lamports(raw, address, keys):
+    """Exact createAccount rent (wallet-funded, non-System owner) and verified tips."""
+    excluded = Decimal("0")
+    for instruction in _iter_coverage_instructions(raw):
+        if not isinstance(instruction, dict):
+            continue
+        parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+        if not parsed:
+            continue
+        info = parsed.get("info") or {}
+        kind = parsed.get("type")
+        program = instruction.get("programId")
+        if program == SYSTEM_PROGRAM and kind in ("createAccount", "createAccountWithSeed"):
+            if info.get("source") != address:
+                continue
+            owner = info.get("owner")
+            if not owner or owner == SYSTEM_PROGRAM:
+                continue
+            expected = _rent_exempt_minimum_lamports(info.get("space"))
+            try:
+                lamports = int(info.get("lamports"))
+            except (TypeError, ValueError):
+                continue
+            if expected is not None and lamports == expected:
+                excluded += Decimal(lamports)
+            continue
+        if kind == "transfer" and info.get("source") == address:
+            dest = info.get("destination")
+            if dest and is_verified_tip_account(dest):
+                try:
+                    excluded += Decimal(int(info.get("lamports")))
+                except (TypeError, ValueError):
+                    pass
+    return excluded
+
+
+def _coverage_sol_after_proven_exclusions(raw, address, keys):
+    """SOL that left the wallet after only proven fee / exact rent / verified-tip exclusions.
+
+    Unknown System transfers and OTC-shaped instruction lists stay unreadable value.
+    """
+    if not isinstance(raw, dict) or not keys or not address:
+        return Decimal("0")
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    pre = meta.get("preBalances") or []
+    post = meta.get("postBalances") or []
+    try:
+        idx = keys.index(address)
+    except ValueError:
+        return Decimal("0")
+    if idx >= len(pre) or idx >= len(post):
+        return Decimal("0")
+    native = Decimal(post[idx] - pre[idx])
+    fee = meta.get("fee") if isinstance(meta.get("fee"), int) and not isinstance(meta.get("fee"), bool) else 0
+    if keys and keys[0] == address:
+        native += Decimal(fee)
+    native += _proven_excluded_sol_lamports(raw, address, keys)
+    wsol = Decimal("0")
+    for field, sign in (("preTokenBalances", -1), ("postTokenBalances", 1)):
+        for row in meta.get(field) or []:
+            if not isinstance(row, dict) or row.get("owner") != address:
+                continue
+            if row.get("mint") != WSOL:
+                continue
+            amount = (row.get("uiTokenAmount") or {}).get("amount")
+            if amount in (None, ""):
+                continue
+            try:
+                wsol += Decimal(str(amount)) * sign
+            except (InvalidOperation, ValueError, TypeError, OverflowError):
+                continue
+    remaining = native + wsol
+    if remaining == 0:
+        return Decimal("0")
+    return abs(remaining) / LAMPORTS
 
 _DISPLAY_QUANTUM = Decimal("0.000000001")
 
@@ -373,34 +475,20 @@ def coverage_over_relevant(records, decoded, address, membership):
         else:
             unsupported_n += 1
             bucket = "unsupported"
-        reasons = member.get("reasons") or []
-        # Count every R member (DC-2). Rent / fee SOL on a non-swap touch
-        # must not open a zero-decoded SOL bucket that wipes a measured
-        # USDC/USDT share on a superset window.
-        lineage_only = (
-            not decoded_trade
-            and not member.get("swap_like")
-            and "unreadable_in_window" not in reasons
-            and "in_window_swap_like" not in reasons
-            and "unreadable_unknown_mints" not in reasons
-            and "unknown_timestamp" not in reasons
-            and "unknown_report_bounds" not in reasons
-        )
-        if lineage_only:
-            continue
-        add_sol = (
-            decoded_trade
-            or member.get("swap_like")
-            or "unreadable_unknown_mints" in reasons
-            or "unknown_timestamp" in reasons
-            or "unknown_report_bounds" in reasons
-        )
+        # Count every R member (DC-2), including lineage-only rows. SOL that
+        # left the wallet is unreadable value unless it is a proven fee, an
+        # exact rent-exempt createAccount, or a verified tip. Unknown
+        # instruction shapes (OTC System+Token) stay in the value bucket.
         for asset, amount in legs.items():
             if not asset or not amount:
                 continue
-            if asset == "SOL" and not add_sol:
+            if asset == "SOL" and not decoded_trade:
                 continue
             consideration[bucket][asset] += amount
+        if not decoded_trade:
+            sol = _coverage_sol_after_proven_exclusions(raw, address, keys)
+            if sol:
+                consideration[bucket]["SOL"] += sol
     shares = _shares_from_totals(decoded_n, unsupported_n, consideration)
     shares["consideration"] = {
         "decoded": {asset: _display_decimal(value) for asset, value in consideration["decoded"].items() if value},

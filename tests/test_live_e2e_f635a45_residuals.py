@@ -137,7 +137,9 @@ def test_dky_same_second_tie_is_created_in_range():
     )
     assert assessed["wallet_created_in_range"] is True
     assert assessed["oldest_native_prebalance"] == 0
-    assert assessed["history_complete"] is True
+    assert assessed["leftover_pagination_token"] is True
+    assert assessed["history_complete"] is False
+    assert assessed["history_complete_reason"] == "pagination_token_remaining_earlier_history"
 
 
 def test_plain_history_to_first_is_accepted_and_capped(tmp_path, fake_keys, monkeypatch):
@@ -267,7 +269,10 @@ def test_one_wallet_cap_does_not_block_the_run(tmp_path, fake_keys, monkeypatch)
     }))
     pages = (result.get("phase3") or {}).get("pages") or {}
     assert pages[WALLETS[0]].get("history_complete") is False
-    assert pages[WALLETS[0]].get("history_complete_reason") == "per_wallet_cap"
+    assert pages[WALLETS[0]].get("history_complete_reason") in {
+        "per_wallet_cap",
+        "page_cap_with_leftover_token",
+    }
     assert WALLETS[1] in pages
     assert pages[WALLETS[1]].get("done") is True
     assert WALLETS[1] in calls

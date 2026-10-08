@@ -58,6 +58,19 @@ SYSTEM_PROGRAM = "11111111111111111111111111111111"
 # deposit the same way when no quote reaches a pre-existing party.
 PYTH_STAKING = "pytS9TjG1qyAZypk7n8rw8gfW9sUaqqYyMhJQ4E7JCQ"
 STAKING_PROGRAMS = frozenset({PYTH_STAKING})
+RENT_EXEMPT_BASE = 890880
+RENT_EXEMPT_PER_BYTE = 6960
+RENT_EXEMPT_SLACK_LAMPORTS = 3_000_000
+
+
+def _rent_exempt_minimum_lamports(space):
+    try:
+        space_n = int(space)
+    except (TypeError, ValueError):
+        return None
+    if space_n < 0:
+        return None
+    return RENT_EXEMPT_BASE + RENT_EXEMPT_PER_BYTE * space_n
 
 
 def _unwrap(record):
@@ -180,7 +193,7 @@ def _is_close_only(raw, keys, address, mint):
 
 
 def _create_account_map(raw, keys):
-    """newAccount -> owner program for System createAccount / createAccountWithSeed."""
+    """newAccount -> {owner, lamports, space} for System createAccount variants."""
     found = {}
     for instruction in _iter_instructions(raw):
         if not isinstance(instruction, dict):
@@ -197,31 +210,37 @@ def _create_account_map(raw, keys):
         info = parsed.get("info") or {}
         dest = info.get("newAccount") or info.get("newAccountPubkey")
         if dest:
-            found[dest] = info.get("owner")
+            found[dest] = {
+                "owner": info.get("owner"),
+                "lamports": info.get("lamports"),
+                "space": info.get("space"),
+            }
     return found
 
 
 def _is_new_or_program_owned_account(raw, keys, other):
-    """True for a brand-new key or a CreateAccount dest (often program-owned).
+    """Exempt only a non-System createAccount funded at its rent-exempt minimum.
 
-    A new account co-signs only because it must sign its own creation. Rent
-    paid into it, or into a program-owned account created in this tx, is not
-    sale proceeds.
+    A fresh keypair or a System-owned createAccount that receives material
+    lamports is sale proceeds. preBalance 0 alone never exempts.
     """
     if not other or not keys:
         return False
     created = _create_account_map(raw, keys)
-    if other in created:
-        return True
-    try:
-        index = keys.index(other)
-    except ValueError:
+    info = created.get(other)
+    if not info:
         return False
-    meta = raw.get("meta") or {}
-    pre = meta.get("preBalances") or []
-    if index < len(pre) and pre[index] == 0:
-        return True
-    return False
+    owner = info.get("owner")
+    if not owner or owner == SYSTEM_PROGRAM:
+        return False
+    expected = _rent_exempt_minimum_lamports(info.get("space"))
+    if expected is None:
+        return False
+    try:
+        lamports = int(info.get("lamports"))
+    except (TypeError, ValueError):
+        return False
+    return expected <= lamports <= expected + RENT_EXEMPT_SLACK_LAMPORTS
 
 
 def _wallet_gained_quote(raw, keys, address, deltas):

@@ -2994,15 +2994,9 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
                     decoded_value["SOL"] += abs(Decimal(str(trade["consideration_sol"])))
         else:
             # DC-2: every included row is counted, including lineage-only.
+            # Independent of the app: any material remaining SOL is
+            # unreadable value. Do not copy app rent/tip exclusion.
             unsupported_n += 1
-            lineage_only = (
-                lineage_touch
-                and not in_report
-                and not swap_like
-                and mints is not None
-            )
-            if lineage_only:
-                continue
             token_deltas, _pre, _post = _owned_token_deltas(raw, address) if isinstance(raw, dict) else ({}, {}, {})
             usdc = abs(token_deltas.get(USDC, Decimal("0")))
             usdt = abs(token_deltas.get(USDT, Decimal("0")))
@@ -3013,8 +3007,7 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
                 unsupported_value["USDC"] += usdc / Decimal("1000000")
             if usdt >= Decimal("1000000"):
                 unsupported_value["USDT"] += usdt / Decimal("1000000")
-            add_sol = swap_like or mints is None or timestamp is None
-            if add_sol and sol > Decimal("0.003"):
+            if sol > Decimal("0.003"):
                 unsupported_value["SOL"] += sol
     denom = decoded_n + unsupported_n
     empty = not signatures or denom == 0

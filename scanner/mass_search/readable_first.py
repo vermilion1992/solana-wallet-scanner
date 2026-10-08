@@ -503,7 +503,7 @@ def bot_prescreen_decision(signature_rows, *, dex_stats=None, max_per_day=None, 
         return {
             "decision": DEFER_UNREADABLE,
             "reason": "history_above_cap",
-            "screen": screen,
+            "screen": {**screen, "cannot_fail_bot_rule": False},
             "can_only_drop_or_defer": True,
         }
     if screen.get("passed"):

@@ -1629,7 +1629,7 @@ def helius_signatures_prescreen(rows, *, max_per_day=None, history_cap=None):
     # D12-7: a history exactly at the cap is incomplete (pagination stopped).
     deferred = bool(total >= length_cap)
     passed = bool(by_day) and not over_days and incomplete == 0 and not deferred
-    cannot_fail_bot = bool(by_day) and not over_days and incomplete == 0
+    cannot_fail_bot = bool(by_day) and not over_days and incomplete == 0 and not deferred
     return {
         "passed": passed,
         "cannot_fail_bot_rule": cannot_fail_bot,

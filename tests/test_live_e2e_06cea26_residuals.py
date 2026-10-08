@@ -99,7 +99,9 @@ def test_b1_truncated_history_is_explicit():
                 pre[idx] = 0
     created_assessed = assess_history_completeness(created, True, address=payload["address"])
     assert created_assessed["wallet_created_in_range"] is True
-    assert created_assessed["history_complete"] is True
+    assert created_assessed["leftover_pagination_token"] is True
+    assert created_assessed["history_complete"] is False
+    assert created_assessed["history_complete_reason"] == "pagination_token_remaining_earlier_history"
 
 
 def test_b2_token_inflow_without_account_keys():
