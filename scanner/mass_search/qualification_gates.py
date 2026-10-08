@@ -670,6 +670,9 @@ def trading_activity(events):
 WSOL_MINT = "So11111111111111111111111111111111111111112"
 USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 USDT_MINT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+JUPITER_V6 = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+JUPITER_V4 = "JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB"
+JUPITER_ROUTE_PROGRAMS = frozenset({JUPITER_V6, JUPITER_V4})
 RAW_QUOTE_ASSETS = frozenset({WSOL_MINT, USDC_MINT, USDT_MINT, "SOL"})
 RAW_SOL_FLOOR_LAMPORTS = 100_000
 RAW_SOL_NOISE_LAMPORTS = RAW_SOL_FLOOR_LAMPORTS
@@ -1138,13 +1141,73 @@ def _has_swap_like_log(record):
     return bool(SWAP_LIKE_LOG_RE.search(_logs_text(record)))
 
 
+def _ix_program_id(instruction, keys):
+    if not isinstance(instruction, dict):
+        return None
+    program = instruction.get("programId")
+    if isinstance(program, str) and program:
+        return program
+    parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else {}
+    if isinstance(parsed.get("programId"), str) and parsed.get("programId"):
+        return parsed["programId"]
+    index = instruction.get("programIdIndex")
+    if type(index) is int and not isinstance(index, bool) and 0 <= index < len(keys):
+        return keys[index]
+    return None
+
+
+def _reviewed_swap_route_programs():
+    try:
+        from scanner.investigation import NET_BALANCE_SWAP_PROGRAMS
+        return frozenset(NET_BALANCE_SWAP_PROGRAMS) | JUPITER_ROUTE_PROGRAMS
+    except Exception:
+        return JUPITER_ROUTE_PROGRAMS
+
+
+def _iter_record_instructions(record):
+    raw = _unwrap_raw_record(record)
+    meta = _record_meta(raw) or {}
+    tx = raw.get("transaction") if isinstance(raw.get("transaction"), dict) else {}
+    message = tx.get("message") if isinstance(tx.get("message"), dict) else {}
+    for instruction in message.get("instructions") or []:
+        if isinstance(instruction, dict):
+            yield instruction
+    for group in meta.get("innerInstructions") or []:
+        if isinstance(group, dict):
+            items = group.get("instructions") or []
+        elif isinstance(group, list):
+            items = group
+        else:
+            continue
+        for instruction in items:
+            if isinstance(instruction, dict):
+                yield instruction
+
+
+def _has_reviewed_swap_instruction(record):
+    """True when a reviewed swap/route program is present as an instruction."""
+    raw = _unwrap_raw_record(record)
+    keys = _tx_account_keys(raw)
+    programs = _reviewed_swap_route_programs()
+    return any(_ix_program_id(instruction, keys) in programs for instruction in _iter_record_instructions(record))
+
+
+def _has_jupiter_route_instruction(record):
+    raw = _unwrap_raw_record(record)
+    keys = _tx_account_keys(raw)
+    return any(_ix_program_id(instruction, keys) in JUPITER_ROUTE_PROGRAMS for instruction in _iter_record_instructions(record))
+
+
 def _is_lp_or_rent_or_tip_non_trade(record, address, material, token_downs, token_ups, quote_downs, quote_ups):
     """Exclude LP opens/closes and rent-only / tip-plus-airdrop transfers.
 
-    Both-down real sells (token down, proceeds elsewhere, swap signal or a
-    stable quote move) stay counted.
+    LP is excluded only when there is no reviewed swap/route instruction and
+    an LP NFT/position actually opens or changes. Tip+airdrop applies only
+    when there is no swap instruction. A Jupiter hop that logs AddLiquidity2
+    still counts.
     """
-    if _wallet_lp_nft_moved(record, address) or _has_lp_instruction(record):
+    has_swap_ix = _has_reviewed_swap_instruction(record)
+    if not has_swap_ix and _wallet_lp_nft_moved(record, address):
         return True
     sol_down = -material["SOL"] if material.get("SOL", 0) < 0 else 0
     stable_down = any(material.get(mint, 0) < 0 for mint in (USDC_MINT, USDT_MINT))
@@ -1154,11 +1217,11 @@ def _is_lp_or_rent_or_tip_non_trade(record, address, material, token_downs, toke
     # logs or a stable quote move.
     if token_downs and not token_ups and quote_downs and not quote_ups:
         rent_or_tip = ATA_RENT_LAMPORTS + RAW_TIP_SOL_LAMPORTS
-        if not stable_down and not swap_log and 0 < sol_down <= rent_or_tip:
+        if not has_swap_ix and not stable_down and not swap_log and 0 < sol_down <= rent_or_tip:
             return True
     # Tip + airdrop: token up, SOL down at or below the tip cutoff, no stable.
-    # 300k tip+airdrop is excluded; 400k Titan fills still count.
-    if token_ups and quote_downs and not token_downs:
+    # Apply only when there is no reviewed swap instruction.
+    if not has_swap_ix and token_ups and quote_downs and not token_downs:
         if not stable_down and 0 < sol_down <= RAW_TIP_SOL_LAMPORTS:
             return True
     return False
@@ -1175,13 +1238,16 @@ def raw_economic_keys_for_tx(record, address):
     if not _wallet_signed(record, address):
         return 0
     legs = wallet_asset_deltas(record, address)
-    if not legs:
-        return 0
     material = {}
-    for mint, qty in legs.items():
+    for mint, qty in (legs or {}).items():
         if mint in RAW_QUOTE_ASSETS or abs(qty) > RAW_TOKEN_DUST_UNITS:
             material[mint] = qty
     if not material:
+        # Zero-net Jupiter round trips (BJcx-style arb) still count as a trade.
+        if _has_jupiter_route_instruction(record) and (
+            _has_swap_like_log(record) or _has_reviewed_swap_instruction(record)
+        ):
+            return 1
         return 0
     token_downs = [mint for mint, qty in material.items() if qty < 0 and mint not in RAW_QUOTE_ASSETS]
     token_ups = [mint for mint, qty in material.items() if qty > 0 and mint not in RAW_QUOTE_ASSETS]
@@ -1198,7 +1264,11 @@ def raw_economic_keys_for_tx(record, address):
     if token_ups and quote_downs:
         sol_down = -material["SOL"] if material.get("SOL", 0) < 0 else 0
         stable_down = any(material.get(mint, 0) < 0 for mint in (USDC_MINT, USDT_MINT))
-        if not stable_down and 0 < sol_down <= RAW_TIP_SOL_LAMPORTS:
+        if (
+            not _has_reviewed_swap_instruction(record)
+            and not stable_down
+            and 0 < sol_down <= RAW_TIP_SOL_LAMPORTS
+        ):
             return 0
         return len(token_ups)
     if quote_ups and quote_downs:

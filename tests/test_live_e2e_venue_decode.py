@@ -36,7 +36,7 @@ def _app_trades(payload):
 
 
 def test_decoder_version_bumped_for_dgmg_dflow():
-    assert DECODER_VERSION == "spot-v25-net-balance-v1"
+    assert DECODER_VERSION == "spot-v27-route-flow-v1"
 
 
 def test_app_and_auditor_are_independent_modules():

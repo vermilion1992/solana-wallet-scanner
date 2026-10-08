@@ -28,7 +28,7 @@ earlier acquisition costs, complete wallet positions or historical profitability
 from __future__ import annotations
 
 from collections import Counter, defaultdict
-from decimal import Decimal, localcontext
+from decimal import Decimal, InvalidOperation, localcontext
 from hashlib import sha256
 import base64
 
@@ -80,6 +80,10 @@ METEORA_DAMM_V2 = 'cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG'
 DFLOW = 'DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH'
 DFLOW_DST = 'dst5MGcFPoBeREFAA5E3tU5ij8m5uVYwkzkSAbsLbNo'
 FLASHX = 'FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9'
+TITAN = 'T1TANpTeScyeqVzzgNViGDNrkQ6qHz9KrSBS4aNXvGT'
+TERM9Y = 'term9YPb9mzAsABaqN71A4xdbxHmpBNZavpBiQKZzN3'
+ROUTEU = 'routeUGWgWzqBWFcrCfv8tritsqukccJPu3q5GPP3xS'
+OKX_DEX_V2 = '6m2CDdhRgxpH4WjvdzxAYbGxwdGUz5MziiL5jek2kBma'
 GMGN = 'GMGNreQcJFufBiCTLDBgKhYEfEe9B454UjpDr5CaSLA1'
 # Observed PumpSwap buy router (jXt 2EtPn1a61imQ): outer Buy then inner PumpSwap Buy.
 DGMG = 'DGMgNKpqygARV2pHZfW4kNQSHT9F3Ly2BKWqvpYrAg5C'
@@ -123,9 +127,13 @@ UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 # discriminator in _route. Jupiter/Whirlpool/AMMv4 stay in both sets so an
 # unknown discriminator can still reconstruct when the net is unambiguous.
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v25-net-balance-v1'
+DECODER_VERSION = 'spot-v27-route-flow-v1'
 NET_BALANCE_INSTRUCTION = 'net_balance'
 NET_BALANCE_SOL_DUST_LAMPORTS = 100_000
+# Fee/referral SOL residue that may be peeled as cost, never as a third trade leg.
+# FLASHX 0.0587 SOL bundled transfers stay above this bound and fail closed.
+NET_BALANCE_COST_SOL_LAMPORTS = 20_000_000
+NET_BALANCE_REFERRAL_BPS = 200
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
     'source_token_account at 1, destination_token_account at 2 from the '
@@ -817,6 +825,7 @@ RAYDIUM_CLMM = 'CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK'
 NET_BALANCE_SWAP_PROGRAMS = frozenset({
     *REVIEWED_OUTER_VENUES,
     RAYDIUM_CLMM,
+    TITAN, TERM9Y, ROUTEU, OKX_DEX_V2,
 })
 # Published hop AMMs seen under Jupiter/DFlow. A random program id still blocks (D3).
 WELL_KNOWN_INNER_AMMS = frozenset({
@@ -1081,11 +1090,21 @@ def _iter_outer_instructions(raw):
 
 
 def _net_balance_skip_outer(instruction, program, keys):
-    """Known non-swap siblings stay unresolved. Unknown DFlow/FLASHX discs too."""
-    if program in {DFLOW, FLASHX, OKX_DEX_ROUTER}:
-        # Layout path already owns these. Net-balance must not decode
-        # sponsored/truncated siblings that look like a clean wallet net.
-        return True
+    """Known non-swap siblings stay unresolved.
+
+    DFlow TransferToSponsor / Unwrap look like a clean wallet net (the
+    sponsor fixture is one token out and SOL in). Layout owns those.
+    FLASHX and OKX go through net-balance; classify plus the fee bound
+    keep bundled value from becoming a trade.
+    """
+    if program == DFLOW:
+        try:
+            payload = _data(instruction.get('data'))
+        except (ValueError, TypeError, KeyError):
+            return True
+        return payload[:8] not in {
+            DFLOW_SWAP, DFLOW_SWAP2, DFLOW_SWAP_WITH_DESTINATION, DFLOW_WRAP,
+        }
     if program == PUMP:
         try:
             payload = _data(instruction.get('data'))
@@ -1147,13 +1166,13 @@ _TOKEN_TAG_KIND = {
 
 
 def _has_unreviewed_outer_program(raw, keys):
-    """True when an outer program is neither JUP6 nor reviewed infra."""
+    """True when an outer program is outside infra and net-balance outers."""
     for instruction in _iter_outer_instructions(raw):
         try:
             program = _program(instruction, keys)
         except (ValueError, TypeError, KeyError, IndexError):
             return True
-        if program in _INNER_INFRA or program == JUPITER:
+        if program in _INNER_INFRA or program in NET_BALANCE_SWAP_PROGRAMS:
             continue
         return True
     return False
@@ -1274,7 +1293,7 @@ def _jupiter_hop_inner_ok(raw, address, keys):
                 continue
             if not _instruction_account_keys(instruction, keys).intersection(owned):
                 continue
-            if outer_program != JUPITER or instruction.get('stackHeight') != 2:
+            if outer_program not in NET_BALANCE_SWAP_PROGRAMS or instruction.get('stackHeight') != 2:
                 return False
             if not _jup_hop_children_ok(inners, idx + 1, owned, address, keys):
                 return False
@@ -1407,6 +1426,393 @@ def _app_owned_net_assets(raw, address, keys):
     return assets, decimals, sol
 
 
+def _peel_fee_sol_residue(assets):
+    """Drop a cost-sized SOL third leg. Returns peeled lamports or 0.
+
+    SOL is the quote when it is one of two legs. Peel only when at least two
+    other assets already form the trade, so a 0.01 SOL swap stays a swap.
+    """
+    if not isinstance(assets, dict):
+        return Decimal(0)
+    sol = assets.get('SOL', Decimal(0))
+    others = [qty for mint, qty in assets.items() if mint != 'SOL' and qty != 0]
+    if len(others) >= 2 and sol != 0 and abs(sol) <= Decimal(NET_BALANCE_COST_SOL_LAMPORTS):
+        assets.pop('SOL', None)
+        return sol
+    return Decimal(0)
+
+
+def _ata_create_owner_account(instruction, keys):
+    """Wallet and ATA pubkey for a create / createIdempotent, parsed or compiled."""
+    parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+    info = parsed.get('info') if isinstance(parsed, dict) else None
+    kind = parsed.get('type') if isinstance(parsed, dict) else None
+    if kind in ('create', 'createIdempotent') and isinstance(info, dict):
+        return info.get('wallet') or info.get('owner'), info.get('account')
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return None, None
+    if payload not in (b'', b'\0', b'\x01') or len(accounts) < 3:
+        return None, None
+    return accounts[2], accounts[1]
+
+
+def _other_wallet_ata_keeps_tokens(raw, address, keys, assets=None):
+    """True when a new other-wallet ATA retains more than the referral bound."""
+    created = set()
+    for instruction in _iter_all_instructions(raw):
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        if program != ASSOCIATED_ID:
+            continue
+        owner, account = _ata_create_owner_account(instruction, keys)
+        if owner and owner != address and account:
+            created.add(account)
+    if not created:
+        return False
+    assets = assets or {}
+    meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
+    for balance in meta.get('postTokenBalances') or []:
+        if not isinstance(balance, dict):
+            continue
+        index = balance.get('accountIndex')
+        if type(index) is not int or isinstance(index, bool) or index < 0 or index >= len(keys):
+            continue
+        if keys[index] not in created:
+            continue
+        amount = (balance.get('uiTokenAmount') or {}).get('amount')
+        try:
+            qty = Decimal(str(amount or 0))
+        except (InvalidOperation, ValueError, TypeError, OverflowError):
+            return True
+        if qty <= 0:
+            continue
+        mint = balance.get('mint')
+        net = abs(assets.get(mint, Decimal(0))) if mint else Decimal(0)
+        if net == 0:
+            continue
+        cap = max(Decimal(1), net * Decimal(NET_BALANCE_REFERRAL_BPS) / Decimal(10_000))
+        if qty > cap:
+            return True
+    return False
+
+
+def _lifecycle_owned_accounts(raw, address, keys):
+    """Wallet, its token accounts, and ATAs / inits created for it in this tx."""
+    owned = {address, *_owned_token_accounts(raw, address, keys)}
+    for instruction in _iter_all_instructions(raw):
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+        info = parsed.get('info') if isinstance(parsed, dict) else None
+        kind = parsed.get('type') if isinstance(parsed, dict) else None
+        if program == ASSOCIATED_ID:
+            owner, account = _ata_create_owner_account(instruction, keys)
+            if owner == address and account:
+                owned.add(account)
+            continue
+        if program in TOKEN_IDS and kind in ('initializeAccount', 'initializeAccount2', 'initializeAccount3'):
+            if isinstance(info, dict) and info.get('owner') == address and info.get('account'):
+                owned.add(info['account'])
+    return owned
+
+
+def _outbound_above_fee_bound(raw, address, keys, assets):
+    """True when a top-level transfer to someone else exceeds the fee bound.
+
+    Inner AMM hops are the swap itself and are not scored here. Bundled
+    value is a sibling outer System/Token transfer above 0.02 SOL or 2% of
+    that mint's wallet net. Wrap funding to a wallet ATA is not outbound.
+    """
+    owned = _lifecycle_owned_accounts(raw, address, keys)
+    for instruction in _iter_outer_instructions(raw):
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+        info = parsed.get('info') if isinstance(parsed, dict) else None
+        kind = parsed.get('type') if isinstance(parsed, dict) else None
+        if program == SYSTEM_ID:
+            if kind == 'transfer' and isinstance(info, dict):
+                if info.get('source') != address:
+                    continue
+                dest = info.get('destination')
+                if dest in owned:
+                    continue
+                from scanner.mass_search.verified_costs import is_verified_tip_account
+                if is_verified_tip_account(dest):
+                    continue
+                lamports = info.get('lamports')
+                if type(lamports) is int and not isinstance(lamports, bool) and lamports > NET_BALANCE_COST_SOL_LAMPORTS:
+                    return True
+                continue
+            try:
+                payload = _data(instruction.get('data'))
+                accounts = _accounts(instruction, keys)
+            except (ValueError, TypeError, KeyError, IndexError):
+                continue
+            if len(payload) >= 12 and int.from_bytes(payload[:4], 'little') == 2:
+                dest = accounts[1] if len(accounts) > 1 else None
+                from scanner.mass_search.verified_costs import is_verified_tip_account
+                if accounts and accounts[0] == address and dest not in owned and not is_verified_tip_account(dest):
+                    if int.from_bytes(payload[4:12], 'little') > NET_BALANCE_COST_SOL_LAMPORTS:
+                        return True
+            continue
+        if program not in TOKEN_IDS or kind not in ('transfer', 'transferChecked', 'transferCheckedWithFee'):
+            continue
+        if not isinstance(info, dict):
+            continue
+        source, dest = info.get('source'), info.get('destination')
+        if source not in owned or dest in owned:
+            continue
+        checked = info.get('tokenAmount') if kind in ('transferChecked', 'transferCheckedWithFee') else None
+        amount = (checked or {}).get('amount') if checked else info.get('amount')
+        try:
+            qty = Decimal(str(amount or 0))
+        except (InvalidOperation, ValueError, TypeError, OverflowError):
+            return True
+        mint = info.get('mint')
+        if not mint:
+            continue
+        net = abs(assets.get(mint, Decimal(0)))
+        if net == 0:
+            continue
+        cap = max(Decimal(1), net * Decimal(NET_BALANCE_REFERRAL_BPS) / Decimal(10_000))
+        if qty > cap:
+            return True
+    return False
+
+
+def _account_mint_map(raw, keys):
+    """Mint for every token account that appears in pre/post balances."""
+    mints = {}
+    meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
+    for field in ('preTokenBalances', 'postTokenBalances'):
+        for balance in meta.get(field) or []:
+            if not isinstance(balance, dict):
+                continue
+            index = balance.get('accountIndex')
+            mint = balance.get('mint')
+            if (
+                type(index) is int and not isinstance(index, bool)
+                and 0 <= index < len(keys) and isinstance(mint, str) and mint
+            ):
+                mints[keys[index]] = mint
+    return mints
+
+
+def _system_transfer_leg(instruction, keys):
+    parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+    info = parsed.get('info') if isinstance(parsed, dict) else None
+    kind = parsed.get('type') if isinstance(parsed, dict) else None
+    if kind == 'transfer' and isinstance(info, dict):
+        lamports = info.get('lamports')
+        if type(lamports) is int and not isinstance(lamports, bool) and lamports > 0:
+            return info.get('source'), info.get('destination'), Decimal(lamports)
+        return None
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return None
+    if len(payload) >= 12 and int.from_bytes(payload[:4], 'little') == 2:
+        lamports = int.from_bytes(payload[4:12], 'little')
+        if lamports > 0 and len(accounts) >= 2:
+            return accounts[0], accounts[1], Decimal(lamports)
+    return None
+
+
+def _token_transfer_qty(instruction, keys):
+    parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+    info = parsed.get('info') if isinstance(parsed, dict) else None
+    kind = parsed.get('type') if isinstance(parsed, dict) else None
+    if kind in ('transfer', 'transferChecked', 'transferCheckedWithFee') and isinstance(info, dict):
+        checked = info.get('tokenAmount') if kind in ('transferChecked', 'transferCheckedWithFee') else None
+        amount = (checked or {}).get('amount') if checked else info.get('amount')
+        try:
+            qty = Decimal(str(amount or 0))
+        except (InvalidOperation, ValueError, TypeError, OverflowError):
+            return None
+        if qty <= 0:
+            return None
+        return qty
+    try:
+        payload = _data(instruction.get('data'))
+    except (ValueError, TypeError, KeyError, IndexError):
+        return None
+    if payload and payload[0] in (3, 12) and len(payload) >= 9:
+        qty = int.from_bytes(payload[1:9], 'little')
+        return Decimal(qty) if qty > 0 else None
+    return None
+
+
+def _token_transfer_leg(instruction, keys, mints):
+    kind, info = _token_hop_fields(instruction, keys)
+    if kind not in ('transfer', 'transferChecked', 'transferCheckedWithFee'):
+        return None
+    source, dest = info.get('source'), info.get('destination')
+    if not source or not dest:
+        return None
+    qty = _token_transfer_qty(instruction, keys)
+    if qty is None:
+        return None
+    mint = info.get('mint') or mints.get(source) or mints.get(dest)
+    return source, dest, qty, mint
+
+
+def _net_balance_route_accounts(raw, keys):
+    """Accounts of each net-balance outer plus every inner CPI under it."""
+    accounts = set()
+    message = ((raw.get('transaction') or {}).get('message')
+               if isinstance(raw.get('transaction'), dict) else {}) or {}
+    meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
+    outers = message.get('instructions') or []
+    for idx, instruction in enumerate(outers):
+        if not isinstance(instruction, dict):
+            continue
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        if program not in NET_BALANCE_SWAP_PROGRAMS:
+            continue
+        if _net_balance_skip_outer(instruction, program, keys):
+            continue
+        accounts.add(program)
+        accounts.update(_instruction_account_keys(instruction, keys))
+        for group in meta.get('innerInstructions') or []:
+            if not isinstance(group, dict) or group.get('index') != idx:
+                continue
+            for inner in group.get('instructions') or []:
+                if not isinstance(inner, dict):
+                    continue
+                try:
+                    accounts.add(_program(inner, keys))
+                except (ValueError, TypeError, KeyError, IndexError):
+                    pass
+                accounts.update(_instruction_account_keys(inner, keys))
+    return accounts
+
+
+def _counterparty_allowed(other, owned, route_accounts, *, tip_ok=False):
+    if not other or other in owned or other in route_accounts:
+        return True
+    if tip_ok:
+        from scanner.mass_search.verified_costs import is_verified_tip_account
+        if is_verified_tip_account(other):
+            return True
+    return False
+
+
+def _non_route_wallet_flow(raw, address, keys):
+    """True when a wallet transfer is not a route/pool/wrap/tip beyond the fee bound.
+
+    Third-party System transfers, token transfers from a non-route source, and
+    airdrop-style native credits without a parsed transfer fail closed.
+    """
+    owned = _lifecycle_owned_accounts(raw, address, keys)
+    route_accounts = _net_balance_route_accounts(raw, keys)
+    mints = _account_mint_map(raw, keys)
+    for instruction in _iter_all_instructions(raw):
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        if program == SYSTEM_ID:
+            leg = _system_transfer_leg(instruction, keys)
+            if not leg:
+                continue
+            source, dest, lamports = leg
+            if dest in owned and source not in owned:
+                if not _counterparty_allowed(source, owned, route_accounts) and lamports > NET_BALANCE_COST_SOL_LAMPORTS:
+                    return True
+            continue
+        if program not in TOKEN_IDS:
+            continue
+        leg = _token_transfer_leg(instruction, keys, mints)
+        if not leg:
+            continue
+        source, dest, qty, mint = leg
+        if dest in owned and source not in owned:
+            if not _counterparty_allowed(source, owned, route_accounts) and qty > Decimal(1):
+                return True
+        elif source in owned and dest not in owned:
+            continue
+    return False
+
+
+def _route_wallet_flows(raw, address, keys):
+    """Wallet legs that touch a route/pool account (outer or inner)."""
+    owned = _lifecycle_owned_accounts(raw, address, keys)
+    route_accounts = _net_balance_route_accounts(raw, keys)
+    mints = _account_mint_map(raw, keys)
+    sol = Decimal(0)
+    tokens = {}
+    saw = False
+    for instruction in _iter_all_instructions(raw):
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        if program == SYSTEM_ID:
+            leg = _system_transfer_leg(instruction, keys)
+            if not leg:
+                continue
+            source, dest, lamports = leg
+            if dest in owned and source in route_accounts and source not in owned:
+                sol += lamports
+                saw = True
+            elif source in owned and dest in route_accounts and dest not in owned:
+                sol -= lamports
+                saw = True
+            continue
+        if program not in TOKEN_IDS:
+            continue
+        leg = _token_transfer_leg(instruction, keys, mints)
+        if not leg:
+            continue
+        source, dest, qty, mint = leg
+        if dest in owned and source in route_accounts and source not in owned:
+            saw = True
+            if mint:
+                tokens[mint] = tokens.get(mint, Decimal(0)) + qty
+        elif source in owned and dest in route_accounts and dest not in owned:
+            saw = True
+            if mint:
+                tokens[mint] = tokens.get(mint, Decimal(0)) - qty
+    return saw, sol, tokens
+
+
+def _route_flow_disagrees_with_wallet(raw, address, keys, assets):
+    """Reconcile route transfers against the wallet net. Disagree → fail closed."""
+    saw, route_sol, route_tokens = _route_wallet_flows(raw, address, keys)
+    if not saw:
+        return True
+    wallet_sol = Decimal(assets.get('SOL', 0) or 0)
+    route_sol += route_tokens.pop(WSOL, Decimal(0))
+    # Extra outbound tips make wallet SOL more negative (conservative).
+    # Fail only when the wallet net is more profitable than the route.
+    if wallet_sol > route_sol + Decimal(NET_BALANCE_COST_SOL_LAMPORTS):
+        return True
+    # Same rule for tokens: fee-sized extra outbound (C7) is conservative.
+    # Extra inbound or a smaller sell than the route overstates profit.
+    for mint in set(route_tokens) | set(assets):
+        if mint in (None, WSOL, 'SOL') or mint == 'SOL':
+            continue
+        wallet_qty = Decimal(assets.get(mint, 0) or 0)
+        route_qty = Decimal(route_tokens.get(mint, 0) or 0)
+        if wallet_qty > route_qty + Decimal(1):
+            return True
+    return False
+
+
 def classify_net_balance_assets(assets, decimals):
     """Accept exactly one in and one out, or a reviewed stable conversion.
 
@@ -1487,6 +1893,17 @@ def net_balance_reviewed_swap(raw, address):
     if owned is None:
         return None
     assets, decimals, _sol = owned
+    if _has_unreviewed_outer_program(raw, keys):
+        return None
+    if _other_wallet_ata_keeps_tokens(raw, address, keys, assets):
+        return None
+    if _outbound_above_fee_bound(raw, address, keys, assets):
+        return None
+    if _non_route_wallet_flow(raw, address, keys):
+        return None
+    cost_sol = _peel_fee_sol_residue(assets)
+    if _route_flow_disagrees_with_wallet(raw, address, keys, assets):
+        return None
     classified = classify_net_balance_assets(assets, decimals)
     if classified is None:
         return None
@@ -1495,6 +1912,8 @@ def net_balance_reviewed_swap(raw, address):
     classified['decimals'] = decimals.get(classified['mint'])
     classified['path'] = 'meta.net_balance'
     classified['source'] = program
+    if cost_sol:
+        classified['fee_residue_sol'] = cost_sol
     return classified
 
 
@@ -2233,20 +2652,19 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 reason.startswith('No reviewed outer spot swap')
                 or reason.startswith('No reviewed spot swap instruction for this program')
                 or reason.startswith('Jupiter route')
+                or reason.startswith('Unrelated token transfer')
+                or reason.startswith('Unreviewed outer program may bundle')
+                or reason.startswith('Associated account creation for another wallet')
+                or reason.startswith('Unsupported system operation')
+                or reason.startswith('Isolated native consideration')
+                or reason.startswith('Transaction version has no reviewed')
+                or reason.startswith('Temporary wrapped SOL')
+                or reason.startswith('Token account closes to another recipient')
+                or reason.startswith('System allocate space')
+                or reason.startswith('Unparsed associated account')
+                or reason.startswith('Recognized swap authority is not')
+                or reason.startswith('Unknown inner program touches a wallet-owned account')
             )
-            if (
-                not coverage_gap
-                and reason.startswith('Unknown inner program touches a wallet-owned account')
-            ):
-                try:
-                    gap_meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
-                    gap_message = ((raw.get('transaction') or {}).get('message')
-                                   if isinstance(raw.get('transaction'), dict) else {}) or {}
-                    coverage_gap = _jupiter_hop_inner_ok(
-                        raw, address, _keys(gap_message, gap_meta),
-                    )
-                except (ValueError, KeyError, IndexError, TypeError, OverflowError):
-                    coverage_gap = False
             if allow_net_balance and coverage_gap:
                 try:
                     net = net_balance_reviewed_swap(raw, address)
@@ -2271,6 +2689,9 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                     fee_sol = canonical(Decimal(fee) / LAMPORTS)
                 except (ValueError, KeyError, IndexError, TypeError, OverflowError):
                     fee_sol = '0'
+                residue = net.get('fee_residue_sol')
+                if residue:
+                    fee_sol = canonical(Decimal(str(fee_sol)) + abs(Decimal(residue)) / LAMPORTS)
                 if net['kind'] == 'conversion':
                     quote_name = QUOTE_ASSET.get(quote_mint) or net.get('to_asset') or 'USDC'
                     quote_decimals = dec if dec is not None else 6

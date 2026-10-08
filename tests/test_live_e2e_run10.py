@@ -702,7 +702,14 @@ def test_d10_2_ti_import_recovers_tokens_from_page_bodies(tmp_path):
     raw = b"\n".join(json.dumps(page, separators=(",", ":")).encode() for page in pages)
     _sha_sidecar(phase1 / "token-intersect-deadbeefcafe.bin", raw)
     (prior / "RUN_STATE.json").write_text(json.dumps({
-        "seed_source_progress": {SEED_TOKEN_INTERSECT: {"paid_pages": 13}},
+        "seed_source_progress": {SEED_TOKEN_INTERSECT: {
+            "paid_pages": 13,
+            "tokens": [
+                "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+                "So11111111111111111111111111111111111111112",
+                "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            ],
+        }},
     }), encoding="utf-8")
     cfg = _cfg(tmp_path, seed_source="token_intersect", import_raw_dir=str(prior), out="fresh")
     store, _ = open_grant_store(cfg["authorization_id"])

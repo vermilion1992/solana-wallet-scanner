@@ -236,8 +236,10 @@ def test_c6_synthetic_approve_hop_stays_blocked():
     assert auditor.reconstruct_record(raw, ENAAT) is None
 
 
-def test_c6_unknown_inner_under_non_jup6_stays_blocked():
-    raw = _jup6_hop_tx(ENAAT, ENAAT_SIG, outer_program=RAYDIUM_AMM)
+def test_c6_unknown_inner_under_unreviewed_outer_stays_blocked():
+    raw = _jup6_hop_tx(
+        ENAAT, ENAAT_SIG, outer_program="B3111yJCeHBcA1bizdJjUFPALfhAfSRnAbJzGUtnt56A"
+    )
     keys = _app_keys(raw)
     assert _jupiter_hop_inner_ok(raw, ENAAT, keys) is False
     assert auditor._jupiter_hop_inner_ok(raw, ENAAT, auditor._keys(raw)) is False

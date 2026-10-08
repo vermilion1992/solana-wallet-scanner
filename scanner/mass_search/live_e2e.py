@@ -2512,7 +2512,10 @@ def _looks_like_token_list_page(body):
 
 
 def _tokens_from_imported_page_bodies(bodies):
-    """Recover mints from token-list pages or request metadata on saved pages."""
+    """Recover mints only from request metadata on saved pages.
+
+    Token-list page items and filename guesses are not authoritative.
+    """
     ordered = []
     seen = set()
 
@@ -2530,28 +2533,6 @@ def _tokens_from_imported_page_bodies(bodies):
                 continue
             for key in ("address", "token", "token_address", "tokenAddress", "mint"):
                 add(blob.get(key))
-        if _looks_like_token_list_page(body):
-            for item in token_list_items(body):
-                if isinstance(item, dict):
-                    add(item.get("address") or item.get("mint"))
-        for item in token_tx_items(body):
-            if not isinstance(item, dict):
-                continue
-            for key in ("tokenAddress", "token_address", "token", "mint"):
-                add(item.get(key))
-    return ordered
-
-
-def _tokens_from_import_filenames(paths):
-    ordered = []
-    seen = set()
-    for path in paths or []:
-        stem = Path(path).stem
-        for part in stem.split("-"):
-            address = _safe_address(part)
-            if address and address not in seen:
-                seen.add(address)
-                ordered.append(address)
     return ordered
 
 
@@ -2647,8 +2628,6 @@ def _import_token_intersect_pages(config):
             raw_parts.append(json.dumps(page, separators=(",", ":")).encode())
     if not tokens:
         tokens = _tokens_from_imported_page_bodies(bodies)
-    if not tokens:
-        tokens = _tokens_from_import_filenames(item["path"] for item in imported)
     if not tokens:
         raise SourceError(
             "MISSING_CAPTURE",
@@ -3464,12 +3443,12 @@ def _token_intersect_from_imported(config, state, identity, imported):
             tx_bodies.append(body)
     if tokens:
         idx = 0
-        chosen = [{"address": token, "listing_time": now - (40 * 86400), "role": "imported"} for token in tokens]
+        chosen = [{"address": token, "listing_time": None, "role": "imported"} for token in tokens]
         for token_row in chosen:
             token = token_row["address"]
-            listing = token_row["listing_time"]
-            after_first_block = int(listing) + FIRST_BLOCK_EXCLUSION_SECONDS
-            windows = ordinary_windows(listing)
+            listing = token_row.get("listing_time")
+            after_first_block = (int(listing) + FIRST_BLOCK_EXCLUSION_SECONDS) if listing not in (None, "") else None
+            windows = ordinary_windows(listing) if listing not in (None, "") else []
             for _window_index in range(TOKEN_INTERSECT_WINDOWS):
                 if idx >= len(tx_bodies):
                     break
@@ -3489,7 +3468,8 @@ def _token_intersect_from_imported(config, state, identity, imported):
                         appearances.extend(owners)
                 if not windowed:
                     appearances.extend(token_tx_owners(
-                        items, token=token, window="imported", after_time=after_first_block,
+                        items, token=token, window="imported",
+                        after_time=after_first_block if after_first_block is not None else 0,
                     ))
     else:
         chosen = []
@@ -3555,8 +3535,7 @@ async def _phase1_token_intersect(store, grant, config, state, recorder, identit
     now = utc_now_unix()
     chosen = []
     if tokens:
-        listing = now - (40 * 86400)
-        chosen = [{"address": token, "listing_time": listing, "role": "supplied"} for token in tokens]
+        chosen = [{"address": token, "listing_time": None, "role": "supplied"} for token in tokens]
     else:
         list_params = {
             "sort_by": "liquidity",
@@ -3594,11 +3573,11 @@ async def _phase1_token_intersect(store, grant, config, state, recorder, identit
     try:
         for token_row in chosen:
             token = token_row.get("address")
-            listing = token_row.get("listing_time") or (now - (40 * 86400))
+            listing = token_row.get("listing_time")
             if not token:
                 continue
-            after_first_block = int(listing) + FIRST_BLOCK_EXCLUSION_SECONDS
-            windows = ordinary_windows(listing)
+            after_first_block = (int(listing) + FIRST_BLOCK_EXCLUSION_SECONDS) if listing not in (None, "") else 0
+            windows = ordinary_windows(listing) if listing not in (None, "") else []
             for window_index in range(TOKEN_INTERSECT_WINDOWS):
                 params = token_txs_params(token, offset=window_index * limit, limit=limit)
                 response = await _birdeye_seed_call(
@@ -4598,8 +4577,12 @@ def _phase4_wallet_row(report, profile):
 PHASE4_WALLET_TIMEOUT_SEC = 600
 
 
-class Phase4Timeout(Exception):
-    """Fail-closed: one wallet exceeded the Phase 4 wall-clock budget."""
+class Phase4Timeout(BaseException):
+    """Fail-closed: one wallet exceeded the Phase 4 wall-clock budget.
+
+    Subclasses BaseException so generic `except Exception` handlers cannot
+    swallow the alarm and emit a normal report.
+    """
 
 
 def phase4_wallet_timeout_sec(config=None):
@@ -4739,6 +4722,7 @@ def phase4_offline(store, config, state):
             raise Phase4Timeout(f"wallet {address} exceeded {timeout_sec}s")
 
         old_handler = None
+        deadline = (time.monotonic() + timeout_sec) if timeout_sec else None
         try:
             if timeout_sec:
                 old_handler = signal.signal(signal.SIGALRM, _on_phase4_alarm)
@@ -4810,8 +4794,12 @@ def phase4_offline(store, config, state):
                 from scanner.mass_search.research_profile import qualification_level
                 profile["qualification_level"] = qualification_level(report, profile)
             report["research_profile"] = profile
+            if deadline is not None and time.monotonic() >= deadline:
+                raise Phase4Timeout(f"wallet {address} exceeded {timeout_sec}s")
             if not config.get("dry_run"):
                 store.put("reports", report["id"], report)
+            if deadline is not None and time.monotonic() >= deadline:
+                raise Phase4Timeout(f"wallet {address} exceeded {timeout_sec}s")
             row = _phase4_wallet_row(report, _authoritative_saved_profile(report) or profile)
             rows.append(row)
         except Phase4Timeout as error:
@@ -5112,6 +5100,9 @@ def validate_config(raw):
     )
     if history_to_first or history_start_unix is not None:
         earlier = bounds["earlier_history_days"]
+    dex_pages = raw.get("nansen_dex_trades_max_pages")
+    if dex_pages not in (None, "") and int(dex_pages) < 1:
+        raise LiveE2EError("nansen_dex_trades_max_pages must be >= 1")
     return {
         "mode": raw["mode"],
         "dry_run": raw["mode"] == "dry-run",
@@ -5463,6 +5454,13 @@ async def run_live_e2e(raw):
         store.close()
 
 
+def _positive_int(value):
+    parsed = int(value)
+    if parsed < 1:
+        raise argparse.ArgumentTypeError("must be >= 1")
+    return parsed
+
+
 def build_arg_parser():
     parser = argparse.ArgumentParser(description="LIVE E2E proof runner. Use --dry-run before any spend.")
     mode = parser.add_mutually_exclusive_group(required=True)
@@ -5573,9 +5571,9 @@ def build_arg_parser():
     parser.add_argument(
         "--nansen-dex-trades-max-pages",
         dest="nansen_dex_trades_max_pages",
-        type=int,
+        type=_positive_int,
         default=3,
-        help="Per-wallet page cap for profiler/dex-trades (default 3).",
+        help="Per-wallet page cap for profiler/dex-trades (default 3; must be >= 1).",
     )
     parser.add_argument(
         "--nansen-dex-trades-wallet-cap",

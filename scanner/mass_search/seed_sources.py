@@ -638,9 +638,11 @@ def estimate_nansen_dex_trades_count(
     except (TypeError, ValueError):
         wallets = 0
     try:
-        pages = max(0, int(max_pages if max_pages not in (None, "") else NANSEN_DEX_TRADES_MAX_PAGES))
+        pages = int(max_pages if max_pages not in (None, "") else NANSEN_DEX_TRADES_MAX_PAGES)
     except (TypeError, ValueError):
         pages = NANSEN_DEX_TRADES_MAX_PAGES
+    if pages < 1:
+        raise ValueError("nansen_dex_trades_max_pages must be >= 1")
     bound = wallets * pages
     if request_cap is not None:
         bound = min(bound, max(0, int(request_cap) - int(already_requests)))
@@ -1267,10 +1269,14 @@ def _dex_trade_timestamp(row):
     if isinstance(raw, str):
         text = raw.replace("Z", "+00:00")
         try:
-            return int(datetime.fromisoformat(text).timestamp())
+            parsed = datetime.fromisoformat(text)
         except (TypeError, ValueError):
             if raw.isdigit():
                 return int(raw)
+            return None
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return int(parsed.timestamp())
     return None
 
 

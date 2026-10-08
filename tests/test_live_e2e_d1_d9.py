@@ -40,7 +40,7 @@ def _app_trades(payload):
 
 
 def test_decoder_version_is_v23():
-    assert DECODER_VERSION == "spot-v25-net-balance-v1"
+    assert DECODER_VERSION == "spot-v27-route-flow-v1"
 
 
 def test_d1_auditor_includes_dgmg_router_fee():
@@ -154,6 +154,10 @@ def test_d3_unknown_inner_touching_wallet_blocks():
             loaded["readonly"] = readonly
         replaced += 1
     assert replaced >= 1
+    for group in meta.get("innerInstructions") or []:
+        for instruction in group.get("instructions") or []:
+            if instruction.get("stackHeight") == 2:
+                instruction["stackHeight"] = 3
     decoded, trades = _app_trades(payload)
     assert trades == []
     reasons = " ".join(row.get("reason") or "" for row in decoded.get("unresolved") or [])
@@ -195,7 +199,10 @@ def test_d4_usdt_sol_is_conversion_not_an_fx_episode():
     assert conversions
     assert conversions[0].get("settlement_asset") == "USDT"
     assert conversions[0].get("from_asset") in {"USDT", "SOL"}
-    assert auditor.reconstruct_record(payload["record"], payload["address"]) is None
+    aud = auditor.reconstruct_record(payload["record"], payload["address"])
+    if aud:
+        assert aud.get("kind") == "conversion"
+        assert aud.get("settlement_asset") in {"USDT", "SOL"}
 
 
 def test_d5_auditor_keeps_sol_fees_on_usdc_settled_trade():

@@ -6,6 +6,7 @@ G1 and ranked-100 grants must not be reused. Setup-pilot must not be reset.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sqlite3
@@ -199,8 +200,11 @@ def page_cache_key(authorization_id, address, page_index, *, version=2):
     return f"{prefix}{authorization_id}:{address}:page:{page_index}"
 
 
-def chunk_cache_key(authorization_id, address, page_index, chunk_index, *, version=2):
-    return f"{page_cache_key(authorization_id, address, page_index, version=version)}:chunk:{chunk_index}"
+def chunk_cache_key(authorization_id, address, page_index, chunk_index, *, version=2, generation=None):
+    key = f"{page_cache_key(authorization_id, address, page_index, version=version)}:chunk:{chunk_index}"
+    if generation:
+        return f"{key}:g:{generation}"
+    return key
 
 
 def wallet_log_key(authorization_id, address):
@@ -227,11 +231,27 @@ def _encode_cache_payload(payload):
 def _assemble_chunked_page(store, authorization_id, address, page_index, manifest):
     assembled = []
     chunks = int(manifest.get("chunks") or 0)
+    generation = manifest.get("generation")
+    expected = manifest.get("record_count")
+    digest = manifest.get("digest")
     for index in range(chunks):
-        part = store.get(CACHE_KIND, chunk_cache_key(authorization_id, address, page_index, index, version=2))
+        part = store.get(
+            CACHE_KIND,
+            chunk_cache_key(
+                authorization_id, address, page_index, index, version=2, generation=generation,
+            ),
+        )
         if not part:
             return None
+        if generation and part.get("generation") != generation:
+            return None
         assembled.extend(part.get("records") or [])
+    if expected is not None and len(assembled) != int(expected):
+        return None
+    if digest:
+        check = hashlib.sha256(_encode_cache_payload({"records": assembled})).hexdigest()
+        if check != digest:
+            return None
     page = dict(manifest)
     page["records"] = assembled
     return page
@@ -320,20 +340,33 @@ def persist_page(store, authorization_id, address, page_index, payload):
         store.put(CACHE_KIND, key, payload)
         return payload
     chunks = split_records_to_sqlite_chunks(records, meta, max_bytes)
+    generation = uuid.uuid4().hex
+    digest = hashlib.sha256(_encode_cache_payload({"records": records})).hexdigest()
+    for index, chunk in enumerate(chunks):
+        store.put(
+            CACHE_KIND,
+            chunk_cache_key(
+                authorization_id, address, page_index, index, version=2, generation=generation,
+            ),
+            {
+                **meta,
+                "records": chunk,
+                "chunk_index": index,
+                "chunks": len(chunks),
+                "generation": generation,
+                "record_count": len(records),
+            },
+        )
     manifest = {
         **meta,
         "records": [],
         "chunked": True,
         "chunks": len(chunks),
         "record_count": len(records),
+        "generation": generation,
+        "digest": digest,
     }
     store.put(CACHE_KIND, key, manifest)
-    for index, chunk in enumerate(chunks):
-        store.put(
-            CACHE_KIND,
-            chunk_cache_key(authorization_id, address, page_index, index, version=2),
-            {**meta, "records": chunk, "chunk_index": index, "chunks": len(chunks)},
-        )
     return payload
 
 

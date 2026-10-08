@@ -4,9 +4,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from decimal import Decimal
+
 from scanner.investigation import (
     DECODER_VERSION,
     JUPITER,
+    LAMPORTS,
     NET_BALANCE_INSTRUCTION,
     NET_BALANCE_SWAP_PROGRAMS,
     RAYDIUM_AMM,
@@ -35,9 +38,12 @@ def _trades(decoded):
 
 
 def test_decoder_version_bumped_for_net_balance():
-    assert DECODER_VERSION == "spot-v25-net-balance-v1"
+    assert DECODER_VERSION == "spot-v27-route-flow-v1"
     assert RAYDIUM_CLMM in NET_BALANCE_SWAP_PROGRAMS
     assert RAYDIUM_CLMM not in REVIEWED_OUTER_VENUES
+    from scanner.investigation import TITAN, TERM9Y, ROUTEU, OKX_DEX_V2
+    assert {TITAN, TERM9Y, ROUTEU, OKX_DEX_V2} <= NET_BALANCE_SWAP_PROGRAMS
+    assert TITAN not in REVIEWED_OUTER_VENUES
     assert auditor.NET_BALANCE_SWAP_PROGRAMS is not NET_BALANCE_SWAP_PROGRAMS
     assert RAYDIUM_CLMM in auditor.NET_BALANCE_SWAP_PROGRAMS
 
@@ -120,6 +126,9 @@ def _assert_decode_agrees(name, program):
     assert trades[0]["kind"] == aud["kind"]
     assert trades[0]["mint"] == aud["mint"]
     assert str(trades[0]["quantity_raw"]) == str(aud["quantity_raw"])
+    if aud.get("settlement_asset") == "SOL" and trades[0].get("amount_sol") not in (None, ""):
+        # Layout vs CPI/net may differ by fee/tip residue; kind/mint/qty already agreed.
+        assert abs(Decimal(str(trades[0]["amount_sol"])) - Decimal(str(aud["consideration_sol"]))) <= Decimal("0.15")
 
 
 def _assert_function_agrees(name, program):
@@ -135,6 +144,10 @@ def _assert_function_agrees(name, program):
     assert str(abs(app["quantity"])) == str(aud["quantity_raw"])
     assert aud.get("source") == "independent-net-balance"
     assert aud.get("instruction") == NET_BALANCE_INSTRUCTION
+    if aud.get("settlement_asset") == "SOL":
+        assert abs(Decimal(app["settlement"])) / LAMPORTS == Decimal(str(aud["consideration_sol"]))
+    elif aud.get("settlement_asset") == "USDC":
+        assert abs(Decimal(app["quote_delta"])) / Decimal(1_000_000) == Decimal(str(aud["consideration_usdc"]))
 
 
 def test_jupiter_v6_net_balance_fixture():
@@ -142,7 +155,11 @@ def test_jupiter_v6_net_balance_fixture():
 
 
 def test_whirlpool_net_balance_fixture():
-    _assert_function_agrees("orca_whirlpool.json", WHIRLPOOL)
+    payload = _load("orca_whirlpool.json")
+    record, address = payload["record"], payload["address"]
+    # 0.049 SOL unverified tip is above the 0.02 outbound bound.
+    assert net_balance_reviewed_swap(record, address) is None
+    assert auditor.reconstruct_record(record, address) is None
 
 
 def test_raydium_amm_v4_net_balance_fixture():
@@ -150,7 +167,14 @@ def test_raydium_amm_v4_net_balance_fixture():
 
 
 def test_raydium_clmm_net_balance_fixture():
-    _assert_decode_agrees("raydium_clmm.json", RAYDIUM_CLMM)
+    payload = _load("raydium_clmm.json")
+    record, address = payload["record"], payload["address"]
+    after = decode_supported_swaps(canonical_decode_records([record]), address)
+    trades = _trades(after)
+    assert trades, "jupiter layout should still decode the CLMM hop route"
+    assert trades[0]["kind"] in {"buy", "sell", "conversion"}
+    # 0.1 SOL unverified tip keeps the net-balance / auditor path closed.
+    assert net_balance_reviewed_swap(record, address) is None
 
 
 def test_app_and_auditor_net_balance_are_independent():
