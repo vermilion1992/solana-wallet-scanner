@@ -2934,6 +2934,7 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
     unsupported_n = 0
     decoded_value = {"SOL": Decimal("0"), "USDC": Decimal("0"), "USDT": Decimal("0")}
     unsupported_value = {"SOL": Decimal("0"), "USDC": Decimal("0"), "USDT": Decimal("0")}
+    value_unknown = False
     for record in records or []:
         raw = _unwrap(record)
         signature = _auditor_record_signature(record, raw)
@@ -3009,6 +3010,16 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
                 unsupported_value["USDT"] += usdt / Decimal("1000000")
             if sol > Decimal("0.003"):
                 unsupported_value["SOL"] += sol
+            downs = {
+                mint for mint, qty in token_deltas.items()
+                if qty < 0 and mint not in AUDITOR_QUOTE_MINTS
+            }
+            ups = {
+                mint for mint, qty in token_deltas.items()
+                if qty > 0 and mint not in AUDITOR_QUOTE_MINTS
+            }
+            if downs and ups:
+                value_unknown = True
     denom = decoded_n + unsupported_n
     empty = not signatures or denom == 0
     by_count = None if not denom else _canonical(Decimal(unsupported_n) / Decimal(denom))
@@ -3021,7 +3032,7 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
             by_consideration[asset] = _canonical(share)
             value_shares.append(Decimal("1") - share)
     count_share = None if by_count is None else Decimal("1") - Decimal(str(by_count))
-    value_share = min(value_shares) if value_shares else None
+    value_share = None if value_unknown else (min(value_shares) if value_shares else None)
     gate_passed = (
         not empty
         and count_share is not None
@@ -3045,6 +3056,7 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
         "unsupported_n": unsupported_n,
         "denominator": denom,
         "method": "reconstructed_trades_vs_unreadables_and_owned_deltas",
+        "value_unknown": bool(value_unknown),
         "PRODUCT_READY": False,
     }
 

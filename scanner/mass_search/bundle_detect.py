@@ -23,6 +23,7 @@ from __future__ import annotations
 from decimal import Decimal
 
 from scanner.investigation import (
+    METEORA_DLMM,
     PUMP,
     PUMP_SWAP,
     REVIEWED_OUTER_VENUES,
@@ -61,6 +62,14 @@ STAKING_PROGRAMS = frozenset({PYTH_STAKING})
 RENT_EXEMPT_BASE = 890880
 RENT_EXEMPT_PER_BYTE = 6960
 RENT_EXEMPT_SLACK_LAMPORTS = 3_000_000
+# Token / ATA accounts are 165 bytes; Token-2022 extensions stay small.
+# Observed program-owned positions in this repo: Pyth stake 4040, DLMM 8120.
+RENT_EXEMPT_MAX_SPACE = 16_384
+RENT_EXEMPT_OWNER_ALLOWLIST = frozenset({
+    *TOKEN_PROGRAMS,
+    PYTH_STAKING,
+    METEORA_DLMM,
+})
 
 
 def _rent_exempt_minimum_lamports(space):
@@ -71,6 +80,45 @@ def _rent_exempt_minimum_lamports(space):
     if space_n < 0:
         return None
     return RENT_EXEMPT_BASE + RENT_EXEMPT_PER_BYTE * space_n
+
+
+def _raw_native_delta(raw, keys, address):
+    """post − pre for one account. None if the row is unreadable. No fee add-back."""
+    if not raw or not keys or not address:
+        return None
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    try:
+        index = keys.index(address)
+    except ValueError:
+        return None
+    pre = meta.get("preBalances") or []
+    post = meta.get("postBalances") or []
+    if index >= len(pre) or index >= len(post):
+        return None
+    try:
+        return Decimal(int(post[index]) - int(pre[index]))
+    except (TypeError, ValueError, OverflowError):
+        return None
+
+
+def _allowlisted_rent_create(info):
+    """True when owner/space/instruction lamports look like a known rent-exempt create."""
+    if not isinstance(info, dict):
+        return False
+    owner = info.get("owner")
+    if owner not in RENT_EXEMPT_OWNER_ALLOWLIST:
+        return False
+    expected = _rent_exempt_minimum_lamports(info.get("space"))
+    if expected is None:
+        return False
+    try:
+        space_n = int(info.get("space"))
+        lamports = int(info.get("lamports"))
+    except (TypeError, ValueError):
+        return False
+    if space_n > RENT_EXEMPT_MAX_SPACE:
+        return False
+    return expected <= lamports <= expected + RENT_EXEMPT_SLACK_LAMPORTS
 
 
 def _unwrap(record):
@@ -219,28 +267,26 @@ def _create_account_map(raw, keys):
 
 
 def _is_new_or_program_owned_account(raw, keys, other):
-    """Exempt only a non-System createAccount funded at its rent-exempt minimum.
+    """Exempt only an allowlisted rent-exempt create whose real net is rent-sized.
 
-    A fresh keypair or a System-owned createAccount that receives material
-    lamports is sale proceeds. preBalance 0 alone never exempts.
+    Instruction lamports alone are not enough: a later System transfer into
+    the same new account must be visible in post − pre. Unknown owners and
+    oversized space are sale proceeds. A fresh keypair or System-owned
+    createAccount never exempts. preBalance 0 alone never exempts.
     """
     if not other or not keys:
         return False
     created = _create_account_map(raw, keys)
     info = created.get(other)
-    if not info:
-        return False
-    owner = info.get("owner")
-    if not owner or owner == SYSTEM_PROGRAM:
+    if not info or not _allowlisted_rent_create(info):
         return False
     expected = _rent_exempt_minimum_lamports(info.get("space"))
     if expected is None:
         return False
-    try:
-        lamports = int(info.get("lamports"))
-    except (TypeError, ValueError):
+    delta = _raw_native_delta(raw, keys, other)
+    if delta is None or delta < 0:
         return False
-    return expected <= lamports <= expected + RENT_EXEMPT_SLACK_LAMPORTS
+    return delta <= expected + RENT_EXEMPT_SLACK_LAMPORTS
 
 
 def _wallet_gained_quote(raw, keys, address, deltas):

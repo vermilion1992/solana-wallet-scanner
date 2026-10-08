@@ -17,6 +17,12 @@ from __future__ import annotations
 
 from decimal import Decimal, InvalidOperation
 
+from scanner.mass_search.bundle_detect import (
+    RENT_EXEMPT_SLACK_LAMPORTS,
+    _allowlisted_rent_create,
+    _raw_native_delta,
+    _rent_exempt_minimum_lamports,
+)
 from scanner.mass_search.canonical_records import unwrap_gta_record
 from scanner.mass_search.record_breakdown import (
     SOL_SWAP_FLOOR,
@@ -33,19 +39,9 @@ from scanner.mass_search.record_breakdown import (
 from scanner.mass_search.verified_costs import is_verified_tip_account
 
 SYSTEM_PROGRAM = "11111111111111111111111111111111"
-RENT_EXEMPT_BASE = 890880
-RENT_EXEMPT_PER_BYTE = 6960
 LAMPORTS = Decimal("1000000000")
-
-
-def _rent_exempt_minimum_lamports(space):
-    try:
-        space_n = int(space)
-    except (TypeError, ValueError):
-        return None
-    if space_n < 0:
-        return None
-    return RENT_EXEMPT_BASE + RENT_EXEMPT_PER_BYTE * space_n
+# Published tips are tiny. Anything above this per tx is value, not a tip.
+TIP_EXCLUSION_CAP_LAMPORTS = 10_000_000
 
 
 def _iter_coverage_instructions(raw):
@@ -58,8 +54,16 @@ def _iter_coverage_instructions(raw):
 
 
 def _proven_excluded_sol_lamports(raw, address, keys):
-    """Exact createAccount rent (wallet-funded, non-System owner) and verified tips."""
+    """Rent remaining on allowlisted creates (once, net of close) and capped tips.
+
+    A create that is closed back to the wallet in the same tx contributes 0.
+    Instruction lamports are never excluded when the dest's real post − pre
+    is missing, larger than rent + slack, or the owner/space is not allowlisted.
+    Tip exclusions are capped at TIP_EXCLUSION_CAP_LAMPORTS per transaction.
+    """
     excluded = Decimal("0")
+    seen_rent_dests = set()
+    tip_excluded = Decimal("0")
     for instruction in _iter_coverage_instructions(raw):
         if not isinstance(instruction, dict):
             continue
@@ -72,24 +76,32 @@ def _proven_excluded_sol_lamports(raw, address, keys):
         if program == SYSTEM_PROGRAM and kind in ("createAccount", "createAccountWithSeed"):
             if info.get("source") != address:
                 continue
-            owner = info.get("owner")
-            if not owner or owner == SYSTEM_PROGRAM:
+            dest = info.get("newAccount") or info.get("newAccountPubkey")
+            if not dest or dest in seen_rent_dests:
+                continue
+            if not _allowlisted_rent_create(info):
                 continue
             expected = _rent_exempt_minimum_lamports(info.get("space"))
-            try:
-                lamports = int(info.get("lamports"))
-            except (TypeError, ValueError):
+            if expected is None:
                 continue
-            if expected is not None and lamports == expected:
-                excluded += Decimal(lamports)
+            remaining = _raw_native_delta(raw, keys, dest)
+            if remaining is None or remaining <= 0:
+                continue
+            if remaining > expected + RENT_EXEMPT_SLACK_LAMPORTS:
+                continue
+            excluded += remaining
+            seen_rent_dests.add(dest)
             continue
         if kind == "transfer" and info.get("source") == address:
             dest = info.get("destination")
             if dest and is_verified_tip_account(dest):
                 try:
-                    excluded += Decimal(int(info.get("lamports")))
+                    tip_excluded += Decimal(int(info.get("lamports")))
                 except (TypeError, ValueError):
                     pass
+    if tip_excluded:
+        cap = Decimal(TIP_EXCLUSION_CAP_LAMPORTS)
+        excluded += tip_excluded if tip_excluded <= cap else cap
     return excluded
 
 
@@ -413,7 +425,30 @@ def relevant_membership(records, decoded, address, *, report_start, report_end, 
     return rows
 
 
-def _shares_from_totals(decoded_n, unsupported_n, consideration):
+def _token_for_token_unpriced(raw, address):
+    """True when an unsupported tx swaps one non-quote mint for another.
+
+    Those rows sit in R by count but carry no quote value. The wallet's
+    value share is unknown (never covered) so the gate cannot pass.
+    """
+    maps = _owner_token_maps(raw, address)
+    if maps is None:
+        return False
+    pre, post = maps
+    downs = set()
+    ups = set()
+    for mint in set(pre) | set(post):
+        if mint in QUOTE_MINTS:
+            continue
+        delta = post.get(mint, Decimal("0")) - pre.get(mint, Decimal("0"))
+        if delta < 0:
+            downs.add(mint)
+        elif delta > 0:
+            ups.add(mint)
+    return bool(downs and ups)
+
+
+def _shares_from_totals(decoded_n, unsupported_n, consideration, value_unknown=False):
     denom = decoded_n + unsupported_n
     by_count = None
     if denom:
@@ -428,7 +463,7 @@ def _shares_from_totals(decoded_n, unsupported_n, consideration):
     for value in by_consideration.values():
         amount = Decimal(str(value))
         value_coverages.append(Decimal("1") - amount)
-    value_share = min(value_coverages) if value_coverages else None
+    value_share = None if value_unknown else (min(value_coverages) if value_coverages else None)
     mandatory = None
     if count_share is not None and value_share is not None:
         mandatory = min(count_share, value_share)
@@ -444,6 +479,7 @@ def _shares_from_totals(decoded_n, unsupported_n, consideration):
         "decoded_n": decoded_n,
         "unsupported_n": unsupported_n,
         "denominator": denom,
+        "value_unknown": bool(value_unknown),
     }
 
 
@@ -456,6 +492,7 @@ def coverage_over_relevant(records, decoded, address, membership):
     }
     decoded_n = 0
     unsupported_n = 0
+    value_unknown = False
     decoded_by_sig = {}
     for event in (decoded or {}).get("events") or []:
         signature = event.get("signature")
@@ -493,7 +530,9 @@ def coverage_over_relevant(records, decoded, address, membership):
             sol = _coverage_sol_after_proven_exclusions(raw, address, keys)
             if sol:
                 consideration[bucket]["SOL"] += sol
-    shares = _shares_from_totals(decoded_n, unsupported_n, consideration)
+            if _token_for_token_unpriced(raw, address):
+                value_unknown = True
+    shares = _shares_from_totals(decoded_n, unsupported_n, consideration, value_unknown=value_unknown)
     shares["consideration"] = {
         "decoded": {asset: _display_decimal(value) for asset, value in consideration["decoded"].items() if value},
         "unsupported": {asset: _display_decimal(value) for asset, value in consideration["unsupported"].items() if value},
@@ -553,6 +592,7 @@ def build_result_relevant(records, decoded, address, *, report_start, report_end
         "unsupported_n": shares["unsupported_n"],
         "denominator": shares["denominator"],
         "consideration": shares["consideration"],
+        "value_unknown": bool(shares.get("value_unknown")),
         "PRODUCT_READY": False,
     }
 
@@ -583,7 +623,7 @@ def attach_result_relevant(
             "version", "signatures", "size", "empty", "lineage_mints",
             "unsupported_swap_share", "coverage_count_share", "coverage_value_share",
             "coverage_mandatory_share", "decoded_n", "unsupported_n",
-            "denominator", "consideration", "gate_passed", "PRODUCT_READY",
+            "denominator", "consideration", "gate_passed", "value_unknown", "PRODUCT_READY",
         )
     }
     report["result_relevant"] = breakdown["result_relevant"]

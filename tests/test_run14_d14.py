@@ -59,9 +59,13 @@ from scanner.mass_search.live_e2e_ledger import (
     request_identity,
 )
 from scanner.mass_search.bundle_detect import (
+    METEORA_DLMM,
     PYTH_STAKING,
+    RENT_EXEMPT_MAX_SPACE,
+    RENT_EXEMPT_SLACK_LAMPORTS,
     detect_bundle_or_distribution,
 )
+from scanner.mass_search.result_relevant_coverage import TIP_EXCLUSION_CAP_LAMPORTS
 from scanner.mass_search.labels import blocking_reason
 from scanner.mass_search.qualification_gates import GT_ECONOMIC_TRADES_RULE, mandatory_coverage_gate
 from scanner.mass_search.result_relevant_coverage import build_result_relevant
@@ -927,6 +931,70 @@ def test_d14_14_neighbor_pyth_extra_and_system_owned_rent_plus_sol_flag():
     assert _d14_14_flag(p2) is True
 
 
+def _rent_exempt_min(space):
+    return 890880 + 6960 * int(space)
+
+
+def _d14_14_program_create(owner, space, lamports, extra_transfer=0, seed=False):
+    rec = json.loads(json.dumps(_pyth_stake_create_account()))
+    ix = rec["transaction"]["message"]["instructions"][0]["parsed"]
+    if seed:
+        ix["type"] = "createAccountWithSeed"
+        ix["info"]["base"] = D14_WALLET
+        ix["info"]["seed"] = "x"
+    ix["info"].update(owner=owner, space=space, lamports=lamports)
+    rec["meta"]["postBalances"][0] = 1_000_000_000 - lamports - extra_transfer - 10_000
+    rec["meta"]["postBalances"][1] = lamports + extra_transfer
+    if extra_transfer:
+        rec["transaction"]["message"]["instructions"].append({
+            "programId": SYSTEM,
+            "parsed": {
+                "type": "transfer",
+                "info": {"source": D14_WALLET, "destination": D14_NEW, "lamports": extra_transfer},
+            },
+        })
+    return rec
+
+
+def test_d14_14_real_net_change_not_instruction_lamports():
+    """C5: exact-rent DLMM create + 5 SOL transfer into the same dest flags."""
+    rent = _rent_exempt_min(8120)
+    c5 = _d14_14_program_create(METEORA_DLMM, 8120, rent, extra_transfer=5_000_000_000)
+    assert _d14_14_flag(c5) is True
+    # Neighbours: the same 5 SOL to a fresh keypair or a System-owned create flags.
+    fresh = json.loads(json.dumps(_d14_existing_cosigner_sale()))
+    fresh["meta"]["preBalances"][1] = 0
+    fresh["meta"]["postBalances"][1] = 5_000_000_000
+    assert _d14_14_flag(fresh) is True
+    system_owned = _d14_14_program_create(SYSTEM, 0, 5_000_000_000)
+    assert _d14_14_flag(system_owned) is True
+    # Exact-rent DLMM without the extra transfer still exempts.
+    c2 = _d14_14_program_create(METEORA_DLMM, 8120, rent)
+    assert _d14_14_flag(c2) is False
+    slack = _d14_14_program_create(METEORA_DLMM, 8120, rent + RENT_EXEMPT_SLACK_LAMPORTS)
+    assert _d14_14_flag(slack) is False
+    over_slack = _d14_14_program_create(METEORA_DLMM, 8120, rent + RENT_EXEMPT_SLACK_LAMPORTS + 100_000)
+    assert _d14_14_flag(over_slack) is True
+
+
+def test_d14_14_neighbor_unknown_owner_and_space_cap():
+    """C4: unknown owner / oversized space is not rent, even at the formula."""
+    unknown = "UnknProg11111111111111111111111111111111112"
+    big = _d14_14_program_create(unknown, 100_000, _rent_exempt_min(100_000))
+    assert _d14_14_flag(big) is True
+    # Material rent (space 2000 ≈ 0.015 SOL) with an unknown owner is not exempt.
+    material_unknown = _d14_14_program_create(unknown, 2000, _rent_exempt_min(2000))
+    assert _d14_14_flag(material_unknown) is True
+    over_space = _d14_14_program_create(
+        METEORA_DLMM, RENT_EXEMPT_MAX_SPACE + 1, _rent_exempt_min(RENT_EXEMPT_MAX_SPACE + 1),
+    )
+    assert _d14_14_flag(over_space) is True
+    token_ata = _d14_14_program_create(TOKEN_PROG, 165, _rent_exempt_min(165))
+    assert _d14_14_flag(token_ata) is False
+    seeded = _d14_14_program_create(METEORA_DLMM, 8120, _rent_exempt_min(8120), seed=True)
+    assert _d14_14_flag(seeded) is False
+
+
 # --- D14-15 ----------------------------------------------------------------
 
 D14_MINT = "RrelMintD1415aaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -1753,3 +1821,335 @@ def test_d15_2_neighbor_serial_requests_still_stop_at_the_cap(tmp_path):
     store.close()
     assert state["run_spend"]["helius_units"] == 20
     assert state["run_spend"]["helius_requests"] == 2
+
+
+# --- eede2c4 verify: value exclusions, probe fail/pagination, unpriced token-token
+
+def _d14_token_for_token(sig, block_time, pay_mint, pay_ata, pay_raw, recv_mint, recv_ata):
+    rec = _d14_swap(
+        sig, token_pre="0", token_post="1000000",
+        usdc_pre="0", usdc_post="0", block_time=block_time, mint=recv_mint,
+    )
+    rec["transaction"]["message"]["accountKeys"][1] = recv_ata
+    rec["transaction"]["message"]["accountKeys"].append(pay_ata)
+    rec["meta"]["preBalances"].append(2_039_280)
+    rec["meta"]["postBalances"].append(2_039_280)
+    rec["transaction"]["message"]["instructions"] = [{"programId": TOKEN_PROG, "accounts": [D14_WALLET], "data": "y"}]
+    rec["meta"]["preTokenBalances"].append({
+        "accountIndex": 5, "mint": pay_mint, "owner": D14_WALLET,
+        "uiTokenAmount": {"amount": str(pay_raw)},
+    })
+    rec["meta"]["postTokenBalances"].append({
+        "accountIndex": 5, "mint": pay_mint, "owner": D14_WALLET,
+        "uiTokenAmount": {"amount": "0"},
+    })
+    return rec
+
+
+def test_d14_15_create_close_rent_not_excluded_twice():
+    """R3: rent created and closed back in the same tx cannot hide a 10 SOL OTC."""
+    other = "OtherMintR3aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    other_ata = "OtherAtaR3aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    new = "NewAcctR3aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    space = 165
+    rent = _rent_exempt_min(space)
+    rec = _d14_otc("r3", IN_90 + 920, other, other_ata, 10_000_000_000)
+    rec["transaction"]["message"]["accountKeys"].append(new)
+    rec["meta"]["preBalances"].append(0)
+    rec["meta"]["postBalances"].append(0)
+    rec["transaction"]["message"]["instructions"] = [
+        {
+            "programId": SYSTEM,
+            "parsed": {
+                "type": "createAccount",
+                "info": {
+                    "source": D14_WALLET, "newAccount": new,
+                    "lamports": rent, "space": space, "owner": TOKEN_PROG,
+                },
+            },
+        },
+        {
+            "programId": TOKEN_PROG,
+            "parsed": {
+                "type": "closeAccount",
+                "info": {"account": new, "destination": D14_WALLET, "owner": D14_WALLET},
+            },
+        },
+        {
+            "programId": SYSTEM,
+            "parsed": {
+                "type": "transfer",
+                "info": {
+                    "source": D14_WALLET,
+                    "destination": "OtcCounterparty11111111111111111111111111",
+                    "lamports": 10_000_000_000,
+                },
+            },
+        },
+    ]
+    app, aud = _d14_15_run([rec])
+    assert app.get("value_unknown") is not True
+    assert Decimal(str(app["value_share"])) < Decimal("0.99")
+    assert app["gate_passed"] is False
+    assert Decimal(str(aud["value_share"])) <= Decimal(str(app["value_share"]))
+    # Neighbour: dest still holding exact rent is excluded once; 10 SOL OTC remains.
+    keep = _d14_otc("r1", IN_90 + 921, other, other_ata, 10_000_000_000 + rent)
+    keep_new = "NewAcctR1keep111111111111111111111111111"
+    keep["transaction"]["message"]["accountKeys"].append(keep_new)
+    keep["meta"]["preBalances"].append(0)
+    keep["meta"]["postBalances"].append(rent)
+    keep["transaction"]["message"]["instructions"] = [
+        {
+            "programId": SYSTEM,
+            "parsed": {
+                "type": "createAccount",
+                "info": {
+                    "source": D14_WALLET, "newAccount": keep_new,
+                    "lamports": rent, "space": space, "owner": TOKEN_PROG,
+                },
+            },
+        },
+        {
+            "programId": SYSTEM,
+            "parsed": {
+                "type": "transfer",
+                "info": {
+                    "source": D14_WALLET,
+                    "destination": "OtcCounterparty11111111111111111111111111",
+                    "lamports": 10_000_000_000,
+                },
+            },
+        },
+    ]
+    keep_app, keep_aud = _d14_15_run([keep])
+    assert Decimal(str(keep_app["value_share"])) < Decimal("0.99")
+    assert keep_app["gate_passed"] is False
+    assert Decimal(str(keep_aud["value_share"])) <= Decimal(str(keep_app["value_share"]))
+
+
+def test_d14_15_neighbor_tip_cap_counts_excess_as_value():
+    """T1: a 10 SOL 'tip' is value. A published tip at the 0.01 SOL cap is still excluded."""
+    other = "OtherMintTipaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    other_ata = "OtherAtaTipaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    tip = next(iter(PUBLISHED_TIP_ACCOUNTS))
+    huge = _d14_otc("t1", IN_90 + 930, other, other_ata, 10_000_000_000, tip_dest=tip)
+    huge_app, huge_aud = _d14_15_run([huge])
+    assert Decimal(str(huge_app["value_share"])) < Decimal("0.99")
+    assert huge_app["gate_passed"] is False
+    assert Decimal(str(huge_aud["value_share"])) <= Decimal(str(huge_app["value_share"]))
+    capped = _d14_otc("tcap", IN_90 + 931, other, other_ata, TIP_EXCLUSION_CAP_LAMPORTS, tip_dest=tip)
+    cap_app, _cap_aud = _d14_15_run([capped])
+    assert Decimal(str(cap_app["value_share"])) == Decimal("1")
+    over = _d14_otc(
+        "tover", IN_90 + 932, other, other_ata, TIP_EXCLUSION_CAP_LAMPORTS + 4_000_000, tip_dest=tip,
+    )
+    over_app, over_aud = _d14_15_run([over])
+    assert Decimal(str(over_app["value_share"])) < Decimal("1")
+    assert over_app["gate_passed"] is False
+    assert Decimal(str(over_aud["value_share"])) <= Decimal(str(over_app["value_share"]))
+
+
+def test_d14_15_unpriced_token_for_token_makes_value_unknown():
+    """Q3: unreadable token→token has no quote value, so value share is unknown."""
+    bonk = "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
+    bonk_ata = "BonkAtaD1415aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    other = "OtherMintQ3aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    other_ata = "OtherAtaQ3aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    rec = _d14_token_for_token("q3", IN_90 + 940, bonk, bonk_ata, 10**12, other, other_ata)
+    app, aud = _d14_15_run([rec])
+    assert app.get("value_unknown") is True
+    assert app["value_share"] is None
+    assert app["gate_passed"] is False
+    assert aud.get("value_unknown") is True
+    assert aud["value_share"] is None
+    assert aud["gate_passed"] is False
+    # Neighbour: token→token via nearly-netted SOL is still unknown.
+    n1 = _d14_otc("n1", IN_90 + 941, other, other_ata, 2_000_000)
+    n1["transaction"]["message"]["instructions"] = [
+        {"programId": SYSTEM, "parsed": {"type": "transfer", "info": {"source": D14_WALLET, "destination": "CptyN1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "lamports": 10_000_000_000}}},
+        {"programId": SYSTEM, "parsed": {"type": "transfer", "info": {"source": "CptyN1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "destination": D14_WALLET, "lamports": 9_998_000_000}}},
+        {"programId": TOKEN_PROG, "accounts": [D14_WALLET], "data": "y"},
+    ]
+    yata = "YAtaN1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    n1["transaction"]["message"]["accountKeys"].append(yata)
+    n1["meta"]["preBalances"].append(2_039_280)
+    n1["meta"]["postBalances"].append(2_039_280)
+    n1["meta"]["preTokenBalances"].append({
+        "accountIndex": 5, "mint": "YMintN1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "owner": D14_WALLET, "uiTokenAmount": {"amount": "5000000"},
+    })
+    n1["meta"]["postTokenBalances"].append({
+        "accountIndex": 5, "mint": "YMintN1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "owner": D14_WALLET, "uiTokenAmount": {"amount": "0"},
+    })
+    n1_app, n1_aud = _d14_15_run([n1])
+    assert n1_app.get("value_unknown") is True
+    assert n1_app["gate_passed"] is False
+    assert n1_aud.get("value_unknown") is True
+    # Neighbour: dust SOL buy of one mint stays priced (sub-floor, not token-token).
+    dust = _d14_otc("f0", IN_90 + 942, other, other_ata, 2_900_000)
+    dust_app, dust_aud = _d14_15_run([dust])
+    assert dust_app.get("value_unknown") is not True
+    assert Decimal(str(dust_app["value_share"])) == Decimal("1")
+    assert dust_app["gate_passed"] is True
+    assert Decimal(str(dust_aud["value_share"])) == Decimal("1")
+
+
+def test_d15_3_failed_probe_is_bot_unknown(tmp_path, monkeypatch):
+    import scanner.mass_search.live_e2e as live
+    day = datetime(2026, 9, 20, tzinfo=timezone.utc)
+    stamp = int(day.timestamp())
+
+    async def fake_sigs(store, grant, config, state, transport, address, *, before=None, phase=2, page_index=0):
+        return {"records": _d15_sig_rows("busy", stamp, 30), "units": 1, "pagination_token": None}
+
+    async def fake_gta(store, grant, config, state, transport, address, options, *, phase, page_index):
+        raise SourceError("HTTP_ERROR", "boom", http_status=500)
+
+    monkeypatch.setattr(live, "_dispatch_signatures", fake_sigs)
+    monkeypatch.setattr(live, "_dispatch_helius", fake_gta)
+    config = _dry_config(
+        tmp_path,
+        seed_source="birdeye_top",
+        phases="2",
+        discovery=False,
+        wallets=D14_WALLET,
+        helius_signatures_prescreen=True,
+    )
+    grant = load_grant(DRAFT)
+    store, _ = open_grant_store(config["authorization_id"])
+    state = _empty_state(config)
+    bind_run_spend(config, state)
+    state["wallets"] = [D14_WALLET]
+    result = asyncio.run(phase2_prescreen(store, grant, config, state, RecorderTransport()))
+    store.close()
+    row = result["wallets"][0]
+    assert row["dropped"] is False
+    assert row.get("bot_unknown") is True
+    assert row.get("cannot_fail_bot_rule") is False
+    assert (row.get("economic_drop") or {}).get("probe_error") == "HTTP_ERROR"
+    ranked = rank_by_nansen_pnl([
+        {"address": "clean", "cannot_fail_bot_rule": True, "nansen_realized_pnl_usd": "1"},
+        {"address": D14_WALLET, "cannot_fail_bot_rule": False, "bot_unknown": True, "nansen_realized_pnl_usd": "999"},
+        {"address": "probed-ok", "cannot_fail_bot_rule": False, "nansen_realized_pnl_usd": "50"},
+    ])
+    assert [item["address"] for item in ranked] == ["clean", "probed-ok", D14_WALLET]
+
+
+def test_d15_3_neighbor_probe_cap_still_raises(tmp_path, monkeypatch):
+    import scanner.mass_search.live_e2e as live
+    day = datetime(2026, 9, 20, tzinfo=timezone.utc)
+    stamp = int(day.timestamp())
+
+    async def fake_sigs(store, grant, config, state, transport, address, *, before=None, phase=2, page_index=0):
+        return {"records": _d15_sig_rows("busy", stamp, 30), "units": 1, "pagination_token": None}
+
+    async def fake_gta(store, grant, config, state, transport, address, options, *, phase, page_index):
+        raise SourceError("CAP_EXCEEDED", "cap", http_status=None)
+
+    monkeypatch.setattr(live, "_dispatch_signatures", fake_sigs)
+    monkeypatch.setattr(live, "_dispatch_helius", fake_gta)
+    config = _dry_config(
+        tmp_path,
+        seed_source="birdeye_top",
+        phases="2",
+        discovery=False,
+        wallets=D14_WALLET,
+        helius_signatures_prescreen=True,
+    )
+    grant = load_grant(DRAFT)
+    store, _ = open_grant_store(config["authorization_id"])
+    state = _empty_state(config)
+    bind_run_spend(config, state)
+    state["wallets"] = [D14_WALLET]
+    result = asyncio.run(phase2_prescreen(store, grant, config, state, RecorderTransport()))
+    store.close()
+    row = result["wallets"][0]
+    assert row.get("funnel_reason") == "cap_reached"
+    assert row.get("bot_unknown") is not True
+
+
+def test_d15_3_probe_follows_day_pagination_and_counts_pages(tmp_path, monkeypatch):
+    """D4: a 130-tx day with 10+30 swaps across two pages must drop, not look clean."""
+    import scanner.mass_search.live_e2e as live
+    day = datetime(2026, 9, 20, tzinfo=timezone.utc)
+    stamp = int(day.timestamp())
+    pages = []
+
+    async def fake_sigs(store, grant, config, state, transport, address, *, before=None, phase=2, page_index=0):
+        return {"records": _d15_sig_rows("busy", stamp, 130), "units": 1, "pagination_token": None}
+
+    async def fake_gta(store, grant, config, state, transport, address, options, *, phase, page_index):
+        token = (options or {}).get("paginationToken")
+        pages.append((page_index, token))
+        start = int(((options or {}).get("filters") or {}).get("blockTime", {}).get("gte") or stamp)
+        if not token:
+            recs = [_d15_econ_swap(address, f"p0-{i}", start + i) for i in range(10)]
+            return {"records": recs, "units": 10, "pagination_token": "day-page-2"}
+        recs = [_d15_econ_swap(address, f"p1-{i}", start + 100 + i) for i in range(30)]
+        return {"records": recs, "units": 10, "pagination_token": None}
+
+    monkeypatch.setattr(live, "_dispatch_signatures", fake_sigs)
+    monkeypatch.setattr(live, "_dispatch_helius", fake_gta)
+    config = _dry_config(
+        tmp_path,
+        seed_source="birdeye_top",
+        phases="2",
+        discovery=False,
+        wallets=D14_WALLET,
+        helius_signatures_prescreen=True,
+        helius_economic_probe_days=8,
+    )
+    grant = load_grant(DRAFT)
+    store, _ = open_grant_store(config["authorization_id"])
+    state = _empty_state(config)
+    bind_run_spend(config, state)
+    state["wallets"] = [D14_WALLET]
+    result = asyncio.run(phase2_prescreen(store, grant, config, state, RecorderTransport()))
+    store.close()
+    row = result["wallets"][0]
+    assert row["dropped"] is True
+    assert row["drop_reason"] == GT_ECONOMIC_TRADES_RULE
+    assert len([item for item in pages if item[0] >= 900000]) == 2
+    assert pages[0][1] in (None, "")
+    assert pages[1][1] == "day-page-2"
+
+
+def test_d15_3_neighbor_leftover_probe_token_is_bot_unknown(tmp_path, monkeypatch):
+    import scanner.mass_search.live_e2e as live
+    day = datetime(2026, 9, 20, tzinfo=timezone.utc)
+    stamp = int(day.timestamp())
+    calls = []
+
+    async def fake_sigs(store, grant, config, state, transport, address, *, before=None, phase=2, page_index=0):
+        return {"records": _d15_sig_rows("busy", stamp, 130), "units": 1, "pagination_token": None}
+
+    async def fake_gta(store, grant, config, state, transport, address, options, *, phase, page_index):
+        calls.append(page_index)
+        recs = [_d15_econ_swap(address, f"p-{page_index}-{i}", stamp + i) for i in range(4)]
+        return {"records": recs, "units": 10, "pagination_token": "still-more"}
+
+    monkeypatch.setattr(live, "_dispatch_signatures", fake_sigs)
+    monkeypatch.setattr(live, "_dispatch_helius", fake_gta)
+    config = _dry_config(
+        tmp_path,
+        seed_source="birdeye_top",
+        phases="2",
+        discovery=False,
+        wallets=D14_WALLET,
+        helius_signatures_prescreen=True,
+        helius_economic_probe_days=2,
+    )
+    grant = load_grant(DRAFT)
+    store, _ = open_grant_store(config["authorization_id"])
+    state = _empty_state(config)
+    bind_run_spend(config, state)
+    state["wallets"] = [D14_WALLET]
+    result = asyncio.run(phase2_prescreen(store, grant, config, state, RecorderTransport()))
+    store.close()
+    row = result["wallets"][0]
+    assert row["dropped"] is False
+    assert row.get("bot_unknown") is True
+    assert row.get("cannot_fail_bot_rule") is False
+    assert len([idx for idx in calls if idx >= 900000]) == 2
+    assert (row.get("economic_drop") or {}).get("incomplete_days")

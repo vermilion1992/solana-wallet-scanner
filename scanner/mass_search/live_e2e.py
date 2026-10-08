@@ -3629,55 +3629,23 @@ def _stamp_cheap_bot_flags(row, cheap):
 async def _phase2_economic_probe_over_days(store, grant, config, state, transport, address, over_days):
     """Targeted GTA for UTC days whose raw tx count is >15. Drop only when proven.
 
-    Probe days ranked by raw count (highest first). Stop at the first day
-    proven above the economic-trade cap. A budget (default 8) leaves leftover
-    over-days as bot_unknown instead of probing every busy day.
+    Probe days ranked by raw count (highest first). Follow each day's GTA
+    pagination until the day is exhausted or >15 economic trades is proven.
+    Each page counts against the budget (default 8). Leftover over-days,
+    a leftover pagination token, or a failed/incomplete probe are
+    bot_unknown instead of ranking with probed-clean wallets.
     """
     if not over_days:
         return {"dropped": False}
     ranked = rank_over_days_for_probe(over_days)
     budget = economic_probe_day_budget(config)
     probed = []
-    for day, _raw_count in ranked[:budget]:
-        try:
-            start = datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=timezone.utc)
-        except ValueError:
-            continue
-        end = start + timedelta(days=1)
-        options = gta_options(
-            details="full",
-            limit=100,
-            start_unix=int(start.timestamp()),
-            end_unix=int(end.timestamp()),
-            sort_order="desc",
-        )
-        page_index = 900000 + (int(day.replace("-", "")) % 100000)
-        page = await _dispatch_helius(
-            store, grant, config, state, transport, address, options,
-            phase=2, page_index=page_index,
-        )
-        records = [row for row in (page.get("records") or []) if isinstance(row, dict)]
-        from scanner.mass_search.canonical_records import canonical_decode_records
-        decoded = decode_supported_swaps(canonical_decode_records(records), address)
-        rate = combined_economic_trade_rate(
-            events=decoded.get("events") if isinstance(decoded, dict) else None,
-            records=records,
-            address=address,
-        )
-        maximum = int(rate.get("max") or 0)
-        probed.append(day)
-        if maximum > MAX_ECONOMIC_TRADES_PER_UTC_DAY:
-            return {
-                "dropped": True,
-                "reason": GT_ECONOMIC_TRADES_RULE,
-                "max": maximum,
-                "max_on": rate.get("max_on") or day,
-                "day": day,
-                "probed_days": probed,
-                "can_only_drop_or_defer": True,
-            }
-    leftover = [day for day, _count in ranked if day not in probed]
-    if leftover:
+    incomplete_days = []
+    pages_used = 0
+    from scanner.mass_search.canonical_records import canonical_decode_records
+
+    if budget <= 0:
+        leftover = [day for day, _count in ranked]
         return {
             "dropped": False,
             "bot_unknown": True,
@@ -3686,7 +3654,98 @@ async def _phase2_economic_probe_over_days(store, grant, config, state, transpor
             "unprobed_days": leftover,
             "cannot_fail_bot_rule": False,
         }
-    return {"dropped": False, "bot_unknown": False, "probed_days": probed}
+
+    for day, _raw_count in ranked:
+        if pages_used >= budget:
+            break
+        try:
+            start = datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        except ValueError:
+            continue
+        end = start + timedelta(days=1)
+        token = None
+        seen_tokens = set()
+        day_records = []
+        day_exhausted = False
+        try:
+            while pages_used < budget:
+                options = gta_options(
+                    details="full",
+                    limit=100,
+                    start_unix=int(start.timestamp()),
+                    end_unix=int(end.timestamp()),
+                    pagination_token=token,
+                    sort_order="desc",
+                )
+                page_index = 900000 + pages_used
+                page = await _dispatch_helius(
+                    store, grant, config, state, transport, address, options,
+                    phase=2, page_index=page_index,
+                )
+                pages_used += 1
+                records = [row for row in (page.get("records") or []) if isinstance(row, dict)]
+                day_records.extend(records)
+                decoded = decode_supported_swaps(canonical_decode_records(day_records), address)
+                rate = combined_economic_trade_rate(
+                    events=decoded.get("events") if isinstance(decoded, dict) else None,
+                    records=day_records,
+                    address=address,
+                )
+                maximum = int(rate.get("max") or 0)
+                if maximum > MAX_ECONOMIC_TRADES_PER_UTC_DAY:
+                    return {
+                        "dropped": True,
+                        "reason": GT_ECONOMIC_TRADES_RULE,
+                        "max": maximum,
+                        "max_on": rate.get("max_on") or day,
+                        "day": day,
+                        "probed_days": probed + [day],
+                        "probe_pages": pages_used,
+                        "can_only_drop_or_defer": True,
+                    }
+                next_token = page.get("pagination_token") or page.get("paginationToken")
+                if not next_token:
+                    day_exhausted = True
+                    break
+                if next_token in seen_tokens:
+                    break
+                seen_tokens.add(next_token)
+                token = next_token
+        except SourceError as error:
+            if getattr(error, "state", None) == "CAP_EXCEEDED":
+                raise
+            return {
+                "dropped": False,
+                "bot_unknown": True,
+                "probe_error": getattr(error, "state", None),
+                "reason": "economic_probe_failed",
+                "probed_days": probed,
+                "incomplete_days": [day],
+                "cannot_fail_bot_rule": False,
+            }
+        probed.append(day)
+        if not day_exhausted:
+            incomplete_days.append(day)
+            break
+    leftover = [day for day, _count in ranked if day not in probed]
+    if leftover or incomplete_days:
+        reason = "economic_probe_incomplete" if incomplete_days else "economic_probe_budget"
+        return {
+            "dropped": False,
+            "bot_unknown": True,
+            "reason": reason,
+            "probed_days": probed,
+            "unprobed_days": leftover,
+            "incomplete_days": incomplete_days,
+            "probe_pages": pages_used,
+            "cannot_fail_bot_rule": False,
+        }
+    return {
+        "dropped": False,
+        "bot_unknown": False,
+        "probed_days": probed,
+        "probe_pages": pages_used,
+    }
 
 
 async def _phase2_cheap_signatures(store, grant, config, state, transport, address, *, helius_transport=None):
@@ -3734,10 +3793,16 @@ async def _phase2_cheap_signatures(store, grant, config, state, transport, addre
         except SourceError as error:
             if getattr(error, "state", None) == "CAP_EXCEEDED":
                 raise
-            economic_drop = {"dropped": False, "probe_error": getattr(error, "state", None)}
+            economic_drop = {
+                "dropped": False,
+                "bot_unknown": True,
+                "probe_error": getattr(error, "state", None),
+                "reason": "economic_probe_failed",
+                "cannot_fail_bot_rule": False,
+            }
         if economic_drop.get("dropped"):
             screen = {**screen, "dropped": True, "deferred": False, "cannot_fail_bot_rule": False}
-        elif economic_drop.get("bot_unknown"):
+        elif economic_drop.get("bot_unknown") or economic_drop.get("probe_error"):
             screen = {**screen, "cannot_fail_bot_rule": False, "bot_unknown": True}
     return {
         "screen": screen,
@@ -7296,9 +7361,10 @@ def build_arg_parser():
         type=int,
         default=DEFAULT_ECONOMIC_PROBE_DAYS,
         help=(
-            "After the signatures walk, probe at most this many over-15 raw "
-            f"UTC days (highest raw count first). Default {DEFAULT_ECONOMIC_PROBE_DAYS}. "
-            "Leftover over-days mark the wallet bot_unknown."
+            "After the signatures walk, spend at most this many GTA pages on "
+            f"over-15 raw UTC days (highest raw count first). Default {DEFAULT_ECONOMIC_PROBE_DAYS}. "
+            "Follow each day's pagination. Leftover over-days or an incomplete "
+            "probe mark the wallet bot_unknown."
         ),
     )
     parser.add_argument(
