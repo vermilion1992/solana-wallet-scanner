@@ -136,6 +136,7 @@ from scanner.mass_search.qualification_gates import (
     MAX_ECONOMIC_TRADES_PER_UTC_DAY,
     BOT_THRESHOLD_RULE,
     HISTORY_AGE_RULE,
+    HISTORY_AGE_RULE_HELIUS,
     is_economic_bot,
     coverage_shares,
     combined_economic_trade_rate,
@@ -1343,16 +1344,43 @@ def merge_nansen_prefilter_dropped(state, dropped_rows):
     return existing
 
 
+def unscreened_address_set(state):
+    """Wallets that hit a cap or timeout. Not dropped; not assumed screened."""
+    out = set()
+    for item in (state or {}).get("unscreened_wallets") or []:
+        if isinstance(item, dict) and item.get("address"):
+            out.add(item["address"])
+        elif isinstance(item, str) and item:
+            out.add(item)
+    return out
+
+
+def record_unscreened(state, addresses, *, reason="cap_reached", screen=None):
+    prior = list((state or {}).get("unscreened_wallets") or [])
+    seen = unscreened_address_set(state)
+    for address in addresses or []:
+        if not address or address in seen:
+            continue
+        prior.append({"address": address, "reason": reason, "screen": screen})
+        seen.add(address)
+    if state is not None:
+        state["unscreened_wallets"] = prior
+    return prior
+
+
 def apply_nansen_vendor_prefilter(config, state):
     """Drop-only Nansen high-frequency filter. Missing fields never pass a wallet."""
     dropped = []
     kept = []
     log = []
+    blocked = unscreened_address_set(state)
     if config.get("wallets_supplied") and config.get("wallets"):
         pool = list(config.get("wallets") or [])
     else:
         pool = list(state.get("wallets") or config.get("wallets") or [])
     for address in pool:
+        if address in blocked:
+            continue
         if ((state.get("phase2") or {}).get(address) or {}).get("done"):
             kept.append(address)
             continue
@@ -1535,9 +1563,13 @@ def phase1_produced_seed_count(state):
 
 def discovered_seed_pool(config, state):
     """Resume pool: explicit --wallets, else this run's phase-1 discoveries."""
+    blocked = unscreened_address_set(state)
     if config.get("wallets_supplied") and config.get("wallets"):
-        return list(config.get("wallets") or [])
-    state_wallets = [addr for addr in ((state or {}).get("wallets") or []) if addr]
+        return [addr for addr in (config.get("wallets") or []) if addr and addr not in blocked]
+    state_wallets = [
+        addr for addr in ((state or {}).get("wallets") or [])
+        if addr and addr not in blocked
+    ]
     if state_wallets:
         return state_wallets
     combined = []
@@ -1546,7 +1578,7 @@ def discovered_seed_pool(config, state):
         if not isinstance(row, dict):
             continue
         for addr in row.get("addresses") or []:
-            if addr and addr not in seen:
+            if addr and addr not in seen and addr not in blocked:
                 seen.add(addr)
                 combined.append(addr)
     return combined
@@ -1588,17 +1620,18 @@ def phase4_targets(config, state=None):
     An empty selection is not a completed Phase 4.
     """
     state = state or {}
+    blocked = unscreened_address_set(state)
     if config.get("wallets_supplied") and config.get("wallets"):
-        return list(config.get("wallets") or [])
+        return [addr for addr in (config.get("wallets") or []) if addr not in blocked]
     done3 = [
         addr
         for addr, row in (state.get("phase3") or {}).items()
-        if isinstance(row, dict) and row.get("done") and addr
+        if isinstance(row, dict) and row.get("done") and addr and addr not in blocked
     ]
     if done3:
         return done3
     if config.get("wallets"):
-        return list(config.get("wallets") or [])
+        return [addr for addr in (config.get("wallets") or []) if addr not in blocked]
     return []
 
 
@@ -1606,10 +1639,14 @@ def phase3_wallets(config, state=None):
     """Phase-3 targets: phase-2 survivors only. Never fall back to the full pool."""
     state = state or {}
     phase2 = state.get("phase2") or {}
+    blocked = unscreened_address_set(state)
     kept_rows = [
         row
         for row in phase2.values()
-        if isinstance(row, dict) and row.get("address") and not row.get("dropped")
+        if isinstance(row, dict)
+        and row.get("address")
+        and not row.get("dropped")
+        and row.get("address") not in blocked
     ]
     kept_rows.sort(key=lambda row: (
         -float(row.get("coverability_rank_key") or 0),
@@ -3632,7 +3669,16 @@ async def _phase1_nansen_dex_trades(
         stats = dex_trades_per_utc_day(collected)
         vendor["profiler_dex_trades"] = stats
         extras.setdefault(address, {})["vendor_metrics"] = vendor
-        hit = nansen_dex_trades_drop(stats, now_unix=now_unix)
+        first_sig = (
+            (extras.get(address) or {}).get("first_sig_unix")
+            or ((state.get("phase2") or {}).get(address) or {}).get("first_sig_unix")
+        )
+        hit = nansen_dex_trades_drop(
+            stats,
+            now_unix=now_unix,
+            helius_first_sig_unix=first_sig,
+            age_rule=config.get("history_age_rule") or HISTORY_AGE_RULE,
+        )
         if hit.get("dropped"):
             dropped.append({"address": address, **hit})
         else:
@@ -3925,7 +3971,7 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
     kept_addresses = [row["address"] for row in profile_rows]
     digest = _save_seed_raw_parts(config, identity, SEED_NANSEN, raw_parts)
     state.setdefault("discoveries", {})[identity] = {
-        "addresses": list(addresses),
+        "addresses": list(kept_addresses),
         "sha256": digest,
         "count": len(addresses),
         "seed_source": SEED_NANSEN,
@@ -4611,6 +4657,8 @@ async def phase2_prescreen(store, grant, config, state, recorder):
         or config.get("batch")
     )
     concurrency = max(1, int(config.get("helius_concurrency") or 1))
+    blocked = unscreened_address_set(state)
+    targets = [addr for addr in config["wallets"] if addr not in blocked]
     rows = []
     state_lock = asyncio.Lock()
 
@@ -4640,9 +4688,9 @@ async def phase2_prescreen(store, grant, config, state, recorder):
         )
         return _phase2_finish(
             config, state,
-            await gather_capped([lambda a=address: _one(a) for address in config["wallets"]], bucket, concurrency=concurrency),
+            await gather_capped([lambda a=address: _one(a) for address in targets], bucket, concurrency=concurrency),
         )
-    for address in config["wallets"]:
+    for address in targets:
         rows.append(await _one(address))
     return _phase2_finish(config, state, rows)
 
@@ -6124,9 +6172,11 @@ async def run_live_e2e(raw):
                         f"wallet pool but phase 1 produced {produced} seeds; "
                         "resume must load the run's own phase-1 output",
                     )
+            blocked = unscreened_address_set(state)
             phase2_pending = [
                 addr for addr in wanted
-                if not ((state.get("phase2") or {}).get(addr) or {}).get("done")
+                if addr not in blocked
+                and not ((state.get("phase2") or {}).get(addr) or {}).get("done")
             ]
             if 2 in config["phases"] and (2 not in done or phase2_pending):
                 _t = time.monotonic()
@@ -6135,7 +6185,8 @@ async def run_live_e2e(raw):
                 wall_s_by_stage["decodability_sample"] = wall_s_by_stage["bot_prescreen"]
                 still = [
                     addr for addr in wanted
-                    if not ((state.get("phase2") or {}).get(addr) or {}).get("done")
+                    if addr not in unscreened_address_set(state)
+                    and not ((state.get("phase2") or {}).get(addr) or {}).get("done")
                 ]
                 if still:
                     state["phases_done"] = sorted(item for item in done if item != 2)
@@ -6201,6 +6252,7 @@ async def run_live_e2e(raw):
             pending = [
                 addr for addr in wanted
                 if 2 in config["phases"]
+                and addr not in unscreened_address_set(state)
                 and not ((state.get("phase2") or {}).get(addr) or {}).get("done")
             ]
             unscreened = list(state.get("unscreened_wallets") or [])
@@ -6229,6 +6281,11 @@ async def run_live_e2e(raw):
         except BaseException as error:
             code = getattr(error, "state", None) or error.__class__.__name__
             if code == "CAP_EXCEEDED":
+                leftover = [
+                    addr for addr in (wanted if "wanted" in locals() else (config.get("wallets") or []))
+                    if not ((state.get("phase2") or {}).get(addr) or {}).get("done")
+                ]
+                record_unscreened(state, leftover, reason="cap_reached", screen="request_cap")
                 state["status"] = "cap_reached"
                 status = "cap_reached"
             else:

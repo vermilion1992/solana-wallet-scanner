@@ -1490,12 +1490,15 @@ def nansen_dex_trades_drop(
     max_per_day=None,
     min_history_days=None,
     helius_first_sig_unix=None,
+    age_rule=None,
 ):
     """Drop-only. Error/empty stats mean no drop.
 
-    Age is off by default (D11-4). Pass min_history_days to enable it.
-    When age is enabled, prefer Helius first-signature time over Nansen's
-    earliest_unix — Nansen coverage can start late (9T546u).
+    Age is off by default (D11-4). Nansen earliest_unix is never the age
+    clock — 9T546u was false-dropped because Nansen coverage started late.
+    Enable age only with an explicit min_history_days or age_rule=
+    helius_first_signature, and then only with a Helius first-signature time.
+    The >MAX_ECONOMIC_TRADES_PER_UTC_DAY drop is unchanged.
     """
     if not isinstance(stats, dict) or not stats:
         return {
@@ -1512,12 +1515,14 @@ def nansen_dex_trades_drop(
     busiest = _as_number(stats.get("max_per_day"))
     if busiest is not None and busiest > cap:
         reasons.append(f"nansen_dex_trades_gt_{cap}_per_day:{busiest} on {stats.get('busiest_day')}")
+    rule = age_rule or HISTORY_AGE_RULE
     min_age = _as_number(min_history_days)
+    if min_age is None and rule == HISTORY_AGE_RULE_HELIUS:
+        min_age = Decimal("60")
     if min_age is None:
         min_age = _as_number(NANSEN_DEX_TRADES_MIN_HISTORY_DAYS)
     earliest = _as_unix(helius_first_sig_unix)
-    if earliest is None:
-        earliest = _as_unix(stats.get("earliest_unix"))
+    # Never fall back to Nansen earliest_unix. That was the 9T546u false drop.
     if min_age is not None and earliest is not None:
         now = _as_unix(now_unix) or utc_now_unix()
         age_days = Decimal(now - earliest) / Decimal(86400)
@@ -1532,7 +1537,7 @@ def nansen_dex_trades_drop(
             "earliest_unix": stats.get("earliest_unix"),
             "helius_first_sig_unix": helius_first_sig_unix,
             "distinct_hashes": stats.get("distinct_hashes"),
-            "age_rule": "off" if min_age is None else str(min_age),
+            "age_rule": "off" if min_age is None else f"{rule}:{min_age}",
         },
         "can_only_drop": True,
         "seed_is_not": "evidence",
