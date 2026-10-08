@@ -17,6 +17,10 @@ from decimal import Decimal
 
 from scanner.config import validate_address
 from scanner.mass_search.qualification_gates import (
+    GT_ECONOMIC_TRADES_RULE,
+    HISTORY_AGE_RULE,
+    HISTORY_AGE_RULE_HELIUS,
+    MAX_ECONOMIC_TRADES_PER_UTC_DAY,
     combined_economic_trade_rate,
     economic_trades_by_utc_day,
     first_defined_int,
@@ -85,8 +89,13 @@ NANSEN_LEADERBOARD_PER_PAGE = 50
 NANSEN_LEADERBOARD_PER_PAGE_MAX = 1000
 NANSEN_DEX_TRADES_MAX_PAGES = 3
 NANSEN_DEX_TRADES_HISTORY_FROM = "2020-03-17"
-NANSEN_DEX_TRADES_MAX_PER_DAY = Decimal("25")
-NANSEN_DEX_TRADES_MIN_HISTORY_DAYS = Decimal("60")
+NANSEN_DEX_TRADES_MAX_PER_DAY = Decimal(MAX_ECONOMIC_TRADES_PER_UTC_DAY)
+# D11-4 / D11-6: Nansen coverage is incomplete (9T546u). Age drop is off
+# unless an explicit min_history_days or a Helius first-signature time is
+# supplied. Named so grant/runner config can select helius_first_signature.
+NANSEN_DEX_TRADES_MIN_HISTORY_DAYS = None
+HISTORY_AGE_RULE_DEFAULT = HISTORY_AGE_RULE
+NANSEN_TIMEFRAMES_FUNNEL = (30, 90, 180)
 RULE_A_MAX_AVG_TRADES_PER_DAY = Decimal("2.5")
 RULE_A_MIN_TOKENS = 3
 RULE_A_MAX_TOKENS = 10
@@ -175,8 +184,20 @@ TOKEN_INTERSECT_PAGES_PER_WINDOW = 1
 TOKEN_INTERSECT_MIN_COHORTS = 3
 FIRST_BLOCK_EXCLUSION_SECONDS = 86400
 
-CHEAP_MAX_TRADES_PER_DAY = Decimal("25")
+CHEAP_MAX_TRADES_PER_DAY = Decimal(MAX_ECONOMIC_TRADES_PER_UTC_DAY)
 CHEAP_MIN_HISTORY_DAYS = Decimal("30")
+# Helius Standard JSON-RPC. https://www.helius.dev/docs/billing/credits
+# Standard methods = 1 credit. getSignaturesForAddress returns ≤1000
+# signatures per call. Enhanced getTransactionsForAddress is not this method.
+HELIUS_SIGNATURES_METHOD = "getSignaturesForAddress"
+HELIUS_SIGNATURES_PAGE_SIZE = 1000
+HELIUS_SIGNATURES_UNITS = 1
+HELIUS_SIGNATURES_HISTORY_CAP = 50_000
+HELIUS_SIGNATURES_CREDIT_NOTE = (
+    "Helius Standard JSON-RPC getSignaturesForAddress costs 1 credit per call "
+    "(https://www.helius.dev/docs/billing/credits). 1000 signatures per request. "
+    "Enhanced history is a different, more expensive method and is not used here."
+)
 TRIAGE_PREFER_AGE_DAYS = Decimal("180")
 TRIAGE_SAMPLES = 3
 TRIAGE_SAMPLE_LIMIT = 100
@@ -202,7 +223,7 @@ COUNT_KINDS = (
 # (signature, kind, mint): one multi-leg tx is not counted more than once
 # per mint/kind. Route-leg hops are not trades, so a multi-hop route in one
 # tx is one trade, not one per hop. An independent unique-(sig, kind, mint)
-# count must match. Under 25/day proves nothing; >25 on full history is the
+# count must match. Under 15/day proves nothing; >15 on full history is the
 # lead gate.
 BOT_RULE_DEFINITION = (
     "economic_swap_including_token_to_token; "
@@ -600,9 +621,11 @@ def estimate_nansen_profiler_count(
     already_units=0,
     leaderboard_pages=1,
     per_page=None,
+    timeframes=None,
 ):
     """Upper bound on pnl-summary calls. Runtime must not exceed this."""
-    leaderboard_req = len(NANSEN_TIMEFRAMES) * nansen_leaderboard_page_count(leaderboard_pages)
+    frames = tuple(timeframes) if timeframes else NANSEN_TIMEFRAMES
+    leaderboard_req = len(frames) * nansen_leaderboard_page_count(leaderboard_pages)
     leaderboard_units = leaderboard_req * NANSEN_LEADERBOARD_UNITS
     page_size = NANSEN_LEADERBOARD_PER_PAGE
     try:
@@ -651,6 +674,41 @@ def estimate_nansen_dex_trades_count(
     return bound
 
 
+def estimate_helius_signatures_count(
+    wallet_count,
+    *,
+    history_cap=None,
+    page_size=None,
+    request_cap=None,
+    unit_cap=None,
+    already_requests=0,
+    already_units=0,
+):
+    """Worst-case getSignaturesForAddress calls. Plan ≥ runtime."""
+    try:
+        wallets = max(0, int(wallet_count or 0))
+    except (TypeError, ValueError):
+        wallets = 0
+    try:
+        cap = int(history_cap if history_cap not in (None, "") else HELIUS_SIGNATURES_HISTORY_CAP)
+    except (TypeError, ValueError):
+        cap = HELIUS_SIGNATURES_HISTORY_CAP
+    try:
+        size = int(page_size if page_size not in (None, "") else HELIUS_SIGNATURES_PAGE_SIZE)
+    except (TypeError, ValueError):
+        size = HELIUS_SIGNATURES_PAGE_SIZE
+    if size < 1:
+        raise ValueError("helius signatures page size must be >= 1")
+    pages = (max(cap, 1) + size - 1) // size
+    bound = wallets * pages
+    if request_cap is not None:
+        bound = min(bound, max(0, int(request_cap) - int(already_requests)))
+    if unit_cap is not None:
+        leftover = max(0, int(unit_cap) - int(already_units))
+        bound = min(bound, leftover // HELIUS_SIGNATURES_UNITS)
+    return bound
+
+
 def estimate_seed_plan(
     sources,
     *,
@@ -669,11 +727,16 @@ def estimate_seed_plan(
     nansen_token_pnl_tokens=None,
     nansen_token_pnl_max_calls=0,
     birdeye_retry_headroom=2,
+    nansen_calibrate=False,
+    nansen_timeframes=None,
+    helius_signatures_prescreen=False,
+    helius_signatures_history_cap=None,
 ):
     """Dry-run request/credit estimates per selected source. No HTTP.
 
     Nansen includes leaderboard calls plus optional profiler / dex-trades /
     per-token pnl-leaderboard loops. Planner counts calls, not rows.
+    Calibration mode plans dex-trades only (D11-1: plan ≥ runtime).
     """
     sources = [canonicalize_seed_name(item) for item in (sources or [])]
     tokens = list(tokens or [])
@@ -740,16 +803,26 @@ def estimate_seed_plan(
         }
     if run_discovery and SEED_NANSEN in sources:
         if nansen_enabled:
+            if nansen_timeframes:
+                frames = tuple(int(item) for item in nansen_timeframes)
+            else:
+                frames = NANSEN_TIMEFRAMES
             pages = nansen_leaderboard_page_count(nansen_leaderboard_pages)
-            leaderboard_req = len(NANSEN_TIMEFRAMES) * pages
-            leaderboard_units = leaderboard_req * NANSEN_LEADERBOARD_UNITS
-            profile_n = estimate_nansen_profiler_count(
-                profile_cap=nansen_profile_cap,
-                request_cap=nansen_request_cap,
-                unit_cap=nansen_unit_cap,
-                leaderboard_pages=pages,
-                per_page=nansen_per_page,
-            )
+            if nansen_calibrate:
+                leaderboard_req = 0
+                leaderboard_units = 0
+                profile_n = 0
+            else:
+                leaderboard_req = len(frames) * pages
+                leaderboard_units = leaderboard_req * NANSEN_LEADERBOARD_UNITS
+                profile_n = estimate_nansen_profiler_count(
+                    profile_cap=nansen_profile_cap,
+                    request_cap=nansen_request_cap,
+                    unit_cap=nansen_unit_cap,
+                    leaderboard_pages=pages,
+                    per_page=nansen_per_page,
+                    timeframes=frames,
+                )
             after_profile_req = leaderboard_req + profile_n
             after_profile_units = leaderboard_units + profile_n * NANSEN_PROFILER_UNITS
             dex_n = estimate_nansen_dex_trades_count(
@@ -783,7 +856,8 @@ def estimate_seed_plan(
                 "requests": nansen_requests,
                 "units": nansen_units,
                 "billing_unit": "nansen_credit",
-                "timeframes": list(NANSEN_TIMEFRAMES),
+                "timeframes": list(frames),
+                "calibration": bool(nansen_calibrate),
                 "leaderboard_requests": leaderboard_req,
                 "leaderboard_pages": pages,
                 "leaderboard_per_page": nansen_per_page or NANSEN_LEADERBOARD_PER_PAGE,
@@ -792,12 +866,20 @@ def estimate_seed_plan(
                 "dex_trades_requests": dex_n,
                 "token_pnl_requests": token_n,
                 "note": (
-                    f"{leaderboard_req} leaderboard calls "
-                    f"({len(NANSEN_TIMEFRAMES)} timeframes × {pages} page(s), "
-                    f"per_page={nansen_per_page or NANSEN_LEADERBOARD_PER_PAGE}) plus up to "
-                    f"{profile_n} pnl-summary, {dex_n} dex-trades and {token_n} "
-                    "tgm/pnl-leaderboard calls. Planner counts calls, not rows. "
-                    "Already-known wallets from --exclude-known-from are skipped."
+                    (
+                        f"calibration: 0 leaderboard, {dex_n} dex-trades "
+                        f"({nansen_dex_trades_wallet_cap} wallets × "
+                        f"{nansen_dex_trades_max_pages} page(s)). Plan ≥ runtime."
+                    )
+                    if nansen_calibrate else
+                    (
+                        f"{leaderboard_req} leaderboard calls "
+                        f"({len(frames)} timeframes × {pages} page(s), "
+                        f"per_page={nansen_per_page or NANSEN_LEADERBOARD_PER_PAGE}) plus up to "
+                        f"{profile_n} pnl-summary, {dex_n} dex-trades and {token_n} "
+                        "tgm/pnl-leaderboard calls. Planner counts calls, not rows. "
+                        "Already-known wallets from --exclude-known-from are skipped."
+                    )
                 ),
             }
         else:
@@ -822,9 +904,34 @@ def estimate_seed_plan(
             "note": (
                 "Up to 3 bounded full samples (limit 100, 10 credits): earliest, "
                 "recent, then the densest UTC day from those samples (older-month "
-                "fallback). >25 economic trades in one UTC day rejects. Under 25 "
+                f"fallback). >{MAX_ECONOMIC_TRADES_PER_UTC_DAY} economic trades "
+                f"in one UTC day rejects. Under {MAX_ECONOMIC_TRADES_PER_UTC_DAY} "
                 "proves nothing. Prefer 180+ days of observed age. Survivors only "
                 "get --history-to-first."
+            ),
+        }
+    if helius_signatures_prescreen and n:
+        sig_n = estimate_helius_signatures_count(
+            n, history_cap=helius_signatures_history_cap,
+        )
+        helius_triage_requests += sig_n
+        helius_triage_units += sig_n * HELIUS_SIGNATURES_UNITS
+        per_source["helius_signatures_prescreen"] = {
+            "provider": "helius",
+            "method": HELIUS_SIGNATURES_METHOD,
+            "requests": sig_n,
+            "units": sig_n * HELIUS_SIGNATURES_UNITS,
+            "billing_unit": "helius_credit",
+            "page_size": HELIUS_SIGNATURES_PAGE_SIZE,
+            "history_cap": helius_signatures_history_cap or HELIUS_SIGNATURES_HISTORY_CAP,
+            "threshold": MAX_ECONOMIC_TRADES_PER_UTC_DAY,
+            "can_only_drop_or_defer": True,
+            "credit_note": HELIUS_SIGNATURES_CREDIT_NOTE,
+            "note": (
+                f"Worst-case {sig_n} getSignaturesForAddress calls "
+                f"(1 credit each). Raw ≤{MAX_ECONOMIC_TRADES_PER_UTC_DAY} "
+                "on every UTC day passes the screen; any day over needs "
+                "decode. Enormous history is deferred. Drop or defer only."
             ),
         }
     return {
@@ -1184,7 +1291,7 @@ def nansen_high_frequency_drop(
             )
         elif rate > CHEAP_MAX_TRADES_PER_DAY:
             reasons.append(
-                f"nansen_vendor_gt_25_trades_per_day:{rate}/d over {days}d ({trades} trades)"
+                f"nansen_vendor_{GT_ECONOMIC_TRADES_RULE}:{rate}/d over {days}d ({trades} trades)"
             )
     tokens = _as_number(metrics.get("n_tokens") if metrics.get("n_tokens") is not None else metrics.get("held_tokens_count"))
     min_tok = _as_number(min_tokens)
@@ -1280,6 +1387,68 @@ def _dex_trade_timestamp(row):
     return None
 
 
+def helius_signatures_prescreen(rows, *, max_per_day=None, history_cap=None):
+    """Cheap getSignaturesForAddress screen. Raw tx count per UTC day.
+
+    A raw count ≤ MAX_ECONOMIC_TRADES_PER_UTC_DAY on every day passes:
+    the wallet cannot break the >15 economic-trades rule. Any day above
+    the cap needs decoding. History above history_cap is deferred.
+    Drop or defer only; this never marks a lead.
+    """
+    cap = first_defined_int(max_per_day)
+    if cap is None:
+        cap = MAX_ECONOMIC_TRADES_PER_UTC_DAY
+    length_cap = first_defined_int(history_cap)
+    if length_cap is None:
+        length_cap = HELIUS_SIGNATURES_HISTORY_CAP
+    by_day = defaultdict(int)
+    incomplete = 0
+    seen = set()
+    earliest = None
+    for row in rows or []:
+        if not isinstance(row, dict):
+            continue
+        signature = row.get("signature") or row.get("txHash") or row.get("tx_hash")
+        stamp = row.get("blockTime") if row.get("blockTime") is not None else row.get("timestamp")
+        if signature:
+            if signature in seen:
+                continue
+            seen.add(signature)
+        if type(stamp) is not int or isinstance(stamp, bool):
+            try:
+                stamp = int(stamp)
+            except (TypeError, ValueError):
+                incomplete += 1
+                continue
+        if earliest is None or stamp < earliest:
+            earliest = stamp
+        day = datetime.fromtimestamp(stamp, tz=timezone.utc).strftime("%Y-%m-%d")
+        by_day[day] += 1
+    maximum = max(by_day.values()) if by_day else 0
+    over_days = {day: count for day, count in by_day.items() if count > cap}
+    total = len(seen) if seen else sum(by_day.values())
+    deferred = bool(total > length_cap)
+    passed = bool(by_day) and not over_days and incomplete == 0 and not deferred
+    return {
+        "passed": passed,
+        "needs_decode": bool(over_days) or bool(incomplete) or not by_day,
+        "deferred": deferred,
+        "dropped": False,
+        "history_length": total,
+        "history_cap": length_cap,
+        "first_sig_unix": earliest,
+        "max_per_day": maximum,
+        "max_on": max(by_day, key=by_day.get) if by_day else None,
+        "over_days": over_days,
+        "per_day": dict(by_day),
+        "incomplete_timestamps": incomplete,
+        "threshold": cap,
+        "can_only_drop_or_defer": True,
+        "seed_is_not": "evidence",
+        "rule": GT_ECONOMIC_TRADES_RULE,
+    }
+
+
 def dex_trades_per_utc_day(rows):
     """Distinct transaction_hash per UTC day. Legs of one tx count once."""
     days = defaultdict(set)
@@ -1314,8 +1483,20 @@ def dex_trades_per_utc_day(rows):
     }
 
 
-def nansen_dex_trades_drop(stats, *, now_unix=None, max_per_day=None, min_history_days=None):
-    """Drop-only. Error/empty stats mean no drop."""
+def nansen_dex_trades_drop(
+    stats,
+    *,
+    now_unix=None,
+    max_per_day=None,
+    min_history_days=None,
+    helius_first_sig_unix=None,
+):
+    """Drop-only. Error/empty stats mean no drop.
+
+    Age is off by default (D11-4). Pass min_history_days to enable it.
+    When age is enabled, prefer Helius first-signature time over Nansen's
+    earliest_unix — Nansen coverage can start late (9T546u).
+    """
     if not isinstance(stats, dict) or not stats:
         return {
             "dropped": False,
@@ -1333,9 +1514,11 @@ def nansen_dex_trades_drop(stats, *, now_unix=None, max_per_day=None, min_histor
         reasons.append(f"nansen_dex_trades_gt_{cap}_per_day:{busiest} on {stats.get('busiest_day')}")
     min_age = _as_number(min_history_days)
     if min_age is None:
-        min_age = NANSEN_DEX_TRADES_MIN_HISTORY_DAYS
-    earliest = _as_unix(stats.get("earliest_unix"))
-    if earliest is not None:
+        min_age = _as_number(NANSEN_DEX_TRADES_MIN_HISTORY_DAYS)
+    earliest = _as_unix(helius_first_sig_unix)
+    if earliest is None:
+        earliest = _as_unix(stats.get("earliest_unix"))
+    if min_age is not None and earliest is not None:
         now = _as_unix(now_unix) or utc_now_unix()
         age_days = Decimal(now - earliest) / Decimal(86400)
         if age_days < min_age:
@@ -1347,7 +1530,9 @@ def nansen_dex_trades_drop(stats, *, now_unix=None, max_per_day=None, min_histor
             "max_per_day": stats.get("max_per_day"),
             "busiest_day": stats.get("busiest_day"),
             "earliest_unix": stats.get("earliest_unix"),
+            "helius_first_sig_unix": helius_first_sig_unix,
             "distinct_hashes": stats.get("distinct_hashes"),
+            "age_rule": "off" if min_age is None else str(min_age),
         },
         "can_only_drop": True,
         "seed_is_not": "evidence",
@@ -1430,10 +1615,10 @@ def _triage_record_signature(row):
 
 
 def helius_triage_decision(samples, *, now_unix, bundle=None, created_in_range=False, address=None):
-    """Drop only on confirmed >25 economic trades in a UTC day, youth, or bundle.
+    """Drop only on confirmed >15 economic trades in a UTC day, youth, or bundle.
 
     Uses the rent-aware raw count (and decoded, taking the per-day max).
-    Under 25 economic trades/day proves nothing. Age under 180 days is a
+    Under 15 economic trades/day proves nothing. Age under 180 days is a
     preference, not a hard drop, unless creation is proven under 30 days.
     """
     records = []
@@ -1480,8 +1665,8 @@ def helius_triage_decision(samples, *, now_unix, bundle=None, created_in_range=F
     max_day = first_defined_int(rate.get("max")) or 0
     max_on = rate.get("max_on")
     reasons = []
-    if max_day > 25:
-        reasons.append("triage_gt_25_economic_trades_in_one_day")
+    if max_day > MAX_ECONOMIC_TRADES_PER_UTC_DAY:
+        reasons.append(f"triage_{GT_ECONOMIC_TRADES_RULE}")
     if created_in_range and history_days is not None and history_days < CHEAP_MIN_HISTORY_DAYS:
         reasons.append("triage_short_history")
     if (bundle or {}).get("excluded"):

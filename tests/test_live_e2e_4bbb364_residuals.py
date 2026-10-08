@@ -488,7 +488,7 @@ def test_committed_ledger_pin_is_absolute():
     assert Path(COMMITTED_LEDGER_ABSOLUTE).is_absolute()
     digest = hashlib.sha256((ROOT / DRAFT_REL_11).read_bytes()).hexdigest()
     assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_11] == digest
-    assert HARD_CEILINGS["helius_units"] == 30000
+    assert HARD_CEILINGS["helius_units"] == 40000
 
 
 def test_expected_pinned_ledger_ignores_home(monkeypatch, tmp_path):

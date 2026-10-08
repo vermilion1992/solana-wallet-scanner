@@ -86,7 +86,7 @@ def test_pinned_hash_and_hard_ceilings_block_local_inflated_draft(tmp_path, fake
     grant = _arm_grant(tmp_path, helius_req=20_000, helius_units=1_000_000)
     with pytest.raises(LiveE2EError, match="hard ceiling|exceeds committed draft"):
         validate_config(_live_kwargs(tmp_path, grant, tmp_path / "out2", WALLETS[:1]))
-    assert HARD_CEILINGS["helius_requests"] == 3000
+    assert HARD_CEILINGS["helius_requests"] == 4000
     assert HARD_CEILINGS["birdeye_units"] == 1400
     working = hashlib.sha256((ROOT / DRAFT_REL_NEXT).read_bytes()).hexdigest()
     assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_NEXT] == working
@@ -159,8 +159,9 @@ def test_bot_rate_is_computed_and_enforced(tmp_path, monkeypatch, fake_keys):
     }))
     row = result["phase2"]["wallets"][0]
     assert Decimal(row["bot_rate"]) > 0
-    assert row["dropped"] is True
-    assert row["drop_reason"] == "bot_rate"
+    # D11-8: tx-rate is informational. The bot flag/gate is economic >15.
+    assert row["bot"] is False
+    assert row.get("drop_reason") != "bot_rate"
 
 
 def test_error_body_page_is_blocked_not_empty():

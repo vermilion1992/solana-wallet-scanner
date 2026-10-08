@@ -61,7 +61,8 @@ def blocking_reason(report, profile, *, coverage_status, level):
     unresolved = int(profile.get("unresolved_basis_sales") or 0)
     reasons = []
     level_reason = (level or {}).get("reason") or (level or {}).get("blocker") or ""
-    if "gt_25_economic_trades_in_one_day" in str(level_reason):
+    from scanner.mass_search.qualification_gates import GT_ECONOMIC_TRADES_RULE
+    if GT_ECONOMIC_TRADES_RULE in str(level_reason):
         reasons.append(str(level_reason))
     if completed < 1:
         reasons.append("0 completed episodes")

@@ -318,8 +318,8 @@ def test_grant_14_is_live_known_with_own_ledger_and_disabled():
     nansen = next(row for row in draft["providers"] if row["provider_id"] == "nansen")
     assert nansen["max_requests"] == 60
     assert nansen["max_units"] == 300
-    assert L.HARD_CEILINGS["nansen_requests"] == 60
-    assert L.HARD_CEILINGS["nansen_units"] == 300
+    assert L.HARD_CEILINGS["nansen_requests"] == 200
+    assert L.HARD_CEILINGS["nansen_units"] == 400
     p13 = grant_ledger_path(L.AUTHORIZATION_ID_13, home="/tmp/ledgers")
     p14 = grant_ledger_path(L.AUTHORIZATION_ID_14, home="/tmp/ledgers")
     assert p13 != p14

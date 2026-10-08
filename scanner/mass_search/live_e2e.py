@@ -107,6 +107,11 @@ from scanner.mass_search.live_e2e_ledger import (
 )
 from scanner.mass_search.qualification_gates import (
     BOT_RULE_DEFINITION,
+    GT_ECONOMIC_TRADES_RULE,
+    MAX_ECONOMIC_TRADES_PER_UTC_DAY,
+    BOT_THRESHOLD_RULE,
+    HISTORY_AGE_RULE,
+    is_economic_bot,
     coverage_shares,
     combined_economic_trade_rate,
     day_for_stored_max,
@@ -219,20 +224,23 @@ AUTHORIZATION_ID_11 = "live-e2e-proof-2026-10-11-mitch"
 AUTHORIZATION_ID_12 = "live-e2e-proof-2026-10-12-mitch"
 AUTHORIZATION_ID_13 = "live-e2e-proof-2026-10-13-mitch"
 AUTHORIZATION_ID_14 = "live-e2e-proof-2026-10-14-mitch"
+AUTHORIZATION_ID_15 = "live-e2e-proof-2026-10-15-mitch"
 DRAFT_REL = "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json"
 DRAFT_REL_NEXT = "config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json"
 DRAFT_REL_11 = "config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json"
 DRAFT_REL_12 = "config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json"
 DRAFT_REL_13 = "config/live_authorization.live-e2e-proof-2026-10-13-mitch-draft.json"
 DRAFT_REL_14 = "config/live_authorization.live-e2e-proof-2026-10-14-mitch-draft.json"
+DRAFT_REL_15 = "config/live_authorization.live-e2e-proof-2026-10-15-mitch-draft.json"
 DRAFT_PATH = ROOT / DRAFT_REL
-# --live accepts the 2026-10-12, 2026-10-13 and 2026-10-14 drafts.
+# --live accepts the 2026-10-12 through 2026-10-15 drafts.
 # 07, 09 and 11 are retired. Dry-run may still load a retired draft.
 # Each authorization_id has its own ledger subdirectory under the pinned home.
 LIVE_KNOWN_DRAFTS = {
     AUTHORIZATION_ID_12: DRAFT_REL_12,
     AUTHORIZATION_ID_13: DRAFT_REL_13,
     AUTHORIZATION_ID_14: DRAFT_REL_14,
+    AUTHORIZATION_ID_15: DRAFT_REL_15,
 }
 RETIRED_LIVE_DRAFTS = {
     AUTHORIZATION_ID: DRAFT_REL,
@@ -249,14 +257,15 @@ PINNED_DRAFT_HASHES = {
     AUTHORIZATION_ID_12: "65b14ccd9e60e453760a1d1da55c825d1083c86c416bc8957985b361fc483270",
     AUTHORIZATION_ID_13: "e9629ca44a48671bb9a61c1b3c2ec19a42aa5338b1fc53e00c55498fe3254a2e",
     AUTHORIZATION_ID_14: "4d3c5ad01fea6c99ee51f0c8e59519206f31edb7d1de1717aa8e1805fc56c50d",
+    AUTHORIZATION_ID_15: "a0cf00c35e906970e1cd10d76548813e69a682bd4ae5f4c60439efde876f2e1c",
 }
 HARD_CEILINGS = {
     "birdeye_requests": 40,
     "birdeye_units": 1400,
-    "helius_requests": 3000,
-    "helius_units": 30000,
-    "nansen_requests": 60,
-    "nansen_units": 300,
+    "helius_requests": 4000,
+    "helius_units": 40000,
+    "nansen_requests": 200,
+    "nansen_units": 400,
     "leaderboard_requests": 0,
     "leaderboard_units": 0,
 }
@@ -1362,7 +1371,7 @@ def phase3_needs_more_pages(config, state, address, *, triage=False):
     if reason in (
         "wallet_created_in_range",
         "no_leftover_pagination_token",
-        "gt_25_economic_trades_in_one_day",
+        GT_ECONOMIC_TRADES_RULE,
     ):
         return False
     if cursor.get("history_complete") and not cursor.get("leftover_pagination_token"):
@@ -1576,10 +1585,18 @@ def plan_request_counts(config, state=None):
     source = primary_seed_source(sources)
     tokens = list(config.get("birdeye_tokens") or [])
     discovery_mode = config.get("discovery_source")
+    calibrate_path = config.get("nansen_calibrate_wallets")
+    calibrate_n = 0
+    if calibrate_path:
+        try:
+            calibrate_n = len(_load_calibrate_wallets(calibrate_path))
+        except (OSError, ValueError, TypeError, json.JSONDecodeError):
+            calibrate_n = int(config.get("nansen_dex_trades_wallet_cap") or 0)
+    dex_wallet_cap = calibrate_n or config.get("nansen_dex_trades_wallet_cap")
     seed_plan = estimate_seed_plan(
         sources,
         tokens=tokens,
-        discovery=discovery or (1 in phases and not wallets),
+        discovery=discovery or bool(calibrate_path) or (1 in phases and not wallets),
         wallets=wallets,
         nansen_enabled=bool((config.get("nansen_enabled") if "nansen_enabled" in config else os.environ.get(NANSEN_KEY_ENV))),
         birdeye_top_mode=discovery_mode if discovery_mode == BIRDEYE_DISCOVERY_TOP_TRADERS else BIRDEYE_DISCOVERY_GAINERS,
@@ -1588,11 +1605,15 @@ def plan_request_counts(config, state=None):
         nansen_unit_cap=(config.get("caps") or {}).get("nansen_units"),
         nansen_leaderboard_pages=config.get("nansen_leaderboard_pages"),
         nansen_per_page=config.get("nansen_per_page"),
-        nansen_dex_trades_wallet_cap=config.get("nansen_dex_trades_wallet_cap"),
+        nansen_dex_trades_wallet_cap=dex_wallet_cap,
         nansen_dex_trades_max_pages=config.get("nansen_dex_trades_max_pages"),
         nansen_token_pnl_tokens=config.get("nansen_token_pnl_tokens"),
         nansen_token_pnl_max_calls=config.get("nansen_token_pnl_max_calls"),
         birdeye_retry_headroom=BIRDEYE_RATE_LIMIT_RETRIES,
+        nansen_calibrate=bool(calibrate_path),
+        nansen_timeframes=config.get("nansen_timeframes"),
+        helius_signatures_prescreen=bool(config.get("helius_signatures_prescreen")),
+        helius_signatures_history_cap=config.get("helius_signatures_history_cap"),
     )
     if 1 in phases and (discovery or not wallets):
         birdeye_requests = seed_plan["totals"]["birdeye_requests"]
@@ -1898,17 +1919,33 @@ def reconcile_state_spend(store, state):
     return state
 
 
-def remaining_caps(config, spend):
+def remaining_caps(config, spend, *, run_spend=None):
+    """Lifetime grant ceilings minus lifetime spend, capped by per-run leftovers.
+
+    `spend` is grant-lifetime (ledger-merged). `run_caps` / `run_spend` are
+    this invocation only. Phase caps stay on grant lifetime via phase_spend.
+    """
     caps = config["caps"]
     spend = spend or {}
-    return {
-        "birdeye_requests": caps["birdeye_requests"] - int(spend.get("birdeye_requests") or 0),
-        "birdeye_units": caps["birdeye_units"] - int(spend.get("birdeye_units") or 0),
-        "helius_requests": caps["helius_requests"] - int(spend.get("helius_requests") or 0),
-        "helius_units": caps["helius_units"] - int(spend.get("helius_units") or 0),
-        "nansen_requests": int(caps.get("nansen_requests") or 0) - int(spend.get("nansen_requests") or 0),
-        "nansen_units": int(caps.get("nansen_units") or 0) - int(spend.get("nansen_units") or 0),
+    keys = (
+        "birdeye_requests", "birdeye_units",
+        "helius_requests", "helius_units",
+        "nansen_requests", "nansen_units",
+    )
+    lifetime_left = {
+        key: int(caps.get(key) or 0) - int(spend.get(key) or 0)
+        for key in keys
     }
+    run_caps = config.get("run_caps")
+    if not run_caps:
+        return lifetime_left
+    used = run_spend if run_spend is not None else (config.get("run_spend") or {})
+    run_left = {
+        key: int(run_caps.get(key) if run_caps.get(key) is not None else caps.get(key) or 0)
+        - int(used.get(key) or 0)
+        for key in keys
+    }
+    return {key: min(lifetime_left[key], run_left[key]) for key in keys}
 
 
 def hard_stop_if_needed(config, spend, *, provider, units, phase=None, phase_spend=None):
@@ -2229,12 +2266,20 @@ async def _live_nansen(method, path, body=None):
     import httpx
 
     headers = {"apikey": key, "content-type": "application/json", "accept": "application/json"}
-    async with httpx.AsyncClient(
-        base_url=f"https://{NANSEN_HOST}",
-        follow_redirects=False,
-        timeout=httpx.Timeout(25, connect=10),
-    ) as client:
-        response = await client.request(method, path, json=body or {}, headers=headers)
+    try:
+        async with httpx.AsyncClient(
+            base_url=f"https://{NANSEN_HOST}",
+            follow_redirects=False,
+            timeout=httpx.Timeout(25, connect=10),
+        ) as client:
+            response = await client.request(method, path, json=body or {}, headers=headers)
+    except (httpx.TimeoutException, TimeoutError) as error:
+        message = str(error) or "Nansen request timed out"
+        extras = {
+            "error_body": {"message": message, "error": "timeout"},
+            "billing": None,
+        }
+        raise SourceError("TIMEOUT", message, extras=extras) from error
     raw = response.content
     try:
         payload = response.json()
@@ -3056,7 +3101,7 @@ async def _phase1_nansen_dex_trades(
     except (TypeError, ValueError):
         cap = 0
     if cap <= 0 or not rows:
-        return list(rows), []
+        return list(rows), [], []
     try:
         max_pages = max(1, int(config.get("nansen_dex_trades_max_pages") or NANSEN_DEX_TRADES_MAX_PAGES))
     except (TypeError, ValueError):
@@ -3065,19 +3110,28 @@ async def _phase1_nansen_dex_trades(
     date_from = NANSEN_DEX_TRADES_HISTORY_FROM
     kept = []
     dropped = []
+    unscreened = []
     screened = 0
     now_unix = int(datetime.now(timezone.utc).timestamp())
     for row in rows:
         if screened >= cap:
-            kept.append(row)
+            unscreened.append(row)
             continue
         address = row["address"]
+        left = remaining_caps(config, state["spend"])
+        if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_DEX_TRADES_UNITS:
+            unscreened.append(row)
+            continue
         collected = []
         failed = False
         empty = True
         for page_num in range(1, max_pages + 1):
             left = remaining_caps(config, state["spend"])
             if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_DEX_TRADES_UNITS:
+                if not collected:
+                    unscreened.append(row)
+                    failed = None
+                    break
                 failed = True
                 break
             body = nansen_dex_trades_body(
@@ -3096,6 +3150,15 @@ async def _phase1_nansen_dex_trades(
                 )
             except Exception as error:
                 extras.setdefault(address, {})["dex_trades_error"] = str(error)
+                timed_out = (
+                    getattr(error, "state", None) == "TIMEOUT"
+                    or "timeout" in str(error).lower()
+                )
+                if timed_out:
+                    unscreened.append(row)
+                    extras.setdefault(address, {})["unscreened_reason"] = "nansen_timeout"
+                    failed = None
+                    break
                 failed = True
                 break
             raw_parts.append(response.get("raw_bytes") or b"{}")
@@ -3106,8 +3169,10 @@ async def _phase1_nansen_dex_trades(
             if len(batch) < 1000:
                 break
             stats_so_far = dex_trades_per_utc_day(collected)
-            if (stats_so_far.get("max_per_day") or 0) > 25:
+            if (stats_so_far.get("max_per_day") or 0) > MAX_ECONOMIC_TRADES_PER_UTC_DAY:
                 break
+        if failed is None:
+            continue
         vendor = dict((extras.get(address) or {}).get("vendor_metrics") or {})
         if failed or empty:
             vendor["profiler_dex_trades"] = {
@@ -3127,7 +3192,17 @@ async def _phase1_nansen_dex_trades(
         else:
             kept.append(row)
         screened += 1
-    return kept, dropped
+    prior = list(state.get("unscreened_wallets") or [])
+    seen = {item.get("address") if isinstance(item, dict) else item for item in prior}
+    for row in unscreened:
+        address = row.get("address") if isinstance(row, dict) else row
+        if address and address not in seen:
+            extra = extras.get(address) or {}
+            reason = extra.get("unscreened_reason") or "cap_reached"
+            prior.append({"address": address, "reason": reason, "screen": "nansen_dex_trades"})
+            seen.add(address)
+    state["unscreened_wallets"] = prior
+    return kept, dropped, unscreened
 
 
 async def _phase1_nansen_token_pnl(store, grant, config, state, recorder, identity, extras, raw_parts, page):
@@ -3187,7 +3262,7 @@ async def _phase1_nansen_calibrate(store, grant, config, state, recorder, identi
     labels = {row["address"]: row.get("label") for row in rows if row.get("address")}
     config = dict(config)
     config["nansen_dex_trades_wallet_cap"] = len(profile_rows)
-    kept, dropped = await _phase1_nansen_dex_trades(
+    kept, dropped, unscreened = await _phase1_nansen_dex_trades(
         store, grant, config, state, recorder, identity, profile_rows, extras, raw_parts, 0,
     )
     dropped_set = {row["address"] for row in dropped}
@@ -3202,6 +3277,7 @@ async def _phase1_nansen_calibrate(store, grant, config, state, recorder, identi
             "busiest_day": stats.get("busiest_day"),
             "earliest_unix": stats.get("earliest_unix"),
             "dropped": address in dropped_set,
+            "unscreened": address in {row.get("address") for row in unscreened},
             "seed_is_not": "evidence",
         })
     digest = _save_seed_raw_parts(config, identity, SEED_NANSEN, raw_parts)
@@ -3352,7 +3428,7 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
             else:
                 profile_rows.append(row)
         merge_nansen_prefilter_dropped(state, prefilter_log)
-        profile_rows, dex_log = await _phase1_nansen_dex_trades(
+        profile_rows, dex_log, _unscreened = await _phase1_nansen_dex_trades(
             store, grant, config, state, recorder, identity, profile_rows, extras, raw_parts, page,
         )
         merge_nansen_prefilter_dropped(state, dex_log)
@@ -4116,6 +4192,13 @@ async def phase2_prescreen(store, grant, config, state, recorder):
             unsupported_share = Decimal(programs["decodable_share"] or "1")
             unsupported_share = Decimal("1") - unsupported_share if programs["decodable_share"] is not None else Decimal("0")
             bot_rate = compute_bot_rate(sample_records, config.get("window_days") or 30)
+            triage_events = [
+                event
+                for sample in samples
+                for event in (sample.get("events") or [])
+            ]
+            econ_rate = economic_trade_rate(triage_events) if triage_events else {"max": None, "max_on": None}
+            bot_flag = is_economic_bot(econ_rate.get("max"))
             bundle = detect_bundle_or_distribution(sample_records, address)
             seeds = seed_counterparties_from_records(sample_records, address)
             if seeds:
@@ -4160,14 +4243,15 @@ async def phase2_prescreen(store, grant, config, state, recorder):
                 "bundle_reasons": bundle.get("reasons") or [],
                 "controlled_pair": bundle.get("controlled_pair") or [],
                 "controlled_pair_explanation": bundle.get("controlled_pair_explanation"),
-                "bot": bot_rate > max_bot_rate,
+                "bot": bot_flag,
                 "bot_rate": str(bot_rate),
+                "bot_threshold_rule": BOT_THRESHOLD_RULE,
                 "program_blockers": programs["blockers"],
                 "coverability_rank_key": str(prescreen_rank_score({
                     "supported_venue_value_share": programs.get("supported_venue_value_share") or "0",
                     "has_known_basis_buys": has_known_basis_buys,
                     "bundle": bundle.get("excluded"),
-                    "bot": bot_rate > max_bot_rate,
+                    "bot": bot_flag,
                     "controlled_pair": bundle.get("controlled_pair"),
                 })),
                 "dropped": dropped,
@@ -4221,6 +4305,15 @@ async def phase2_prescreen(store, grant, config, state, recorder):
         unsupported_share = Decimal(programs["decodable_share"] or "1")
         unsupported_share = Decimal("1") - unsupported_share if programs["decodable_share"] is not None else Decimal("0")
         bot_rate = compute_bot_rate(sigs.get("records") or [], config.get("window_days") or 30)
+        sample_events = []
+        try:
+            from scanner.mass_search.canonical_records import canonical_decode_records
+            decoded_sample = decode_supported_swaps(canonical_decode_records(sample_records), address)
+            sample_events = list(decoded_sample.get("events") or [])
+        except Exception:
+            sample_events = []
+        econ_rate = economic_trade_rate(sample_events) if sample_events else {"max": None, "max_on": None}
+        bot_flag = is_economic_bot(econ_rate.get("max"))
         bundle = detect_bundle_or_distribution(sample_records, address)
         seeds = seed_counterparties_from_records(sample_records, address)
         if seeds:
@@ -4247,9 +4340,9 @@ async def phase2_prescreen(store, grant, config, state, recorder):
         elif unsupported_share > max_unsupported_share:
             dropped = True
             drop_reason = "unsupported_program_heavy"
-        elif bot_rate > max_bot_rate:
+        elif bot_flag:
             dropped = True
-            drop_reason = "bot_rate"
+            drop_reason = GT_ECONOMIC_TRADES_RULE
         elif bundle.get("excluded"):
             dropped = True
             drop_reason = bundle.get("reason") or "bundle_or_distribution"
@@ -4287,14 +4380,17 @@ async def phase2_prescreen(store, grant, config, state, recorder):
             "bundle_reasons": bundle.get("reasons") or [],
             "controlled_pair": bundle.get("controlled_pair") or [],
             "controlled_pair_explanation": bundle.get("controlled_pair_explanation"),
-            "bot": bot_rate > max_bot_rate,
+            "bot": bot_flag,
             "bot_rate": str(bot_rate),
+            "bot_threshold_rule": BOT_THRESHOLD_RULE,
+            "max_economic_trades_in_one_day": econ_rate.get("max"),
+            "max_economic_trades_on": econ_rate.get("max_on"),
             "program_blockers": programs["blockers"],
             "coverability_rank_key": str(prescreen_rank_score({
                 "supported_venue_value_share": programs.get("supported_venue_value_share") or "0",
                 "has_known_basis_buys": has_known_basis_buys,
                 "bundle": bundle.get("excluded"),
-                "bot": bot_rate > max_bot_rate,
+                "bot": bot_flag,
                 "controlled_pair": bundle.get("controlled_pair"),
             })),
             "dropped": dropped,
@@ -4392,10 +4488,10 @@ async def phase3_history(store, grant, config, state, recorder):
             rate = combined_economic_trade_rate(
                 events=page_events, records=records, address=address,
             )
-            if first_defined_int(rate.get("max")) is not None and rate["max"] > 25:
+            if first_defined_int(rate.get("max")) is not None and rate["max"] > MAX_ECONOMIC_TRADES_PER_UTC_DAY:
                 cursor["done"] = True
                 cursor["history_complete"] = False
-                cursor["history_complete_reason"] = "gt_25_economic_trades_in_one_day"
+                cursor["history_complete_reason"] = GT_ECONOMIC_TRADES_RULE
                 cursor["early_stop_bot_rate"] = True
                 cursor["leftover_pagination_token"] = bool(token)
                 cursor["window_covered"] = False
@@ -4527,8 +4623,19 @@ def _phase4_wallet_row(report, profile):
         "bundle_reasons": bundle.get("reasons") or [],
         "controlled_pair": bundle.get("controlled_pair") or [],
         "controlled_pair_explanation": bundle.get("controlled_pair_explanation"),
-        "bot": ((report.get("prescreen") or {}).get("bot")),
+        "bot": is_economic_bot(first_defined_int(
+            (profile or {}).get("max_economic_trades_in_one_day"),
+            (report or {}).get("max_economic_trades_in_one_day"),
+            rate.get("max"),
+        )),
         "bot_rate": ((report.get("prescreen") or {}).get("bot_rate")),
+        "bot_threshold_rule": BOT_THRESHOLD_RULE,
+        "independent_audit": audit_blob or None,
+        "auditor_clean_episodes": audit_blob.get("auditor_clean_episodes") if audit_blob else None,
+        "auditor_dropped_losing_episodes": audit_blob.get("dropped_losing_episodes") if audit_blob else None,
+        "independently_audited_episode_net": audit_blob.get("independently_audited_episode_net") if audit_blob else None,
+        "independently_audited_episode_net_unit": audit_blob.get("independently_audited_episode_net_unit") if audit_blob else None,
+        "auditor_reason": audit_blob.get("reason") if audit_blob else None,
         "supported_venue_value_share": (
             (report.get("prescreen") or {}).get("supported_venue_value_share")
             or shares.get("coverage_value_share")
@@ -4888,11 +4995,17 @@ def assert_live_ledger_identity(grant):
     if auth_id in LIVE_KNOWN_DRAFTS:
         try:
             draft, _ = load_committed_draft(LIVE_KNOWN_DRAFTS[auth_id])
-        except LiveE2EError:
-            draft = {}
+        except LiveE2EError as error:
+            raise LiveE2EError(
+                f"committed draft could not be read ({error}); "
+                "git-archive copies fall back to the file tree"
+            ) from error
         draft_pin = draft.get("pinned_ledger_home")
         if not draft_pin or not Path(str(draft_pin)).is_absolute():
-            raise LiveE2EError("committed draft pinned_ledger_home must be an absolute path")
+            raise LiveE2EError(
+                "committed draft pinned_ledger_home must be an absolute path "
+                f"(got {draft_pin!r})"
+            )
         if PINNED_LEDGER_ABSOLUTE == COMMITTED_LEDGER_ABSOLUTE:
             if Path(draft_pin).resolve() != Path(COMMITTED_LEDGER_ABSOLUTE).resolve():
                 raise LiveE2EError("committed draft pinned_ledger_home disagrees with the code constant")
@@ -5198,6 +5311,9 @@ def validate_config(raw):
             "max_unsupported_share": str(raw.get("max_unsupported_share") or "1"),
             "max_bot_rate": str(raw.get("max_bot_rate") or "1"),
         },
+        "run_caps": raw.get("run_caps") or None,
+        "history_age_rule": raw.get("history_age_rule") or HISTORY_AGE_RULE,
+        "bot_threshold_rule": raw.get("bot_threshold_rule") or BOT_THRESHOLD_RULE,
         "PRODUCT_READY": False,
     }
 
@@ -5398,12 +5514,23 @@ async def run_live_e2e(raw):
                 if 2 in config["phases"]
                 and not ((state.get("phase2") or {}).get(addr) or {}).get("done")
             ]
+            unscreened = list(state.get("unscreened_wallets") or [])
             if pending:
                 state["status"] = "incomplete"
                 state["blocker"] = "unprocessed_wallets"
                 state["detail"] = f"{len(pending)} wallets not yet screened"
                 status = "incomplete"
                 blocker = "unprocessed_wallets"
+            elif unscreened:
+                reasons = {
+                    (item.get("reason") if isinstance(item, dict) else None) or "cap_reached"
+                    for item in unscreened
+                }
+                status = "cap_reached" if "cap_reached" in reasons else "partial"
+                state["status"] = status
+                state["blocker"] = status
+                state["detail"] = f"{len(unscreened)} wallets unscreened ({', '.join(sorted(reasons))})"
+                blocker = status
             else:
                 state["status"] = "completed"
                 state["blocker"] = None
@@ -5411,11 +5538,16 @@ async def run_live_e2e(raw):
                 status = "completed"
                 blocker = None
         except BaseException as error:
-            state["status"] = "blocked"
-            state["blocker"] = getattr(error, "state", None) or error.__class__.__name__
+            code = getattr(error, "state", None) or error.__class__.__name__
+            if code == "CAP_EXCEEDED":
+                state["status"] = "cap_reached"
+                status = "cap_reached"
+            else:
+                state["status"] = "blocked"
+                status = "blocked"
+            state["blocker"] = code
             state["detail"] = redact_text(str(error))
             phase4 = {"wallets": state.get("phase4_wallets") or []}
-            status = "blocked"
             blocker = state["blocker"]
             save_state(output_dir, state)
             if not isinstance(error, Exception):
@@ -5439,6 +5571,7 @@ async def run_live_e2e(raw):
             "phase2": state.get("phase2_result"),
             "phase3": state.get("phase3_result"),
             "wallets": phase4.get("wallets") or [],
+            "unscreened_wallets": list(state.get("unscreened_wallets") or []),
             "PRODUCT_READY": False,
         }
         audit_worthy = {}

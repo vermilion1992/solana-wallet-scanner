@@ -67,36 +67,45 @@ def draft_artifact_hash(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def committed_draft_hash(rel_path, *, repo_root, commit="HEAD"):
-    """SHA-256 of the draft blob at a pinned git object. Working-tree edits do not count."""
+def _read_draft_bytes(rel_path, *, repo_root, commit="HEAD"):
+    """Git object first; file-tree fallback when git isn't available (D11-2)."""
     import subprocess
 
     spec = f"{commit}:{rel_path}"
-    proc = subprocess.run(
-        ["git", "show", spec],
-        cwd=str(repo_root),
-        capture_output=True,
-        check=False,
+    try:
+        proc = subprocess.run(
+            ["git", "show", spec],
+            cwd=str(repo_root),
+            capture_output=True,
+            check=False,
+        )
+    except OSError as error:
+        proc = None
+        git_err = str(error)
+    else:
+        if proc.returncode == 0 and proc.stdout:
+            return proc.stdout, "git"
+        git_err = (proc.stderr or b"").decode("utf-8", errors="replace").strip() or str(proc.returncode)
+    path = Path(repo_root) / rel_path
+    if path.is_file():
+        return path.read_bytes(), "file_tree"
+    raise ValueError(
+        f"draft blob missing: {spec}; git unavailable or not a repo "
+        f"({git_err}); file tree also missing {path}"
     )
-    if proc.returncode != 0 or not proc.stdout:
-        raise ValueError(f"committed draft blob missing: {spec}")
-    return hashlib.sha256(proc.stdout).hexdigest()
+
+
+def committed_draft_hash(rel_path, *, repo_root, commit="HEAD"):
+    """SHA-256 of the draft blob at a pinned git object. Working-tree edits do not count."""
+    raw, _source = _read_draft_bytes(rel_path, repo_root=repo_root, commit=commit)
+    return hashlib.sha256(raw).hexdigest()
 
 
 def committed_draft_payload(rel_path, *, repo_root, commit="HEAD"):
     import json
-    import subprocess
 
-    spec = f"{commit}:{rel_path}"
-    proc = subprocess.run(
-        ["git", "show", spec],
-        cwd=str(repo_root),
-        capture_output=True,
-        check=False,
-    )
-    if proc.returncode != 0 or not proc.stdout:
-        raise ValueError(f"committed draft blob missing: {spec}")
-    return json.loads(proc.stdout.decode("utf-8")), hashlib.sha256(proc.stdout).hexdigest()
+    raw, _source = _read_draft_bytes(rel_path, repo_root=repo_root, commit=commit)
+    return json.loads(raw.decode("utf-8")), hashlib.sha256(raw).hexdigest()
 
 
 def provider_caps(grant):

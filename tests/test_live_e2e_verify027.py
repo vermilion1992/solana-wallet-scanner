@@ -186,7 +186,7 @@ def test_d7_no_stored_day_inf_dedupe_and_single_gt25():
     buy = rec("dup", T0 + 10, [tb(1, X, 0)], [tb(1, X, 1000)], native=-5_000_000)
     deduped = raw_economic_trade_rate([buy, buy], A)
     assert deduped["max"] == 1
-    blocker = with_gt25_blocker("gt_25_economic_trades_in_one_day", {"max": 130, "max_on": "2026-09-30"})
+    blocker = with_gt25_blocker(GT25_ECONOMIC_TRADES_RULE, {"max": 130, "max_on": "2026-09-30"})
     assert blocker.count(GT25_ECONOMIC_TRADES_RULE) == 1
     assert "130" in blocker and "2026-09-30" in blocker
 
@@ -203,7 +203,7 @@ def test_triage_uses_raw_rent_aware_count():
     )
     assert decision["dropped"] is True
     assert decision["max_economic_trades_in_one_day"] >= 26
-    assert "triage_gt_25_economic_trades_in_one_day" in decision["drop_reasons"]
+    assert f"triage_{GT25_ECONOMIC_TRADES_RULE}" in decision["drop_reasons"]
 
 
 def test_nansen_phase1_keeps_both_timeframes(tmp_path, monkeypatch):

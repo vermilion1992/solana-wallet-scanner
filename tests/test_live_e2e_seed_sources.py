@@ -170,9 +170,9 @@ def test_new_draft_grant_is_disabled_and_hashed():
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_13] == digest
     assert HARD_CEILINGS["birdeye_units"] == 1400
-    assert HARD_CEILINGS["helius_units"] == 30000
-    assert HARD_CEILINGS["nansen_units"] == 300
-    assert HARD_CEILINGS["nansen_requests"] == 60
+    assert HARD_CEILINGS["helius_units"] == 40000
+    assert HARD_CEILINGS["nansen_units"] == 400
+    assert HARD_CEILINGS["nansen_requests"] == 200
     assert HARD_CEILINGS["leaderboard_requests"] == 0
 
 
@@ -280,15 +280,24 @@ def test_helius_triage_drops_only_on_confirmed_signals():
         now_unix=now,
     )
     assert over["dropped"] is True
-    assert "triage_gt_25_economic_trades_in_one_day" in over["drop_reasons"]
+    assert "triage_gt_15_economic_trades_in_one_day" in over["drop_reasons"]
     under = helius_triage_decision(
         [{"records": [{"blockTime": now - 200 * 86400}], "events": [
-            {"kind": "buy", "block_time": now - 100} for _ in range(24)
+            {"kind": "buy", "block_time": now - 100 - i, "signature": f"s{i}", "mint": "M"}
+            for i in range(15)
         ]}],
         now_unix=now,
     )
     assert under["dropped"] is False
-    assert under["max_economic_trades_in_one_day"] == 24
+    assert under["max_economic_trades_in_one_day"] == 15
+    sixteen = helius_triage_decision(
+        [{"records": [{"blockTime": now - 200 * 86400}], "events": [
+            {"kind": "buy", "block_time": now - 100 - i, "signature": f"s{i}", "mint": "M"}
+            for i in range(16)
+        ]}],
+        now_unix=now,
+    )
+    assert sixteen["dropped"] is True
     young = helius_triage_decision(
         [{"records": [{"blockTime": now - 10 * 86400}], "events": []}],
         now_unix=now,
@@ -498,7 +507,7 @@ def test_pda_unsigned_debit_is_not_a_cosigner():
 
 
 def test_decoder_version_is_pinned():
-    assert DECODER_VERSION == "spot-v27-route-flow-v1"
+    assert DECODER_VERSION == "spot-v28-humidifi-9h6tua7-v1"
 
 
 def test_research_program_ids_are_split_into_pinned_and_unverified():

@@ -70,7 +70,16 @@ def _order_key(row):
 
 
 def _ordered_rows(rows):
-    dated = [row for row in rows if not row.get("timestamp_missing") and row.get("seconds_from_start") is not None]
+    dated = []
+    for row in rows:
+        if row.get("timestamp_missing"):
+            continue
+        seconds = row.get("seconds_from_start")
+        if seconds is None:
+            seconds = row.get("timestamp") or row.get("block_time")
+        if seconds is None:
+            continue
+        dated.append({**row, "seconds_from_start": seconds})
     return sorted(dated, key=lambda row: (row["seconds_from_start"], _order_key(row), row.get("signature") or ""))
 
 

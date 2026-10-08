@@ -76,6 +76,9 @@ BOT_RULE_DEFINITION = (
     "route_legs_are_not_trades; "
     "multi_hop_same_tx_counts_once_per_mint_kind"
 )
+# Independent copy of the app bot-day cap. Do not import scanner.
+MAX_ECONOMIC_TRADES_PER_UTC_DAY = 15
+GT_ECONOMIC_TRADES_RULE = "gt_15_economic_trades_in_one_day"
 
 # Pinned published discriminators (Pump IDL / Jupiter parser / Meteora swap / RFQ Fill).
 # Meteora swap = sha256("global:swap")[:8]; RFQ Fill is the published 8-byte disc.
@@ -371,6 +374,8 @@ WELL_KNOWN_INNER_AMMS = frozenset({
     "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
     "BSwp6bEBihVLdqJRK3PkMH2nNzQ4K3CwbGoiJ2mr8BEf",
     "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+    # Published HumidiFi AMM. HpNfyc2 is the earlier mis-pin; keep both.
+    "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
     "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
     "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
     "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
@@ -2634,6 +2639,9 @@ def audit_address(address, pages):
         "economic_trades_by_utc_day": by_day,
         "max_economic_trades_in_one_day": max_day,
         "max_economic_trades_on": max_on,
+        "max_economic_trades_threshold": MAX_ECONOMIC_TRADES_PER_UTC_DAY,
+        "over_max_economic_trades": bool(max_day) and max_day > MAX_ECONOMIC_TRADES_PER_UTC_DAY,
+        "bot_rule": GT_ECONOMIC_TRADES_RULE,
         "clean_episodes": len(episodes),
         "independently_audited_episode_net": episode_net,
         "independently_audited_episode_net_unit": episode_unit,

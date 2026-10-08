@@ -505,6 +505,9 @@ def detect_bundle_or_distribution(records, address):
     zero_basis = []
     quarantined = set()
     sold_quarantined = set()
+    transfer_in_sources = {}
+    transfer_in_signatures = {}
+    transfer_in_mints = set()
     counterparts = set()
     for raw, keys, deltas, record, signers, has_swap in parsed_rows:
         native, paid = _native_delta(raw, keys, address) if keys else (Decimal("0"), False)
@@ -576,10 +579,28 @@ def detect_bundle_or_distribution(records, address):
             # history problem, not a bundle transfer-in.
             if native <= -MATERIAL_SOL_LAMPORTS and gained:
                 continue
+            inbound_source = None
+            for instruction in _iter_instructions(raw):
+                if not isinstance(instruction, dict):
+                    continue
+                parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+                if not parsed or parsed.get("type") not in ("transfer", "transferChecked"):
+                    continue
+                info = parsed.get("info") or {}
+                authority = info.get("authority")
+                src = info.get("source")
+                if authority and authority != address and src != address:
+                    inbound_source = authority
+                    break
             for mint in gained:
                 if mint in (WSOL,):
                     continue
                 quarantined.add(mint)
+                transfer_in_mints.add(mint)
+                if inbound_source:
+                    transfer_in_sources.setdefault(mint, inbound_source)
+                if signature:
+                    transfer_in_signatures.setdefault(mint, signature)
             if any(mint in later_sold for mint in gained if mint != WSOL):
                 sold_quarantined.update(mint for mint in gained if mint in later_sold and mint != WSOL)
                 zero_basis.append(signature)
@@ -620,6 +641,9 @@ def detect_bundle_or_distribution(records, address):
         "zero_basis_signatures": [item for item in zero_basis if item],
         "quarantined_mints": sorted(quarantined),
         "sold_quarantined_mints": sorted(sold_quarantined),
+        "transfer_in_sources": transfer_in_sources,
+        "transfer_in_signatures": transfer_in_signatures,
+        "transfer_in_mints": sorted(transfer_in_mints),
         "controlled_pair": controlled,
         "controlled_pair_explanation": "; ".join(controlled_explanations) if controlled_explanations else None,
         "lead_eligible": not excluded,

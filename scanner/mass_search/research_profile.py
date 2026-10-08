@@ -34,6 +34,7 @@ from scanner.mass_search.qualification_gates import (
     stronger_shortlist_activity_ok,
     trading_activity,
     worksheet_episode_bridge,
+    GT_ECONOMIC_TRADES_RULE,
     GT25_ECONOMIC_TRADES_RULE,
     attach_economic_trade_rate,
     first_defined_int,
@@ -738,6 +739,48 @@ def _episode_ledger_from_report(report):
             elif event.get("known_cost_pnl") not in (None, ""):
                 net = Decimal(str(event["known_cost_pnl"]))
             if net is None:
+                # Completed flatten with known same-asset quotes but no
+                # worksheet sale_row (isolate dropped the legs). Recover
+                # the episode from the events; do not invent a quote.
+                from scanner.mass_search.settlement import quote_consideration, settlement_of, WSOL
+                acq = Decimal("0")
+                proc = Decimal("0")
+                fee_sum = Decimal("0")
+                assets = []
+                missing = False
+                dirty = False
+                for ev in episode_events:
+                    if ev.get("unresolved_basis") or ev.get("not_clean_episode") or ev.get("opening_inventory_consumed"):
+                        dirty = True
+                        break
+                    priced = quote_consideration(ev)
+                    asset = settlement_of(ev)
+                    if ev.get("kind") == "buy":
+                        if priced is None or asset is None:
+                            missing = True
+                            break
+                        acq += priced
+                        assets.append(asset)
+                    elif ev.get("kind") == "sell":
+                        if priced is None or asset is None:
+                            missing = True
+                            break
+                        proc += priced
+                        assets.append(asset)
+                    for key in ("fees_and_tips_sol", "wallet_fee_sol", "fee_sol"):
+                        if ev.get(key) not in (None, ""):
+                            fee_sum += Decimal(str(ev[key]))
+                            break
+                if not missing and not dirty and assets and len(set(assets)) == 1:
+                    basis = acq
+                    proceeds = proc
+                    if assets[0] == WSOL:
+                        costs = fee_sum
+                        net = proceeds - basis - costs
+                    else:
+                        costs = Decimal("0")
+                        net = proceeds - basis
+            if net is None:
                 continue
             from scanner.mass_search.settlement import quote_consideration, settlement_of, USDC, USDT
             if proceeds is not None and Decimal(str(proceeds)) == 0 and quote_consideration(event) is None:
@@ -919,6 +962,7 @@ def attach_live_independent_audit(report, profile, records, address):
         "result_relevant": relevant,
         "source": "live_phase4_independent_episode_audit",
         "economic_trades_by_utc_day": auditor.combined_economic_trades_by_utc_day(trades, records, address),
+        "episodes": episodes,
         "PRODUCT_READY": False,
     }
     base["max_economic_trades_in_one_day"] = (
@@ -1171,7 +1215,7 @@ def qualification_level(report, profile):
             "max_trades_per_day_on": rate.get("max_on"),
         }
     if first_defined_int(rate.get("max")) is not None and rate["max"] > _qual_gates.MAX_ECONOMIC_TRADES_PER_UTC_DAY:
-        reason = f"{GT25_ECONOMIC_TRADES_RULE}: {rate['max']} on {rate['max_on']}"
+        reason = f"{GT_ECONOMIC_TRADES_RULE}: {rate['max']} on {rate['max_on']}"
         return {
             "level": "insufficient_evidence",
             "label": "insufficient evidence",
@@ -1345,6 +1389,10 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     mapped = _merge_decoded_taints([_mapped_trade_row(row) for row in events], decoded)
     known, unresolved = isolate_known_cost_by_mint(mapped) if mapped else ([], [])
     bundle = (report or {}).get("bundle_or_distribution") or {}
+    if not bundle and records and (address or report.get("address")):
+        from scanner.mass_search.bundle_detect import detect_bundle_or_distribution
+        bundle = detect_bundle_or_distribution(records, address or report.get("address"))
+        report["bundle_or_distribution"] = bundle
     sold_quarantined = {
         mint for mint in (bundle.get("sold_quarantined_mints") or []) if mint
     }
@@ -1527,6 +1575,35 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
             "count": len(unresolved),
             "detail": "Leading/unbacked sells have no known acquisition cost in this sample",
         })
+    transfer_sources = (bundle.get("transfer_in_sources") or {}) if isinstance(bundle, dict) else {}
+    transfer_sigs = (bundle.get("transfer_in_signatures") or {}) if isinstance(bundle, dict) else {}
+    transfer_mints = set(bundle.get("transfer_in_mints") or []) if isinstance(bundle, dict) else set()
+    unresolved_detail = []
+    for row in unresolved:
+        mint = row.get("mint")
+        reason = row.get("reason") or "unknown_basis"
+        source = transfer_sources.get(mint) if mint else None
+        inbound_sig = transfer_sigs.get(mint) if mint else None
+        leftover = isinstance(reason, str) and (
+            reason.startswith("Sale has no known acquisition")
+            or reason.startswith("Sale remainder has no known acquisition")
+            or reason == "sold_quarantined_mint"
+        )
+        if leftover and (source or mint in transfer_mints):
+            reason = "transfer_in_zero_basis"
+            row["reason"] = reason
+            row["transfer_in_source"] = source
+            if inbound_sig:
+                row["transfer_in_signature"] = inbound_sig
+        unresolved_detail.append({
+            "signature": row.get("signature"),
+            "mint": mint,
+            "reason": reason,
+            "transfer_in_source": row.get("transfer_in_source") or source,
+            "transfer_in_signature": row.get("transfer_in_signature") or inbound_sig,
+            "split_part": row.get("split_part"),
+            "unresolved_basis": True,
+        })
     profile = {
         "kind": PROFILE_KIND,
         "address": report.get("address"),
@@ -1546,6 +1623,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "sale_count": sale_count,
         "known_cost_trades": len(known),
         "unresolved_basis_sales": len(unresolved),
+        "unresolved_basis_sales_detail": unresolved_detail,
         "quarantined_mints": sorted(quarantined_mints),
         "sold_quarantined_mints": sorted(sold_quarantined),
         "quarantine_never_sold": sorted(quarantined_mints - sold_quarantined),

@@ -341,7 +341,7 @@ def test_new_draft_is_disabled_and_pinned():
     assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_12] == digest
     assert HARD_CEILINGS["birdeye_requests"] == 40
     assert HARD_CEILINGS["birdeye_units"] == 1400
-    assert HARD_CEILINGS["helius_units"] == 30000
+    assert HARD_CEILINGS["helius_units"] == 40000
 
 
 def test_jxt_jito_jupiter_native_settlement_decodes():

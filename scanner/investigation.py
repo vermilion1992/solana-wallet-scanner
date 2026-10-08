@@ -127,7 +127,7 @@ UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 # discriminator in _route. Jupiter/Whirlpool/AMMv4 stay in both sets so an
 # unknown discriminator can still reconstruct when the net is unambiguous.
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v27-route-flow-v1'
+DECODER_VERSION = 'spot-v28-humidifi-9h6tua7-v1'
 NET_BALANCE_INSTRUCTION = 'net_balance'
 NET_BALANCE_SOL_DUST_LAMPORTS = 100_000
 # Fee/referral SOL residue that may be peeled as cost, never as a third trade leg.
@@ -851,7 +851,11 @@ WELL_KNOWN_INNER_AMMS = frozenset({
     '9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin',  # Serum DEX
     'BSwp6bEBihVLdqJRK3PkMH2nNzQ4K3CwbGoiJ2mr8BEf',  # Bonkswap
     'TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH',  # Tessera
-    'HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq',  # HumidiFi
+    # Published HumidiFi AMM (swaps crate / orbmarkets / explorer).
+    # HpNfyc2… was an earlier mis-pin and is kept so already-reviewed
+    # hops do not regress; 9H6tua7 is the live program id.
+    '9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp',  # HumidiFi
+    'HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq',  # legacy HumidiFi pin
     'goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE',  # GoonFi
     '3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU',
     'MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms',  # Manifest
@@ -1059,7 +1063,9 @@ def _accept_inner_system_lifecycle(kind, info, *, nested, address):
     if kind == 'allocate':
         space = info.get('space')
         if type(space) is not int or space not in _REVIEWED_ALLOCATE_SPACES:
-            raise ValueError('System allocate space is not a reviewed account layout')
+            raise ValueError(
+                f'System allocate space {space} is not a reviewed account layout'
+            )
         return
     owner = info.get('owner')
     if owner not in _REVIEWED_LIFECYCLE_OWNERS:

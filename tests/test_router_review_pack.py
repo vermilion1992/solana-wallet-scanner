@@ -80,7 +80,7 @@ def _agree(raw, wallet):
 
 
 def test_decoder_version_and_new_outers():
-    assert DECODER_VERSION == "spot-v27-route-flow-v1"
+    assert DECODER_VERSION == "spot-v28-humidifi-9h6tua7-v1"
     assert {TITAN, TERM9Y, ROUTEU, OKX_DEX_V2} <= NET_BALANCE_SWAP_PROGRAMS
     assert not {TITAN, TERM9Y, ROUTEU, OKX_DEX_V2} & set(REVIEWED_OUTER_VENUES)
     assert {TITAN, TERM9Y, ROUTEU, auditor.OKX_V2} <= auditor.NET_BALANCE_SWAP_PROGRAMS

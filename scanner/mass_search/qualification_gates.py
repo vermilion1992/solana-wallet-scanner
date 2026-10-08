@@ -17,7 +17,7 @@ from statistics import median
 
 ACCOUNTING_POLICY_VERSION = (
     "completed-episode-ledger-v1+asset-atomic-v1+coverage-count-and-value-v1+"
-    "audit-1to1-v1+result-relevant-coverage-v1"
+    "audit-1to1-v1+result-relevant-coverage-v1+gt15-v1"
 )
 
 # Asset-specific atomic units. Tolerances are integer atomics, then converted.
@@ -40,8 +40,16 @@ ROUNDING_POLICY = (
     "atomic difference is at most 2 units of that asset. Never apply a SOL "
     "lamport tolerance to USDC or USDT. Never sum mixed quote currencies."
 )
-MAX_ECONOMIC_TRADES_PER_UTC_DAY = 25
-GT25_ECONOMIC_TRADES_RULE = "gt_25_economic_trades_in_one_day"
+MAX_ECONOMIC_TRADES_PER_UTC_DAY = 15
+BOT_THRESHOLD_RULE = "economic_trades_per_utc_day"
+BOT_GATE_VERSION = "gt15-v1"
+# Age drop is off unless a caller supplies min_history_days or a Helius
+# first-signature time. Named so grant/runner config can flip it.
+HISTORY_AGE_RULE = "off"
+HISTORY_AGE_RULE_HELIUS = "helius_first_signature"
+GT_ECONOMIC_TRADES_RULE = f"gt_{MAX_ECONOMIC_TRADES_PER_UTC_DAY}_economic_trades_in_one_day"
+GT15_ECONOMIC_TRADES_RULE = GT_ECONOMIC_TRADES_RULE
+GT25_ECONOMIC_TRADES_RULE = GT_ECONOMIC_TRADES_RULE
 BOT_RULE_DEFINITION = (
     "economic_swap_including_token_to_token; "
     "dedupe=(signature,kind,mint); "
@@ -248,6 +256,7 @@ def compute_audit_fingerprint(report=None, *, entry=None, profile=None, episodes
         "completed_episode_ledger": _sha256_text("\n".join(membership)),
         "completed_episode_count": len(ledger),
         "accounting_policy_version": ACCOUNTING_POLICY_VERSION,
+        "bot_gate_version": BOT_GATE_VERSION,
     }
     payload["fingerprint"] = _sha256_text(json.dumps(payload, sort_keys=True, separators=(",", ":")))
     return payload
@@ -833,14 +842,24 @@ def first_defined_int(*values):
     return None
 
 
+def is_economic_bot(max_economic_trades_in_one_day, *, threshold=None):
+    """True only when a known economic-trade max exceeds the UTC-day cap.
+
+    A missing count cannot prove a bot. Tx-rate heuristics must not set this.
+    """
+    cap = MAX_ECONOMIC_TRADES_PER_UTC_DAY if threshold is None else int(threshold)
+    maximum = first_defined_int(max_economic_trades_in_one_day)
+    return maximum is not None and maximum > cap
+
+
 def gt25_blocker_text(rate):
     if not rate:
         return None
     maximum = first_defined_int(rate.get("max"))
-    if maximum is None or maximum <= MAX_ECONOMIC_TRADES_PER_UTC_DAY:
+    if maximum is None or not is_economic_bot(maximum):
         return None
     day = rate.get("max_on") or "unknown"
-    return f"{GT25_ECONOMIC_TRADES_RULE}: {maximum} on {day}"
+    return f"{GT_ECONOMIC_TRADES_RULE}: {maximum} on {day}"
 
 
 def with_gt25_blocker(blocker, rate):
@@ -851,7 +870,7 @@ def with_gt25_blocker(blocker, rate):
         return extra
     parts = [part.strip() for part in str(blocker).split(";") if part.strip()]
     kept = []
-    prefix = GT25_ECONOMIC_TRADES_RULE
+    prefix = GT_ECONOMIC_TRADES_RULE
     for part in parts:
         if part == extra or extra in part:
             continue
@@ -863,7 +882,7 @@ def with_gt25_blocker(blocker, rate):
 
 
 def bot_rate_disagreement_blocker(app_rate, auditor_rate):
-    """Fail closed when app and auditor disagree on the >25/day gate."""
+    """Fail closed when app and auditor disagree on the >15/day gate."""
     app_max = first_defined_int((app_rate or {}).get("max"))
     aud_max = first_defined_int((auditor_rate or {}).get("max"))
     if app_max is None and aud_max is None:

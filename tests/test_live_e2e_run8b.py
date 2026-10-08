@@ -372,7 +372,7 @@ def test_phase3_early_stops_after_gt25_page(tmp_path, monkeypatch):
     cursor = result["pages"][JXT]
     assert cursor["pages"] == 1
     assert cursor["early_stop_bot_rate"] is True
-    assert cursor["history_complete_reason"] == "gt_25_economic_trades_in_one_day"
+    assert cursor["history_complete_reason"] == "gt_15_economic_trades_in_one_day"
 
 
 def test_phase3_resume_deepens_capped_history_without_refetch(tmp_path, monkeypatch):

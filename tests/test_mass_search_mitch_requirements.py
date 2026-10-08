@@ -495,7 +495,7 @@ def test_cache_key_includes_window():
         "analysis-v6-research-screen-v2+sol-isolate-v1+mixed-quote-v1+"
         "sig-keyed-v1+quote-conversion-v1+fees-tips-v1+coverage-v1+mitch-review-v1+"
         "chatgpt-review-2026-10-07-v1+rereview-0346-v1+rereview-0547-v1+rereview-0714-v1+rereview-0842-v1+rereview-2fe60bd-v1+"
-        "result-relevant-coverage-v1"
+        "result-relevant-coverage-v1+gt15-v1"
     )
 
 

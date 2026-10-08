@@ -1,4 +1,4 @@
-"""A wallet with >25 economic trades in any UTC day is never a lead.
+"""A wallet with >15 economic trades in any UTC day is never a lead.
 
 Counts buy/sell on (signature, kind, mint) over full captured history.
 Independent of the report window. Phase-2 triage samples are not enough.
@@ -21,6 +21,7 @@ from scanner.mass_search.live_e2e import (
     window_bounds,
 )
 from scanner.mass_search.qualification_gates import (
+    GT_ECONOMIC_TRADES_RULE,
     GT25_ECONOMIC_TRADES_RULE,
     MAX_ECONOMIC_TRADES_PER_UTC_DAY,
     attach_economic_trade_rate,
@@ -79,7 +80,7 @@ def test_wallet_over_25_economic_trades_per_utc_day_is_never_a_lead(tmp_path, rw
     assert row["lead_level"] not in LEADS, (row["lead_level"], row["blocker"])
     assert row["lead_level"] == "insufficient_evidence"
     assert row["blocker"] and GT25_ECONOMIC_TRADES_RULE in row["blocker"]
-    assert "25" in row["blocker"]
+    assert "15" in row["blocker"]
     assert "2026-10-01" in row["blocker"]
     assert int(row["max_economic_trades_in_one_day"]) == 104
     assert row["max_economic_trades_on"] == "2026-10-01"
@@ -180,4 +181,67 @@ def test_gt25_is_independent_of_report_window():
     assert judged["lead_eligible"] is False
     assert judged["max_economic_trades_in_one_day"] == 26
     assert judged["max_economic_trades_on"] == "2026-01-01"
-    assert MAX_ECONOMIC_TRADES_PER_UTC_DAY == 25
+    assert MAX_ECONOMIC_TRADES_PER_UTC_DAY == 15
+    assert GT_ECONOMIC_TRADES_RULE == "gt_15_economic_trades_in_one_day"
+    assert GT25_ECONOMIC_TRADES_RULE == GT_ECONOMIC_TRADES_RULE
+
+
+def _burst_events(count, day_unix=1_767_225_600):
+    return [
+        {
+            "kind": "buy" if index % 2 == 0 else "sell",
+            "signature": f"b{index}",
+            "mint": f"M{index % 3}",
+            "timestamp": day_unix + index,
+        }
+        for index in range(count)
+    ]
+
+
+def test_gt15_boundary_15_is_not_a_bot():
+    from scanner.mass_search.qualification_gates import is_economic_bot, economic_trade_rate
+
+    rate = economic_trade_rate(_burst_events(15))
+    assert rate["max"] == 15
+    assert is_economic_bot(rate["max"]) is False
+    profile = {
+        "completed_known_cost_positions": 20,
+        "completed_episode_ledger": [
+            {"mint": f"T{i}", "close_signature": f"c{i}", "net": "1", "unit": "SOL"}
+            for i in range(20)
+        ],
+        "unresolved_basis_sales": 0,
+        "concentration_detail": {"distinct_tokens": 4},
+        "trading_activity": {"active_trading_days": 10, "span_days": 20},
+        "independent_audit": {"status": "independently_audited", "independently_audited": True},
+    }
+    report = {"captured_history_events": _burst_events(15), "events": []}
+    attach_economic_trade_rate(profile, _burst_events(15))
+    attach_economic_trade_rate(report, _burst_events(15))
+    judged = qualification_level(report, profile)
+    assert judged["level"] in LEADS or GT_ECONOMIC_TRADES_RULE not in (judged.get("reason") or "")
+
+
+def test_gt15_boundary_16_is_a_bot():
+    from scanner.mass_search.qualification_gates import is_economic_bot, economic_trade_rate
+
+    rate = economic_trade_rate(_burst_events(16))
+    assert rate["max"] == 16
+    assert is_economic_bot(rate["max"]) is True
+    profile = {
+        "completed_known_cost_positions": 20,
+        "completed_episode_ledger": [
+            {"mint": f"T{i}", "close_signature": f"c{i}", "net": "1", "unit": "SOL"}
+            for i in range(20)
+        ],
+        "unresolved_basis_sales": 0,
+        "concentration_detail": {"distinct_tokens": 4},
+        "trading_activity": {"active_trading_days": 10, "span_days": 20},
+        "independent_audit": {"status": "independently_audited", "independently_audited": True},
+    }
+    report = {"captured_history_events": _burst_events(16), "events": []}
+    attach_economic_trade_rate(profile, _burst_events(16))
+    attach_economic_trade_rate(report, _burst_events(16))
+    judged = qualification_level(report, profile)
+    assert judged["level"] == "insufficient_evidence"
+    assert GT_ECONOMIC_TRADES_RULE in (judged.get("reason") or "")
