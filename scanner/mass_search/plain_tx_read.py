@@ -55,7 +55,6 @@ C2_COVERAGE_GAP_PREFIXES = (
     "No reviewed outer spot swap",
     "No reviewed spot swap instruction for this program",
     "Jupiter route",
-    "Transaction version has no reviewed",
 )
 G2G_MAX_NATIVE_LAMPORTS = 10_000_000
 JITO_MAX_NATIVE_LAMPORTS = 1_000_000_000
@@ -296,9 +295,14 @@ def _hydrate_plain_instruction(instruction, keys):
         if tag == 4:
             return {"type": "advanceNonce", "info": {}}
         if tag == 1:
-            return {"type": "assign", "info": {}}
+            owner = None
+            if len(data) >= 36:
+                from scanner.mass_search.fail_closed_preflight import _b58encode
+                owner = _b58encode(data[4:36])
+            return {"type": "assign", "info": {"account": accounts[0] if accounts else None, "owner": owner}}
         if tag == 8:
-            return {"type": "allocate", "info": {}}
+            space = int.from_bytes(data[4:12], "little") if len(data) >= 12 else None
+            return {"type": "allocate", "info": {"account": accounts[0] if accounts else None, "space": space}}
         return None
     if program in TOKEN_IDS and data:
         tag = data[0]
@@ -560,6 +564,9 @@ def classify_plain_tx(raw, address):
     """C1: System/Token/ATA/ComputeBudget/Memo only, exact reconcile."""
     if not isinstance(raw, dict) or not address:
         return None
+    from scanner.mass_search.fail_closed_preflight import fail_closed_reason
+    if fail_closed_reason(raw, address, trade=False):
+        return None
     meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
     if meta.get("err") is not None:
         return None
@@ -688,11 +695,12 @@ def _sponsored_token_account_rent(raw, address, keys):
         program = _program_of(instruction, keys)
         dest = info.get("destination") or info.get("newAccount") or info.get("account")
         if program == SYSTEM_ID and kind in ("transfer", "createAccount", "createAccountWithSeed"):
-            if dest in keys:
-                funded.add(keys.index(dest) if dest in keys else -1)
+            if dest in keys and info.get("source") == address:
+                funded.add(keys.index(dest))
         if program == ASSOCIATED_ID:
             account = info.get("account")
-            if account in keys:
+            source = info.get("source") or info.get("wallet")
+            if account in keys and source == address:
                 funded.add(keys.index(account))
     for index in owned_indexes:
         if index >= len(pre_native) or index >= len(post_native):
@@ -707,8 +715,11 @@ def _sponsored_token_account_rent(raw, address, keys):
 
 
 def _c2_fail_closed_preconditions(raw, address, keys):
-    """Any nonce / unknown outer / allocate / conflict / sponsored-rent blocks C2."""
+    """Shared preflight plus C2-only nonce / unknown-outer."""
     if not keys or not address:
+        return True
+    from scanner.mass_search.fail_closed_preflight import fail_closed_reason
+    if fail_closed_reason(raw, address, trade=False):
         return True
     for program in _outer_programs(raw, keys):
         if program not in REVIEWED_OUTER_PROGRAMS:
@@ -716,14 +727,6 @@ def _c2_fail_closed_preconditions(raw, address, keys):
     for _role, _index, instruction in _iter_instructions(raw):
         if _instruction_has_nonce(instruction, keys):
             return True
-        if _role == "outer" and _instruction_allocate_assign(instruction, keys):
-            return True
-        if _mixed_parsed_opaque(instruction):
-            return True
-    if _transfer_identity_mismatch(raw, keys):
-        return True
-    if _sponsored_token_account_rent(raw, address, keys):
-        return True
     return False
 
 
@@ -771,14 +774,16 @@ def _edge_trade_dirty(raw, address, keys, actual):
             if dest in owned and account and account not in owned:
                 return True
     meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
-    if meta.get("innerInstructions"):
-        assets = {mint: qty for mint, qty in actual["tokens"].items() if qty}
-        assets["SOL"] = actual["native"] + actual["tokens"].get(WSOL, 0)
-        try:
-            if _route_flow_disagrees_with_wallet(raw, address, keys, assets):
-                return True
-        except (ValueError, TypeError, KeyError, IndexError, AttributeError):
+    inners = meta.get("innerInstructions")
+    if not isinstance(inners, list) or not inners:
+        return True
+    assets = {mint: qty for mint, qty in actual["tokens"].items() if qty}
+    assets["SOL"] = actual["native"] + actual["tokens"].get(WSOL, 0)
+    try:
+        if _route_flow_disagrees_with_wallet(raw, address, keys, assets):
             return True
+    except (ValueError, TypeError, KeyError, IndexError, AttributeError):
+        return True
     return False
 
 
@@ -853,6 +858,9 @@ def _accepted_edge_trade(raw, address, keys, actual, classified):
     if not classified:
         return None
     if any(item.get("kind") in TRADE_KINDS for item in classified):
+        from scanner.mass_search.fail_closed_preflight import fail_closed_reason
+        if fail_closed_reason(raw, address, trade=True):
+            return None
         if _c2_fail_closed_preconditions(raw, address, keys):
             return None
         if _edge_trade_dirty(raw, address, keys, actual):
@@ -863,6 +871,9 @@ def _accepted_edge_trade(raw, address, keys, actual, classified):
 def classify_edge_tx(raw, address):
     """C2: wallet-edge reconcile for named programs. Unknown stays unreadable."""
     if not isinstance(raw, dict) or not address:
+        return None
+    from scanner.mass_search.fail_closed_preflight import fail_closed_reason
+    if fail_closed_reason(raw, address, trade=False):
         return None
     meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
     if meta.get("err") is not None:
@@ -924,14 +935,11 @@ def classify_edge_tx(raw, address):
         )
 
     if OKX_VAULT in outer_programs:
-        if not zero_token:
-            return _classify_token_effects(
-                actual, program=OKX_VAULT, instruction="custody",
-                reason="OKX Vault with token deltas uses transfer semantics",
-            )
+        if not zero_token or abs(sol) > JITO_MAX_NATIVE_LAMPORTS:
+            return None
         return _classify_token_effects(
             actual, program=OKX_VAULT, instruction="custody",
-            reason="OKX Vault outer SOL-only custody move; non-trade",
+            reason="OKX Vault outer SOL-only custody within cap; non-trade",
         )
 
     if PUMP in programs:

@@ -42,7 +42,7 @@ IN_WINDOW = 1789000000
 TOKEN_RENT = 2_039_280
 
 
-def _disc(hex_disc, extra=16):
+def _disc(hex_disc, extra=24):
     raw = bytes.fromhex(hex_disc) + b"\x00" * extra
     return [base64.b64encode(raw).decode("ascii"), "base64"]
 
@@ -144,7 +144,7 @@ def _ata_create_close(signature):
 
 
 def _edge_swap(signature, program, disc_hex, *, token_pre, token_post, usdc_pre, usdc_post, native_pre=2_000_000_000, extra_token=None):
-    keys = [WALLET, TOKEN_ATA, USDC_ATA, FEE_ATA, program, TOKEN]
+    keys = [WALLET, TOKEN_ATA, USDC_ATA, FEE_ATA, program, TOKEN, COUNTER_ATA]
     fee = 5000
     pre_token = [
         {"accountIndex": 1, "mint": MINT, "owner": WALLET, "uiTokenAmount": {"amount": token_pre, "decimals": 6}},
@@ -159,12 +159,36 @@ def _edge_swap(signature, program, disc_hex, *, token_pre, token_post, usdc_pre,
         post_token.append(extra_token[1])
         if FEE_ATA not in keys:
             keys.append(FEE_ATA)
+    token_delta = int(token_post) - int(token_pre)
+    usdc_delta = int(usdc_post) - int(usdc_pre)
+    inners = []
+    if token_delta:
+        src, dst, qty = (COUNTER_ATA, TOKEN_ATA, token_delta) if token_delta > 0 else (TOKEN_ATA, COUNTER_ATA, -token_delta)
+        inners.append({
+            "programId": TOKEN,
+            "parsed": {"type": "transferChecked", "info": {
+                "source": src, "destination": dst, "mint": MINT, "authority": WALLET,
+                "tokenAmount": {"amount": str(qty), "decimals": 6},
+            }},
+        })
+    if usdc_delta:
+        src, dst, qty = (COUNTER_ATA, USDC_ATA, usdc_delta) if usdc_delta > 0 else (USDC_ATA, COUNTER_ATA, -usdc_delta)
+        inners.append({
+            "programId": TOKEN,
+            "parsed": {"type": "transferChecked", "info": {
+                "source": src, "destination": dst, "mint": USDC, "authority": WALLET,
+                "tokenAmount": {"amount": str(qty), "decimals": 6},
+            }},
+        })
     return _record(
         signature, keys,
-        [{"programId": program, "accounts": [WALLET, TOKEN_ATA, USDC_ATA], "data": _disc(disc_hex)}],
-        pre_native=[native_pre, TOKEN_RENT, TOKEN_RENT, TOKEN_RENT, 1, 1],
-        post_native=[native_pre - fee, TOKEN_RENT, TOKEN_RENT, TOKEN_RENT, 1, 1],
+        [{"programId": program, "accounts": [WALLET, TOKEN_ATA, USDC_ATA, COUNTER_ATA], "data": _disc(disc_hex)}],
+        pre_native=[native_pre, TOKEN_RENT, TOKEN_RENT, TOKEN_RENT, 1, 1, TOKEN_RENT],
+        post_native=[native_pre - fee, TOKEN_RENT, TOKEN_RENT, TOKEN_RENT, 1, 1, TOKEN_RENT],
         pre_token=pre_token, post_token=post_token, fee=fee,
+        inner=[{"index": 0, "instructions": inners}] if inners else [{"index": 0, "instructions": [
+            {"programId": TOKEN, "parsed": {"type": "getAccountDataSize", "info": {"mint": MINT}}},
+        ]}],
     )
 
 
@@ -299,12 +323,13 @@ def test_c2_pump_distribution_with_sol_unreadable():
 
 
 def test_c2_rfq_token_token_conversion():
-    keys = [WALLET, TOKEN_ATA, "PlainReadMintBAta11111111111111111111112", RFQ_FILL, TOKEN]
+    mint_b_ata = "PlainReadMintBAta11111111111111111111112"
+    keys = [WALLET, TOKEN_ATA, mint_b_ata, RFQ_FILL, TOKEN, COUNTER_ATA]
     raw = _record(
         "rfq1", keys,
-        [{"programId": RFQ_FILL, "accounts": [WALLET], "data": _disc("a860b7a35c0a28a0")}],
-        pre_native=[2_000_000_000, TOKEN_RENT, TOKEN_RENT, 1, 1],
-        post_native=[1_999_995_000, TOKEN_RENT, TOKEN_RENT, 1, 1],
+        [{"programId": RFQ_FILL, "accounts": [WALLET, TOKEN_ATA, mint_b_ata, COUNTER_ATA], "data": _disc("a860b7a35c0a28a0")}],
+        pre_native=[2_000_000_000, TOKEN_RENT, TOKEN_RENT, 1, 1, TOKEN_RENT],
+        post_native=[1_999_995_000, TOKEN_RENT, TOKEN_RENT, 1, 1, TOKEN_RENT],
         pre_token=[
             {"accountIndex": 1, "mint": MINT, "owner": WALLET, "uiTokenAmount": {"amount": "1000", "decimals": 6}},
             {"accountIndex": 2, "mint": MINT_B, "owner": WALLET, "uiTokenAmount": {"amount": "0", "decimals": 6}},
@@ -313,6 +338,19 @@ def test_c2_rfq_token_token_conversion():
             {"accountIndex": 1, "mint": MINT, "owner": WALLET, "uiTokenAmount": {"amount": "0", "decimals": 6}},
             {"accountIndex": 2, "mint": MINT_B, "owner": WALLET, "uiTokenAmount": {"amount": "4000", "decimals": 6}},
         ],
+        inner=[{
+            "index": 0,
+            "instructions": [
+                {"programId": TOKEN, "parsed": {"type": "transferChecked", "info": {
+                    "source": TOKEN_ATA, "destination": COUNTER_ATA, "mint": MINT, "authority": WALLET,
+                    "tokenAmount": {"amount": "1000", "decimals": 6},
+                }}},
+                {"programId": TOKEN, "parsed": {"type": "transferChecked", "info": {
+                    "source": COUNTER_ATA, "destination": mint_b_ata, "mint": MINT_B, "authority": WALLET,
+                    "tokenAmount": {"amount": "4000", "decimals": 6},
+                }}},
+            ],
+        }],
     )
     classified = classify_read_tx(raw, WALLET)
     assert classified and classified[0]["kind"] == "conversion"
@@ -658,3 +696,376 @@ def test_c1_wrap_and_unwrap_reconcile_or_neither():
     if wrap_aud:
         assert wrap_aud[0]["kind"] == "non_trade"
         assert unwrap_aud[0]["kind"] == "non_trade"
+
+
+def _b58(data):
+    from scanner.mass_search.fail_closed_preflight import _b58encode
+    return _b58encode(data)
+
+
+def _no_priced_trade(raw, address=WALLET):
+    classified = classify_read_tx(raw, address)
+    if classified and any(item.get("kind") in ("buy", "sell", "conversion") for item in classified):
+        return False
+    decoded = _decode([raw])
+    if any(kind in ("buy", "sell", "conversion") for kind in _kinds(decoded, raw["signature"])):
+        return False
+    aud = auditor.auditor_classify_read(raw, address)
+    if aud and any(row.get("kind") in ("buy", "sell", "conversion") for row in aud):
+        return False
+    rebuilt = auditor.reconstruct_record(_wrap(raw), address)
+    if rebuilt and rebuilt.get("kind") in ("buy", "sell", "conversion"):
+        return False
+    return True
+
+
+def _graft_feature(raw, feature, location, form):
+    grafted = json.loads(json.dumps(raw))
+    unknown = "UnknownInner11111111111111111111111111111"
+    other = "CloseRecipient111111111111111111111111112"
+    newacc = "NewAllocAccount1111111111111111111111112"
+    if feature == "version_1":
+        grafted["version"] = 1
+        return grafted
+    if feature == "jupiter_short":
+        for instruction in grafted["transaction"]["message"]["instructions"]:
+            if instruction.get("programId") == JUPITER or (isinstance(instruction.get("data"), list)):
+                instruction["data"] = _disc("bb64facc31c4af14", extra=8)
+                instruction["programId"] = JUPITER
+        return grafted
+    if feature == "sponsored_third_party":
+        grafted["transaction"]["message"]["accountKeys"].extend([
+            {"pubkey": newacc, "signer": False, "writable": True},
+            {"pubkey": COUNTER, "signer": False, "writable": True},
+        ])
+        grafted["meta"]["preBalances"].extend([0, 6_000_000_000])
+        grafted["meta"]["postBalances"].extend([5_000_000_000, 1_000_000_000])
+        grafted["meta"]["postTokenBalances"].append({
+            "accountIndex": len(grafted["transaction"]["message"]["accountKeys"]) - 2,
+            "mint": MINT, "owner": WALLET, "uiTokenAmount": {"amount": "0", "decimals": 6},
+        })
+        ix = (
+            {"programId": SYSTEM_ID, "parsed": {"type": "createAccount", "info": {
+                "source": COUNTER, "newAccount": newacc, "lamports": 5_000_000_000, "space": 165, "owner": TOKEN,
+            }}}
+            if form == "parsed" else
+            {"programId": SYSTEM_ID, "accounts": [COUNTER, newacc], "data": [
+                base64.b64encode((0).to_bytes(4, "little") + (5_000_000_000).to_bytes(8, "little") + (165).to_bytes(8, "little")).decode(),
+                "base64",
+            ]}
+        )
+        _place_ix(grafted, ix, location)
+        return grafted
+    if feature == "signer_missing":
+        keys = grafted["transaction"]["message"]["accountKeys"]
+        if keys and isinstance(keys[0], dict):
+            keys[0]["signer"] = False
+            keys[0]["pubkey"] = COUNTER
+            keys.append({"pubkey": WALLET, "signer": False, "writable": True})
+            grafted["meta"]["preBalances"].append(grafted["meta"]["preBalances"][0])
+            grafted["meta"]["postBalances"].append(grafted["meta"]["postBalances"][0])
+            grafted["transaction"]["message"]["header"]["numRequiredSignatures"] = 1
+        return grafted
+
+    payload = {
+        "inner_assign_wallet": {
+            "parsed": {"programId": SYSTEM_ID, "parsed": {"type": "assign", "info": {"account": WALLET, "owner": unknown}}},
+            "compiled": {"programId": SYSTEM_ID, "accounts": [WALLET], "data": [
+                base64.b64encode(bytes([1, 0, 0, 0]) + bytes(range(1, 33))).decode(), "base64",
+            ]},
+        },
+        "inner_allocate_2440": {
+            "parsed": {"programId": SYSTEM_ID, "parsed": {"type": "allocate", "info": {"account": newacc, "space": 2440}}},
+            "compiled": {"programId": SYSTEM_ID, "accounts": [newacc], "data": [
+                base64.b64encode(bytes([8, 0, 0, 0]) + (2440).to_bytes(8, "little")).decode(), "base64",
+            ]},
+        },
+        "inner_allocate_2440_wallet": {
+            "parsed": {"programId": SYSTEM_ID, "parsed": {"type": "allocate", "info": {"account": WALLET, "space": 2440}}},
+            "compiled": {"programId": SYSTEM_ID, "accounts": [WALLET], "data": [
+                base64.b64encode(bytes([8, 0, 0, 0]) + (2440).to_bytes(8, "little")).decode(), "base64",
+            ]},
+        },
+        "inner_unknown_program": {
+            "parsed": {"programId": unknown, "accounts": [WALLET, TOKEN_ATA], "data": _disc("deadbeefdeadbeef")},
+            "compiled": {"programId": unknown, "accounts": [WALLET, TOKEN_ATA], "data": _disc("deadbeefdeadbeef")},
+        },
+        "inner_advance_nonce": {
+            "parsed": {"programId": SYSTEM_ID, "parsed": {"type": "advanceNonce", "info": {
+                "nonceAccount": COUNTER, "nonceAuthority": WALLET,
+                "recentBlockhashesSysvar": "SysvarRecentB1ockHashes11111111111111111111",
+            }}},
+            "compiled": {"programId": SYSTEM_ID, "accounts": [COUNTER, "SysvarRecentB1ockHashes11111111111111111111", WALLET], "data": [
+                base64.b64encode(bytes([4, 0, 0, 0])).decode(), "base64",
+            ]},
+        },
+        "close_to_other": {
+            "parsed": {"programId": TOKEN, "parsed": {"type": "closeAccount", "info": {
+                "account": TOKEN_ATA, "destination": other, "owner": WALLET,
+            }}},
+            "compiled": {"programId": TOKEN, "accounts": [TOKEN_ATA, other, WALLET], "data": [
+                base64.b64encode(bytes([9])).decode(), "base64",
+            ]},
+        },
+        "mixed_data": {
+            "parsed": {"programId": SYSTEM_ID, "parsed": {"type": "transfer", "info": {
+                "source": WALLET, "destination": WALLET, "lamports": 0,
+            }}, "accounts": [WALLET], "data": [
+                base64.b64encode(bytes([2, 0, 0, 0]) + (7).to_bytes(8, "little")).decode(), "base64",
+            ]},
+            "compiled": {"programId": SYSTEM_ID, "parsed": {"type": "transfer", "info": {
+                "source": WALLET, "destination": WALLET, "lamports": 0,
+            }}, "accounts": [WALLET], "data": [
+                base64.b64encode(bytes([2, 0, 0, 0]) + (7).to_bytes(8, "little")).decode(), "base64",
+            ]},
+        },
+        "compiled_wrong_decimals": {
+            "parsed": {"programId": TOKEN, "parsed": {"type": "transferChecked", "info": {
+                "source": TOKEN_ATA, "destination": COUNTER_ATA, "mint": MINT, "authority": WALLET,
+                "tokenAmount": {"amount": "0", "decimals": 9},
+            }}},
+            "compiled": {"programId": TOKEN, "accounts": [TOKEN_ATA, MINT, COUNTER_ATA, WALLET], "data": [
+                base64.b64encode(bytes([12]) + (0).to_bytes(8, "little") + bytes([9])).decode(), "base64",
+            ]},
+        },
+        "nonce_admin": {
+            "parsed": {"programId": SYSTEM_ID, "parsed": {"type": "withdrawNonceAccount", "info": {
+                "nonceAccount": COUNTER, "destination": WALLET,
+            }}},
+            "compiled": {"programId": SYSTEM_ID, "accounts": [COUNTER, WALLET], "data": [
+                base64.b64encode(bytes([5, 0, 0, 0])).decode(), "base64",
+            ]},
+        },
+    }[feature][form]
+    if feature in ("inner_unknown_program", "close_to_other", "inner_allocate_2440"):
+        extra = other if feature == "close_to_other" else (unknown if feature == "inner_unknown_program" else newacc)
+        grafted["transaction"]["message"]["accountKeys"].append({"pubkey": extra, "signer": False, "writable": True})
+        grafted["meta"]["preBalances"].append(5_000_000_000 if feature == "close_to_other" else 1)
+        grafted["meta"]["postBalances"].append(0 if feature == "close_to_other" else 1)
+    if feature == "close_to_other":
+        grafted["meta"]["preTokenBalances"].append({
+            "accountIndex": 1, "mint": MINT, "owner": WALLET, "uiTokenAmount": {"amount": "0", "decimals": 6},
+        })
+    _place_ix(grafted, payload, location)
+    return grafted
+
+
+def _place_ix(raw, instruction, location):
+    if location == "outer":
+        raw["transaction"]["message"]["instructions"].insert(0, instruction)
+        return
+    groups = raw["meta"].setdefault("innerInstructions", [])
+    if not isinstance(groups, list) or not groups:
+        raw["meta"]["innerInstructions"] = [{"index": 0, "instructions": [instruction]}]
+        return
+    groups[0].setdefault("instructions", []).append(instruction)
+
+
+def test_preflight_mutation_matrix_unreadable_on_app_and_auditor():
+    """Every pricing path × unsafe feature × outer/inner × parsed/compiled is unreadable."""
+    carriers = {
+        "c2": _edge_swap("mtx-c2", OKX_DEX_ROUTER, "aa2955b184501f35", token_pre="0", token_post="1000", usdc_pre="5000000", usdc_post="0"),
+        "c1": _token_move("mtx-c1", inbound=True),
+        "first_path": _edge_swap("mtx-fp", PUMP_SWAP, "33e685a4017f83ad", token_pre="1000", token_post="0", usdc_pre="0", usdc_post="2000000"),
+        "net_balance": _edge_swap("mtx-nb", OKX_DEX_ROUTER, "aa2955b184501f35", token_pre="0", token_post="1000", usdc_pre="5000000", usdc_post="0"),
+    }
+    features = (
+        "inner_assign_wallet", "inner_allocate_2440", "inner_allocate_2440_wallet",
+        "inner_unknown_program", "inner_advance_nonce", "close_to_other",
+        "mixed_data", "compiled_wrong_decimals", "nonce_admin",
+    )
+    tx_features = ("version_1", "jupiter_short", "sponsored_third_party", "signer_missing")
+    failures = []
+    for path, carrier in carriers.items():
+        for feature in features:
+            for location in ("outer", "inner"):
+                if feature == "inner_advance_nonce" and location == "outer" and path in ("first_path", "c1"):
+                    # Outer durable nonce stays a first-path layout exception.
+                    continue
+                for form in ("parsed", "compiled"):
+                    grafted = _graft_feature(carrier, feature, location, form)
+                    if not _no_priced_trade(grafted):
+                        failures.append(f"{path}/{feature}/{location}/{form}")
+        for feature in tx_features:
+            if feature == "signer_missing" and path == "c1":
+                continue
+            grafted = _graft_feature(carrier, feature, "inner", "parsed")
+            if not _no_priced_trade(grafted):
+                failures.append(f"{path}/{feature}")
+    assert not failures, failures
+
+
+def test_preflight_missing_inners_refuse_priced_trades():
+    raw = _edge_swap("no-ix", OKX_DEX_ROUTER, "aa2955b184501f35", token_pre="0", token_post="1000", usdc_pre="5000000", usdc_post="0")
+    for inner in (None, [], "absent"):
+        grafted = json.loads(json.dumps(raw))
+        if inner == "absent":
+            grafted["meta"].pop("innerInstructions", None)
+        else:
+            grafted["meta"]["innerInstructions"] = inner
+        assert _no_priced_trade(grafted), inner
+
+
+def test_okx_vault_sol_cap_matches_jito():
+    from scanner.mass_search.plain_tx_read import JITO_MAX_NATIVE_LAMPORTS
+    keys = [WALLET, OKX_VAULT, COMPUTE_ID, COUNTER]
+    over = _record(
+        "vault-over", keys,
+        [{"programId": OKX_VAULT, "accounts": [WALLET], "data": _disc("709fd333ee46d43c")},
+         {"programId": SYSTEM_ID, "parsed": {"type": "transfer", "info": {
+             "source": WALLET, "destination": COUNTER, "lamports": JITO_MAX_NATIVE_LAMPORTS + 1,
+         }}}],
+        pre_native=[2_000_000_000_000, 1, 1, 1],
+        post_native=[2_000_000_000_000 - JITO_MAX_NATIVE_LAMPORTS - 1 - 5000, 1, 1, 1 + JITO_MAX_NATIVE_LAMPORTS + 1],
+        pre_token=[], post_token=[],
+    )
+    assert classify_read_tx(over, WALLET) is None
+    assert auditor.auditor_classify_read(over, WALLET) is None
+
+
+def test_product_report_lp_and_conversion_are_blocking_unknown():
+    from scanner.accounting import analyze
+    buy = {
+        "kind": "buy", "timestamp": IN_WINDOW, "order": 1, "mint": MINT,
+        "quantity_raw": "1000000", "decimals": 6, "amount_sol": "1",
+        "classification": "unknown", "signature": "buy-lp", "path": "ix.0",
+        "evidence": ["a" * 64], "paid_by_wallet": True,
+    }
+    lp = {
+        "kind": "lp", "timestamp": IN_WINDOW + 1, "order": 2, "mint": MINT,
+        "quantity_raw": "1000000", "decimals": 6, "classification": "lp",
+        "touches_result_relevant_mint": True, "signature": "lp1", "path": "ix.1",
+        "evidence": ["b" * 64],
+    }
+    conversion = {
+        "kind": "conversion", "timestamp": IN_WINDOW + 2, "order": 3, "mint": MINT,
+        "quantity_raw": "1", "decimals": 6, "classification": "conversion",
+        "signature": "conv1", "path": "ix.2", "evidence": ["c" * 64],
+    }
+    report = analyze(
+        [buy, lp], REPORT_START, REPORT_END,
+        opening_equity="0", closing_equity="0",
+        external_deposits="0", external_withdrawals="0",
+    )
+    assert report["counts"]["unresolved"] >= 1 or any(row["status"] == "unresolved" for row in report["positions"])
+    assert report["metrics"]["profit_sol"]["value"] is None or report["counts"]["unresolved"]
+    converted = analyze(
+        [buy, conversion], REPORT_START, REPORT_END,
+        opening_equity="0", closing_equity="0",
+        external_deposits="0", external_withdrawals="0",
+    )
+    assert converted["metrics"]["profit_sol"]["value"] is None or any(
+        row["status"] == "unresolved" for row in converted["positions"]
+    )
+
+
+def test_jxt_okx_wrap_inner_assign_drops_out_of_proven(tmp_path):
+    """E2E: OKX-wrapped first-path buy + inner wallet assign must leave proven."""
+    from datetime import datetime, timezone
+    from scanner.investigation import REVIEWED_OUTER_VENUES
+    from scanner.mass_search.history_ingest import replay_cached_history_to_report
+    from scanner.mass_search.research_profile import (
+        attach_live_independent_audit,
+        build_research_profile,
+        default_filters,
+    )
+    from scanner.storage import Store
+    from tests.test_live_e2e_d1_d9 import JXT, JXT_PAGES, _require_pages
+
+    records = _require_pages(JXT_PAGES)
+    end = datetime(2026, 9, 21, tzinfo=timezone.utc)
+    start = end.timestamp() - 30 * 86400
+    target = None
+    for record in records:
+        stamp = record.get("blockTime") or 0
+        if not (start <= stamp < end.timestamp()):
+            continue
+        raw = record
+        message = (raw.get("transaction") or {}).get("message") or {}
+        meta = raw.get("meta") or {}
+        if not meta.get("innerInstructions"):
+            continue
+        keys = [
+            item["pubkey"] if isinstance(item, dict) else item
+            for item in (message.get("accountKeys") or [])
+        ]
+        loaded = meta.get("loadedAddresses") or {}
+        keys = keys + list(loaded.get("writable") or []) + list(loaded.get("readonly") or [])
+        if not keys or keys[0] != JXT:
+            continue
+        decoded = decode_supported_swaps([_wrap(raw)], JXT)
+        trades = [row for row in decoded.get("events") or [] if row.get("kind") in ("buy", "sell")]
+        if not trades or any("wallet-edge" in (row.get("reason") or "") for row in trades):
+            continue
+        if trades[0].get("kind") != "buy":
+            continue
+        target = raw
+        break
+    assert target is not None, "need an in-window first-path JXT buy"
+    grafted = json.loads(json.dumps(target))
+    message = grafted["transaction"]["message"]
+    keys = [item["pubkey"] if isinstance(item, dict) else item for item in message["accountKeys"]]
+    loaded = grafted["meta"].setdefault("loadedAddresses", {})
+    keys = keys + list(loaded.get("writable") or []) + list(loaded.get("readonly") or [])
+    outer = next(
+        index for index, instruction in enumerate(message["instructions"])
+        if keys[instruction.get("programIdIndex", -1)] in REVIEWED_OUTER_VENUES
+        or instruction.get("programId") in REVIEWED_OUTER_VENUES
+    )
+    for extra in (OKX_DEX_ROUTER, SYSTEM_ID):
+        if extra not in keys:
+            message["accountKeys"].append(
+                {"pubkey": extra, "signer": False, "writable": False}
+                if isinstance(message["accountKeys"][0], dict) else extra
+            )
+            grafted["meta"]["preBalances"].append(1)
+            grafted["meta"]["postBalances"].append(1)
+            keys.append(extra)
+    okx_index = keys.index(OKX_DEX_ROUTER)
+    message["instructions"][outer]["programIdIndex"] = okx_index
+    message["instructions"][outer].pop("programId", None)
+    rest = b""
+    data = message["instructions"][outer].get("data")
+    if isinstance(data, str):
+        from scanner.mass_search.plain_tx_read import _b58decode
+        rest = _b58decode(data)[8:]
+    message["instructions"][outer]["data"] = _b58(bytes.fromhex("aa2955b184501f35") + rest)
+    group = next((item for item in grafted["meta"]["innerInstructions"] if item.get("index") == outer), None)
+    if group is None:
+        group = {"index": outer, "instructions": []}
+        grafted["meta"]["innerInstructions"].append(group)
+    group["instructions"].append({
+        "programIdIndex": keys.index(SYSTEM_ID),
+        "accounts": [keys.index(JXT)],
+        "data": _b58(bytes([1, 0, 0, 0]) + bytes(range(1, 33))),
+        "stackHeight": 2,
+    })
+    sig = (target.get("transaction") or {}).get("signatures") or [target.get("signature")]
+    signature = sig[0]
+    decoded = decode_supported_swaps([_wrap(grafted)], JXT)
+    assert not any(row.get("kind") in ("buy", "sell", "conversion") and row.get("signature") == signature for row in decoded.get("events") or [])
+    rebuilt = auditor.reconstruct_record(_wrap(grafted), JXT)
+    assert rebuilt is None or rebuilt.get("kind") not in ("buy", "sell", "conversion")
+    swapped = []
+    for record in records:
+        rec_sig = ((record.get("transaction") or {}).get("signatures") or [record.get("signature")])[0]
+        swapped.append(grafted if rec_sig == signature else record)
+    from scanner.mass_search.live_e2e import window_bounds
+    bounds = window_bounds(30, 60, end=end, history_to_first=True, report_window_days=30)
+    store = Store(tmp_path / "jxt-graft")
+    report = replay_cached_history_to_report(
+        store, address=JXT, records=swapped,
+        window_start=bounds["report_start_inclusive"],
+        window_end=bounds["report_end_exclusive"],
+        acquisition_start=bounds["history_start_inclusive"],
+    )["report"]
+    profile = build_research_profile(report, filters=default_filters())
+    audit = attach_live_independent_audit(report, profile, swapped, address=JXT)
+    store.close()
+    level = (profile.get("qualification_level") or {}).get("level")
+    assert level != "stronger_research_shortlist"
+    assert audit.get("independently_audited") is not True
+    assert audit.get("status") != "independently_audited"
+    assert classify_read_tx(grafted, JXT) is None or all(
+        item.get("kind") not in ("buy", "sell", "conversion") for item in (classify_read_tx(grafted, JXT) or [])
+    )

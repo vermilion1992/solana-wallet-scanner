@@ -166,6 +166,21 @@ def _b58decode(value):
     return b"\0" * (len(value) - len(value.lstrip("1"))) + body
 
 
+def _auditor_b58encode(data):
+    number = int.from_bytes(data, "big")
+    encoded = ""
+    while number:
+        number, remainder = divmod(number, 58)
+        encoded = B58[remainder] + encoded
+    pad = 0
+    for byte in data:
+        if byte == 0:
+            pad += 1
+        else:
+            break
+    return ("1" * pad) + (encoded or "")
+
+
 def _keys(raw):
     message = (raw.get("transaction") or {}).get("message") or {}
     meta = raw.get("meta") or {}
@@ -883,6 +898,7 @@ def _verified_tips(raw, keys, address):
 
 def _route(raw, address, keys):
     message = (raw.get("transaction") or {}).get("message") or {}
+    matches = []
     for index, instruction in enumerate(message.get("instructions") or []):
         if not isinstance(instruction, dict):
             continue
@@ -919,7 +935,7 @@ def _route(raw, address, keys):
         if authority_idx >= len(accounts) or accounts[authority_idx] != address:
             continue
         owned = [accounts[i] for i in owned_idx if i < len(accounts)]
-        return {
+        matches.append({
             "program": program,
             "instruction": name,
             "discriminator": disc,
@@ -928,8 +944,10 @@ def _route(raw, address, keys):
             "accounts": accounts,
             "index": index,
             "path": f"transaction.message.instructions.{index}",
-        }
-    return None
+        })
+    if len(matches) > 1:
+        return None
+    return matches[0] if matches else None
 
 
 def _unwrap(record):
@@ -1769,6 +1787,8 @@ def _net_balance_reconstruct(raw, address, keys):
 
     This is not the app's owner-walk + parsed-transfer tip method.
     """
+    if _auditor_fail_closed_preflight(raw, address, trade=True):
+        return None
     if _auditor_token_owner_unreadable(raw):
         return None
     if not _wallet_is_signer(raw, address, keys):
@@ -1963,6 +1983,8 @@ def _layout_reconstruct(record, address):
         return None
     keys = _keys(raw)
     if address not in keys:
+        return None
+    if _auditor_fail_closed_preflight(raw, address, trade=False):
         return None
     route = _route(raw, address, keys)
     if not route:
@@ -2161,6 +2183,7 @@ def _auditor_plain_explained(raw, address, keys, actual):
                 owned[keys[index]] = mint
     explained_native = 0
     explained_tokens = defaultdict(int)
+    saw_wrap = False
     for _index, _path, instruction, _inner in _iter_instructions(raw):
         program = _program(instruction, keys)
         if not program or program not in AUDITOR_PLAIN_PROGRAMS:
@@ -2188,6 +2211,7 @@ def _auditor_plain_explained(raw, address, keys, actual):
                     explained_native += lamports
                 if dest and owned.get(dest) == WSOL:
                     explained_tokens[WSOL] += lamports
+                    saw_wrap = True
                 if source in running:
                     running[source] -= lamports
                 if dest:
@@ -2230,6 +2254,7 @@ def _auditor_plain_explained(raw, address, keys, actual):
                 if dest == address and refund is not None:
                     explained_native += refund
                 if account and owned.get(account) == WSOL:
+                    saw_wrap = True
                     pre_qty = 0
                     for row in meta.get("preTokenBalances") or []:
                         if not isinstance(row, dict) or row.get("owner") != address:
@@ -2287,7 +2312,7 @@ def _auditor_plain_explained(raw, address, keys, actual):
             return None
     leftover_native = actual["native"] - explained_native
     leftover_wsol = actual["tokens"].get(WSOL, 0) - explained_tokens.get(WSOL, 0)
-    if leftover_native + leftover_wsol == 0:
+    if saw_wrap and leftover_native + leftover_wsol == 0:
         explained_native += leftover_native
         if leftover_wsol:
             explained_tokens[WSOL] += leftover_wsol
@@ -2442,9 +2467,11 @@ def _auditor_hydrate_plain(instruction, keys):
         if tag == 4:
             return {"type": "advanceNonce", "info": {}}
         if tag == 1:
-            return {"type": "assign", "info": {}}
+            owner = _auditor_b58encode(data[4:36]) if len(data) >= 36 else None
+            return {"type": "assign", "info": {"account": accounts[0] if accounts else None, "owner": owner}}
         if tag == 8:
-            return {"type": "allocate", "info": {}}
+            space = int.from_bytes(data[4:12], "little") if len(data) >= 12 else None
+            return {"type": "allocate", "info": {"account": accounts[0] if accounts else None, "space": space}}
         return None
     if program in TOKEN_PROGRAMS:
         if not data:
@@ -2474,6 +2501,150 @@ def _auditor_hydrate_plain(instruction, keys):
             return {"type": "initializeAccount3", "info": {"account": accounts[0] if accounts else None}}
         return None
     return None
+
+
+AUDITOR_ALLOCATE_SPACES = frozenset({137, 165, 170})
+AUDITOR_LIFECYCLE_OWNERS = frozenset({
+    *TOKEN_PROGRAMS, PUMP, PUMP_SWAP, JUPITER, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
+    OKX, METEORA_DAMM_V2, DFLOW, DFLOW_DST, RFQ_FILL, FLASHX, GMGN, DGMG, PHOTON, METEORA_DLMM,
+})
+AUDITOR_REVIEWED_INNER = frozenset({
+    SYSTEM, COMPUTE, ASSOCIATED, LIGHTHOUSE, *TOKEN_PROGRAMS, *MEMO_PROGRAMS,
+    *NET_BALANCE_SWAP_PROGRAMS, PUMP_FEE, *WELL_KNOWN_INNER_AMMS,
+})
+
+
+def _auditor_fail_closed_preflight(raw, address, *, trade=False):
+    """Independent copy of the app preflight. No scanner import."""
+    if not isinstance(raw, dict) or not address:
+        return True
+    keys = _keys(raw)
+    if address not in keys:
+        return True
+    version = raw.get("version", "legacy")
+    if version not in ("legacy", 0):
+        return True
+    owned = {address}
+    meta = raw.get("meta") or {}
+    for field in ("preTokenBalances", "postTokenBalances"):
+        for row in meta.get(field) or []:
+            if isinstance(row, dict) and row.get("owner") == address:
+                index = row.get("accountIndex")
+                if isinstance(index, int) and 0 <= index < len(keys):
+                    owned.add(keys[index])
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    del message
+    for index, instruction, inner in _auditor_walk(raw):
+        del index
+        try:
+            program = _program(instruction, keys)
+            accounts = _accounts(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            return True
+        parsed = _auditor_hydrate_plain(instruction, keys) or instruction.get("parsed")
+        kind = parsed.get("type") if isinstance(parsed, dict) else None
+        info = parsed.get("info") if isinstance(parsed, dict) else {}
+        if not isinstance(info, dict):
+            info = {}
+        data = _b58decode(instruction.get("data"))
+        tag = int.from_bytes(data[:4], "little") if program == SYSTEM and len(data) >= 4 else None
+        if isinstance(parsed, dict) and parsed.get("type"):
+            if instruction.get("accounts") == []:
+                return True
+            if instruction.get("data") not in (None, "", [], b""):
+                compiled = _auditor_hydrate_plain({"programId": program, "accounts": instruction.get("accounts") or [], "data": instruction.get("data")}, keys)
+                if not isinstance(compiled, dict) or not compiled.get("type"):
+                    if program in {SYSTEM, *TOKEN_PROGRAMS} or parsed.get("type") in {
+                        "transfer", "transferChecked", "allocate", "assign", "createAccount", "closeAccount",
+                    }:
+                        return True
+                elif compiled.get("type") != parsed.get("type"):
+                    return True
+                else:
+                    cinfo = compiled.get("info") if isinstance(compiled.get("info"), dict) else {}
+                    for field in ("source", "destination", "mint", "account", "newAccount", "lamports"):
+                        if field in cinfo and field in info and cinfo[field] not in (None, "") and info[field] not in (None, "") and cinfo[field] != info[field]:
+                            return True
+        del accounts
+        if program == JUPITER and not inner and len(data) < 28:
+            return True
+        if program == SYSTEM:
+            if kind in ("withdrawNonceAccount", "initializeNonceAccount", "authorizeNonceAccount") or tag in (5, 6, 7):
+                return True
+            if (kind in ("advanceNonce", "advanceNonceAccount") or tag == 4) and inner:
+                return True
+            is_alloc = kind in ("allocate", "assign", "allocateWithSeed", "assignWithSeed") or tag in (1, 8)
+            if is_alloc:
+                account = info.get("account")
+                accounts = _accounts(instruction, keys)
+                if not account and accounts:
+                    account = accounts[0]
+                space = info.get("space")
+                if space is None and tag == 8 and len(data) >= 12:
+                    space = int.from_bytes(data[4:12], "little")
+                owner = info.get("owner")
+                if not inner:
+                    return True
+                if account == address:
+                    return True
+                if (kind == "allocate" or tag == 8) and type(space) is int and space not in AUDITOR_ALLOCATE_SPACES:
+                    return True
+                if (kind == "assign" or tag == 1) and owner not in AUDITOR_LIFECYCLE_OWNERS:
+                    return True
+        if program in TOKEN_PROGRAMS and kind in ("transfer", "transferChecked", "transferCheckedWithFee"):
+            mint = info.get("mint")
+            dec = (info.get("tokenAmount") or {}).get("decimals") if isinstance(info.get("tokenAmount"), dict) else None
+            for field in ("source", "destination"):
+                account = info.get(field)
+                if not account or account not in keys:
+                    continue
+                idx = keys.index(account)
+                for row in (meta.get("preTokenBalances") or []) + (meta.get("postTokenBalances") or []):
+                    if not isinstance(row, dict) or row.get("accountIndex") != idx:
+                        continue
+                    if mint and row.get("mint") and mint != row.get("mint"):
+                        return True
+                    row_dec = (row.get("uiTokenAmount") or {}).get("decimals")
+                    if dec is not None and row_dec is not None and dec != row_dec:
+                        return True
+        if program in TOKEN_PROGRAMS and kind == "closeAccount":
+            if info.get("account") in owned and info.get("destination") not in (None, "", address):
+                return True
+        if inner and program and program not in AUDITOR_REVIEWED_INNER:
+            touched = set(_accounts(instruction, keys))
+            for field in ("source", "destination", "account", "newAccount", "owner", "authority", "wallet"):
+                value = info.get(field)
+                if isinstance(value, str) and value:
+                    touched.add(value)
+            if touched.intersection(owned):
+                return True
+    if _auditor_sponsored_token_account_rent(raw, address, keys):
+        # Require wallet-sourced funding; third-party createAccount is sponsored.
+        return True
+    if trade:
+        if not _wallet_is_signer(raw, address, keys):
+            return True
+        inners = meta.get("innerInstructions")
+        if not isinstance(inners, list) or not inners:
+            return True
+    return False
+
+
+def _auditor_walk(raw):
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    for index, instruction in enumerate(message.get("instructions") or []):
+        if isinstance(instruction, dict):
+            yield index, instruction, False
+    meta = raw.get("meta") or {}
+    groups = meta.get("innerInstructions")
+    if not isinstance(groups, list):
+        return
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        for instruction in group.get("instructions") or []:
+            if isinstance(instruction, dict):
+                yield group.get("index"), instruction, True
 
 
 def _auditor_c2_unknown_outer(raw, keys):
@@ -2586,7 +2757,8 @@ def _auditor_sponsored_token_account_rent(raw, address, keys):
         parsed = _auditor_hydrate_plain(instruction, keys) or instruction.get("parsed")
         info = parsed.get("info") if isinstance(parsed, dict) else {}
         dest = info.get("destination") or info.get("newAccount") or info.get("account")
-        if dest in keys:
+        source = info.get("source")
+        if dest in keys and source == address:
             funded.add(keys.index(dest))
     for index in owned_indexes:
         if index >= len(pre_native) or index >= len(post_native):
@@ -2609,12 +2781,9 @@ def auditor_classify_read(raw, address):
     keys = _keys(raw)
     if address not in keys:
         return None
-    if (
-        _auditor_allocate_mixed_identity(raw, address, keys)
-        or _auditor_has_durable_nonce(raw, keys)
-        or _auditor_sponsored_token_account_rent(raw, address, keys)
-        or _auditor_c2_unknown_outer(raw, keys)
-    ):
+    if _auditor_fail_closed_preflight(raw, address, trade=False):
+        return None
+    if _auditor_c2_unknown_outer(raw, keys) or _auditor_has_durable_nonce(raw, keys):
         if not (set(_auditor_all_programs(raw, keys)) <= AUDITOR_PLAIN_PROGRAMS):
             return None
     programs = set(_auditor_all_programs(raw, keys))
@@ -2655,18 +2824,27 @@ def auditor_classify_read(raw, address):
             return None
         return _auditor_read_effects(actual, program=JITO_TIP_ROUTER, instruction="claim", reason="Independent Jito outer claim non-trade")
     if OKX_VAULT in outer_programs:
-        return _auditor_read_effects(actual, program=OKX_VAULT, instruction="custody", reason="Independent OKX Vault custody/transfer")
+        sol = actual["native"] + actual["tokens"].get(WSOL, 0)
+        if not zero_token or abs(sol) > AUDITOR_JITO_MAX_NATIVE:
+            return None
+        return _auditor_read_effects(actual, program=OKX_VAULT, instruction="custody", reason="Independent OKX Vault custody within cap")
     def _accept_trade(classified):
         if not classified:
             return None
         if any(row.get("kind") in ("buy", "sell", "conversion") for row in classified):
+            if _auditor_fail_closed_preflight(raw, address, trade=True):
+                return None
+            if _auditor_c2_unknown_outer(raw, keys) or _auditor_has_durable_nonce(raw, keys):
+                return None
             if _auditor_third_party_pool_leg(raw, address, keys):
                 return None
             if _auditor_system_credit_to_wallet(raw, address, keys):
                 return None
-            if (raw.get("meta") or {}).get("innerInstructions"):
-                if _route_cpi_disagrees_with_wallet(raw, address, keys):
-                    return None
+            inners = (raw.get("meta") or {}).get("innerInstructions")
+            if not isinstance(inners, list) or not inners:
+                return None
+            if _route_cpi_disagrees_with_wallet(raw, address, keys):
+                return None
         return classified
 
     if PUMP in programs:
@@ -2733,7 +2911,7 @@ def reconstruct_record(record, address):
     keys = _keys(raw)
     if address not in keys:
         return None
-    if _auditor_allocate_mixed_identity(raw, address, keys):
+    if _auditor_fail_closed_preflight(raw, address, trade=False):
         return None
     first_nb = _first_net_balance_program(raw, keys)
     layout = _layout_reconstruct(record, address)
@@ -3499,6 +3677,8 @@ def _auditor_touched_mints(raw, address):
     unknown (unreadable), not 'not the wallet'. Malformed rows return None.
     """
     if not isinstance(raw, dict) or not address:
+        return None
+    if _auditor_fail_closed_preflight(raw, address, trade=False):
         return None
     if _auditor_token_owner_unreadable(raw):
         return None

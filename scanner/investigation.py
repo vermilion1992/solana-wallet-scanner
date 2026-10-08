@@ -2275,6 +2275,9 @@ def net_balance_reviewed_swap(raw, address):
     """
     if not isinstance(raw, dict) or not address:
         return None
+    from scanner.mass_search.fail_closed_preflight import fail_closed_reason
+    if fail_closed_reason(raw, address, trade=True):
+        return None
     meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
     if meta.get('err') is not None:
         return None
@@ -2433,6 +2436,8 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 continue
             if address not in keys:
                 raise ValueError('Investigated wallet is absent from transaction account keys')
+            from scanner.mass_search.fail_closed_preflight import require_preflight
+            require_preflight(raw, address, trade=False)
             if slots[slot] > 1:
                 tx_index = record.get('transaction_index')
                 if not isinstance(tx_index, int) or isinstance(tx_index, bool) or tx_index < 0:
@@ -3075,7 +3080,6 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 reason.startswith('No reviewed outer spot swap')
                 or reason.startswith('Jupiter route')
                 or reason.startswith('Unrelated token transfer')
-                or reason.startswith('Transaction version has no reviewed')
                 or (
                     reason.startswith('No reviewed spot swap instruction for this program')
                     and first_nb in D14_TOP3_DEFERRED_PROGRAMS
@@ -3102,6 +3106,23 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 allow_c2_trade = any(
                     reason.startswith(prefix) for prefix in C2_COVERAGE_GAP_PREFIXES
                 )
+                if (
+                    not allow_c2_trade
+                    and reason.startswith('Multiple outer swaps')
+                    and not reason.startswith('Fail-closed preflight')
+                ):
+                    from scanner.mass_search.plain_tx_read import EDGE_SWAP_PROGRAMS
+                    edge_outers = []
+                    for instruction in message_nb.get('instructions') or []:
+                        if not isinstance(instruction, dict):
+                            continue
+                        try:
+                            program = _program(instruction, _keys(message_nb, meta_nb))
+                        except (ValueError, TypeError, KeyError, IndexError):
+                            continue
+                        if program in EDGE_SWAP_PROGRAMS:
+                            edge_outers.append(program)
+                    allow_c2_trade = bool(edge_outers) and len(set(edge_outers)) == 1
                 if classified:
                     kept = []
                     for item in classified:
