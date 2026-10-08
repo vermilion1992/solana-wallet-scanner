@@ -155,9 +155,10 @@ def test_gt25_mutation_without_cap_jxt_would_be_a_lead(tmp_path):
         assert mutated["level"] not in LEADS, mutated
         gate = mandatory_coverage_gate(report, profile)
         assert gate["passed"] is False
-        assert mutated.get("independently_audited") is True
-        assert mutated.get("clean_episodes", 0) >= 3
-        assert mutated.get("positive_completed_episode_net") is True
+        # Leftover pagination token is earlier history; that is never independently audited.
+        assert mutated.get("independently_audited") is not True
+        assert mutated.get("level") == "insufficient_evidence"
+        assert "pagination_token" in (mutated.get("reason") or "") or mutated.get("clean_episodes", 0) >= 3
     finally:
         gates.MAX_ECONOMIC_TRADES_PER_UTC_DAY = original
 

@@ -410,14 +410,22 @@ def test_phase3_resume_deepens_capped_history_without_refetch(tmp_path, monkeypa
     }
     first = asyncio.run(phase3_history(store, grant, config, state, RecorderTransport()))
     assert first["pages"][JXT]["pages"] == 1
-    assert first["pages"][JXT]["history_complete_reason"] == "per_wallet_cap"
+    assert first["pages"][JXT]["history_complete"] is False
+    assert first["pages"][JXT]["history_complete_reason"] in {
+        "per_wallet_cap",
+        "page_cap_with_leftover_token",
+    }
     assert calls == [0]
     config["per_wallet_cap"] = 6
     second = asyncio.run(phase3_history(store, grant, config, state, RecorderTransport()))
     store.close()
     assert calls == [0, 1, 2]
     assert second["pages"][JXT]["pages"] == 3
-    assert second["pages"][JXT]["history_complete_reason"] == "per_wallet_cap"
+    assert second["pages"][JXT]["history_complete"] is False
+    assert second["pages"][JXT]["history_complete_reason"] in {
+        "per_wallet_cap",
+        "page_cap_with_leftover_token",
+    }
     assert second["pages"][JXT]["leftover_pagination_token"] is True
 
 

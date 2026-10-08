@@ -128,7 +128,7 @@ def _coverage_sol_after_proven_exclusions(raw, address, keys):
             except (InvalidOperation, ValueError, TypeError, OverflowError):
                 continue
     remaining = native + wsol
-    if remaining == 0:
+    if remaining >= 0:
         return Decimal("0")
     return abs(remaining) / LAMPORTS
 

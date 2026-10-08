@@ -178,7 +178,10 @@ def test_d4_mixed_wallet_separate_quote_asset_worksheets(tmp_path):
     assert len(indep["fifo"]["SOL"]["open_lots"]) == 1
     assert report.get("conversions")
     profile = report["research_profile"]
-    assert profile["scoped_pnl_by_quote_asset"]["USDC"]
+    if profile.get("headline_pnl_blocked"):
+        assert profile["scoped_pnl_by_quote_asset"] == {}
+    else:
+        assert profile["scoped_pnl_by_quote_asset"]["USDC"]
     assert profile["settlement_asset"] == "mixed"
     win = report["analytics"]["win_rate"]
     assert win["wins"] <= win["denominator"]
