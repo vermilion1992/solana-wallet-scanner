@@ -65,6 +65,7 @@ MANDATORY = [
     "tests/test_d377_verify_fixes.py",
     "tests/test_result_relevant_coverage.py",
     "tests/test_cyrcnvs3_d11.py",
+    "tests/test_readable_first.py",
 ]
 FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL", "NANSEN_API_KEY")
 

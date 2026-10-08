@@ -105,6 +105,16 @@ from scanner.mass_search.live_e2e_ledger import (
     spend_from_ledger,
     verify_receipt_chain,
 )
+from scanner.mass_search.readable_first import (
+    FUNNEL_VERSION as READABLE_FIRST_VERSION,
+    SAMPLE_PAGES_DEFAULT,
+    attach_sample,
+    format_dry_run_plan,
+    readable_first_plan,
+    select_deep_pull,
+    walk_ranked,
+    write_funnel_report,
+)
 from scanner.mass_search.qualification_gates import (
     BOT_RULE_DEFINITION,
     GT_ECONOMIC_TRADES_RULE,
@@ -150,6 +160,7 @@ from scanner.mass_search.seed_sources import (
     NANSEN_TGM_PNL_LEADERBOARD_PATH,
     NANSEN_TGM_PNL_LEADERBOARD_UNITS,
     NANSEN_TIMEFRAMES,
+    NANSEN_TIMEFRAMES_FUNNEL,
     RULE_A_MAX_AVG_TRADES_PER_DAY,
     RULE_A_MAX_TOKENS,
     RULE_A_MIN_REALIZED_PNL,
@@ -1561,6 +1572,8 @@ def phase3_wallets(config, state=None):
         -float(row.get("coverability_rank_key") or 0),
         row.get("address") or "",
     ))
+    if config.get("readable_first"):
+        return select_deep_pull(kept_rows, n=config.get("readable_first_n") or 0)
     kept = [row["address"] for row in kept_rows]
     if phase2:
         if config.get("wallets_supplied"):
@@ -1611,9 +1624,14 @@ def plan_request_counts(config, state=None):
         nansen_token_pnl_max_calls=config.get("nansen_token_pnl_max_calls"),
         birdeye_retry_headroom=BIRDEYE_RATE_LIMIT_RETRIES,
         nansen_calibrate=bool(calibrate_path),
-        nansen_timeframes=config.get("nansen_timeframes"),
-        helius_signatures_prescreen=bool(config.get("helius_signatures_prescreen")),
+        helius_signatures_prescreen=bool(
+            config.get("helius_signatures_prescreen") or config.get("readable_first")
+        ),
         helius_signatures_history_cap=config.get("helius_signatures_history_cap"),
+        nansen_timeframes=(
+            config.get("nansen_timeframes")
+            or (NANSEN_TIMEFRAMES_FUNNEL if config.get("readable_first") else None)
+        ),
     )
     if 1 in phases and (discovery or not wallets):
         birdeye_requests = seed_plan["totals"]["birdeye_requests"]
@@ -1653,7 +1671,7 @@ def plan_request_counts(config, state=None):
             helius_units += n * (SIG_ONLY_UNITS + FULL_100_UNITS)
     if 3 in phases:
         helius_units += helius_phase3 * FULL_1000_UNITS
-    return {
+    payload = {
         "kind": "live-e2e-request-plan-v1",
         "dry_run": True,
         "phases": list(config["phases"]),
@@ -1725,6 +1743,28 @@ def plan_request_counts(config, state=None):
         "caps": config["caps"],
         "PRODUCT_READY": False,
     }
+    if config.get("readable_first"):
+        rf_plan = readable_first_plan(
+            leaderboard_pages=config.get("nansen_leaderboard_pages") or 1,
+            timeframes=config.get("nansen_timeframes") or NANSEN_TIMEFRAMES_FUNNEL,
+            token_count=len(config.get("nansen_token_pnl_tokens") or []),
+            token_pnl_calls=config.get("nansen_token_pnl_max_calls") or 0,
+            discovered_wallets=n,
+            dex_pages=config.get("nansen_dex_trades_max_pages") or 0,
+            sample_pages=config.get("readable_first_sample_pages") or SAMPLE_PAGES_DEFAULT,
+            deep_n=config.get("readable_first_n") or 0,
+            history_cap=config.get("helius_signatures_history_cap"),
+            nansen_profile_cap=config.get("nansen_profile_cap") or 0,
+        )
+        payload = {
+            **payload,
+            "readable_first": True,
+            "readable_first_version": READABLE_FIRST_VERSION,
+            "readable_first_plan": rf_plan,
+            "readable_first_dry_run": format_dry_run_plan(rf_plan),
+        }
+        return payload
+    return payload
 
 
 def within_caps(plan, caps):
@@ -3362,7 +3402,8 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
         raise LiveE2EError(str(error)) from error
     try:
         page = 0
-        for timeframe in NANSEN_TIMEFRAMES:
+        frames = tuple(config.get("nansen_timeframes") or NANSEN_TIMEFRAMES)
+        for timeframe in frames:
             for page_num in range(1, pages_per_tf + 1):
                 left = remaining_caps(config, state["spend"])
                 if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_LEADERBOARD_UNITS:
@@ -4130,6 +4171,20 @@ def _triage_third_sample(bounds, samples, *, address=None):
     return _triage_sample_options(bounds)[2]
 
 
+def _stamp_readable_first(row, records, address, config, *, decoded=None):
+    if not config.get("readable_first"):
+        return row
+    attached = attach_sample(row, records, address, decoded=decoded)
+    if row.get("bot") or row.get("drop_reason") == GT_ECONOMIC_TRADES_RULE:
+        attached["funnel_decision"] = "dropped"
+        attached["funnel_reason"] = GT_ECONOMIC_TRADES_RULE
+    attached["nansen_realized_pnl_usd"] = (
+        attached.get("nansen_realized_pnl_usd")
+        or ((attached.get("vendor_metrics") or {}).get("realized_pnl_usd"))
+    )
+    return attached
+
+
 async def phase2_prescreen(store, grant, config, state, recorder):
     if 2 not in config["phases"]:
         return {"skipped": True}
@@ -4266,6 +4321,7 @@ async def phase2_prescreen(store, grant, config, state, recorder):
                 "count_kinds": list(COUNT_KINDS),
                 **seed_fields_for_wallet(state, address),
             }
+            row = _stamp_readable_first(row, sample_records, address, config)
             state.setdefault("phase2", {})[address] = row
             save_state(config["output_dir"], state)
             rows.append(row)
@@ -4399,6 +4455,7 @@ async def phase2_prescreen(store, grant, config, state, recorder):
             "done": True,
             **seed_fields_for_wallet(state, address),
         }
+        row = _stamp_readable_first(row, sample_records, address, config)
         state.setdefault("phase2", {})[address] = row
         save_state(config["output_dir"], state)
         rows.append(row)
@@ -4408,6 +4465,13 @@ async def phase2_prescreen(store, grant, config, state, recorder):
         row["address"],
     ))
     kept = [row["address"] for row in ranked if not row.get("dropped")]
+    if config.get("readable_first"):
+        walked = walk_ranked(ranked, n=config.get("readable_first_n") or 0)
+        write_funnel_report(config["output_dir"], walked, extra={
+            "phase2_kept": kept,
+            "readable_first_n": config.get("readable_first_n"),
+        })
+        kept = [row.get("address") for row in walked["kept"] if row.get("address")]
     return {"wallets": ranked, "kept": kept}
 
 
@@ -5314,6 +5378,25 @@ def validate_config(raw):
         "run_caps": raw.get("run_caps") or None,
         "history_age_rule": raw.get("history_age_rule") or HISTORY_AGE_RULE,
         "bot_threshold_rule": raw.get("bot_threshold_rule") or BOT_THRESHOLD_RULE,
+        "readable_first": bool(raw.get("readable_first")),
+        "readable_first_n": (
+            int(raw["readable_first_n"])
+            if raw.get("readable_first_n") not in (None, "")
+            else 10
+        ),
+        "readable_first_sample_pages": (
+            int(raw["readable_first_sample_pages"])
+            if raw.get("readable_first_sample_pages") not in (None, "")
+            else SAMPLE_PAGES_DEFAULT
+        ),
+        "helius_signatures_prescreen": bool(
+            raw.get("helius_signatures_prescreen") or raw.get("readable_first")
+        ),
+        "nansen_timeframes": (
+            list(raw.get("nansen_timeframes"))
+            if raw.get("nansen_timeframes")
+            else (list(NANSEN_TIMEFRAMES_FUNNEL) if raw.get("readable_first") else None)
+        ),
         "PRODUCT_READY": False,
     }
 
@@ -5737,6 +5820,29 @@ def build_arg_parser():
         type=int,
         default=0,
         help="Hard cap on tgm/pnl-leaderboard calls (default 0 = off).",
+    )
+    parser.add_argument(
+        "--readable-first",
+        dest="readable_first",
+        action="store_true",
+        help=(
+            "Readable-first funnel: discovery → Rule A → cheap bot pre-screen "
+            "→ decodability sample ≥0.97 → deep-pull top N. Drop or defer only."
+        ),
+    )
+    parser.add_argument(
+        "--readable-first-n",
+        dest="readable_first_n",
+        type=int,
+        default=10,
+        help="Deep-pull at most this many wallets that pass the readable sample (default 10).",
+    )
+    parser.add_argument(
+        "--readable-first-sample-pages",
+        dest="readable_first_sample_pages",
+        type=int,
+        default=SAMPLE_PAGES_DEFAULT,
+        help="Enhanced pages for the decodability sample (default 2, ~100 txs).",
     )
     parser.add_argument(
         "--exclude-known-from",
