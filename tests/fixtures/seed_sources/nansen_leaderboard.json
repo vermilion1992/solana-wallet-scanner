@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "address": "jXtCVtdQhrn7GAHTPKxRHM94dbnmZwpBdGbswa3EeGZ",
+      "realized_pnl_usd": 18420.5,
+      "unrealized_pnl_usd": 210.0,
+      "n_trades": 14,
+      "n_tokens": 6,
+      "win_rate": 0.42
+    },
+    {
+      "wallet": "Gygj9QQby4j2jryqyqBHvLP7ctv2SaANgh4sCb69BUpA",
+      "realized_pnl_usd": 900,
+      "n_trades": 8,
+      "n_tokens": 3,
+      "win_rate": 0.5
+    }
+  ]
+}

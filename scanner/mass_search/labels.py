@@ -100,7 +100,8 @@ def blocking_reason(report, profile, *, coverage_status, level):
         return None
     if not reasons:
         reasons.append("does not meet provisional_research_lead gates")
-    return "; ".join(reasons)
+    from scanner.mass_search.qualification_gates import trade_rate_from, with_gt25_blocker
+    return with_gt25_blocker("; ".join(reasons), trade_rate_from(report, profile))
 
 
 def wallet_status_fields(report, profile=None):

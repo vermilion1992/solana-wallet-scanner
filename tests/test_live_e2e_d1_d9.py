@@ -661,6 +661,7 @@ def test_reviewed_stablecoin_rule_is_usdc_usdt_only():
     assert USDC in QUOTE_MINTS
     assert USDT in QUOTE_MINTS
     assert PYUSD not in QUOTE_MINTS
+    assert PYUSD == "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo"
     assert USD1 not in QUOTE_MINTS
     assert USDS not in QUOTE_MINTS
     assert "USDC and USDT only" in REVIEWED_STABLECOIN_RULE

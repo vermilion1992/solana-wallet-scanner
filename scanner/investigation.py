@@ -48,7 +48,7 @@ REVIEWED_STABLECOIN_RULE = (
     "are not reviewed quotes: SOL↔them is an ordinary token trade; "
     "token↔them is unresolved. Unknown quote is unresolved, never 0."
 )
-PYUSD = '2b1kV6DkPYTUsS6vgMfaVwC4w2FgbNwkJWqaERbdW9t'
+PYUSD = '2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo'
 USD1 = 'USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB'
 USDS = 'USDSwr9ApdHk5bvJKMjzff41FfuX8bSxdKcR81vTwcA'
 JUPITER = 'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'

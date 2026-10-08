@@ -36,7 +36,9 @@ from scanner.mass_search.qualification_gates import (
     worksheet_episode_bridge,
     GT25_ECONOMIC_TRADES_RULE,
     attach_economic_trade_rate,
+    first_defined_int,
     trade_rate_from,
+    with_gt25_blocker,
 )
 import scanner.mass_search.qualification_gates as _qual_gates
 from scanner.mass_search.settlement import (
@@ -914,8 +916,16 @@ def attach_live_independent_audit(report, profile, records, address):
         "omitted_losing_all": omitted_losing,
         "reconstructed_trades": len(trades),
         "source": "live_phase4_independent_episode_audit",
+        "economic_trades_by_utc_day": auditor.combined_economic_trades_by_utc_day(trades, records, address),
         "PRODUCT_READY": False,
     }
+    base["max_economic_trades_in_one_day"] = (
+        max(base["economic_trades_by_utc_day"].values()) if base["economic_trades_by_utc_day"] else 0
+    )
+    base["max_economic_trades_on"] = (
+        max(base["economic_trades_by_utc_day"], key=lambda item: (base["economic_trades_by_utc_day"][item], item))
+        if base["economic_trades_by_utc_day"] else None
+    )
     in_window_drops = [
         row for row in (omitted_losing or [])
         if row.get("reason") != "not_in_window_or_unresolved"
@@ -1089,25 +1099,38 @@ def independently_audited(report, profile=None):
 
 
 def qualification_level(report, profile):
+    rate = trade_rate_from(report, profile)
+    rate_fields = {
+        "max_economic_trades_in_one_day": first_defined_int(rate.get("max")),
+        "max_economic_trades_on": rate.get("max_on"),
+        "max_trades_per_day": first_defined_int(rate.get("max")),
+        "max_trades_per_day_on": rate.get("max_on"),
+    }
     bundle = (report or {}).get("bundle_or_distribution") or (profile or {}).get("bundle_or_distribution") or {}
     if bundle.get("excluded"):
+        reason = with_gt25_blocker(bundle.get("reason") or "bundle_or_distribution", rate)
         return {
             "level": "insufficient_evidence",
             "label": "bundle or distribution",
-            "reason": bundle.get("reason") or "bundle_or_distribution",
+            "reason": reason,
+            "blocker": reason,
             "not": "unprofitable",
             "qualifying_ledger": "completed_episode_ledger",
             "lead_eligible": False,
+            **rate_fields,
         }
     history = (report or {}).get("history") or {}
     if (report or {}).get("history_complete") is False or history.get("history_complete") is False:
+        reason = with_gt25_blocker(history.get("history_complete_reason") or "history_incomplete", rate)
         return {
             "level": "insufficient_evidence",
             "label": "history incomplete",
-            "reason": history.get("history_complete_reason") or "history_incomplete",
+            "reason": reason,
+            "blocker": reason,
             "not": "unprofitable",
             "qualifying_ledger": "completed_episode_ledger",
             "lead_eligible": False,
+            **rate_fields,
         }
     completed = int(profile.get("completed_known_cost_positions") or 0)
     profit, _unit, _vector = qualifying_profit(profile, report)
@@ -1117,8 +1140,22 @@ def qualification_level(report, profile):
     cost_dependency = sensitivity_sign_flips(report, profile)
     activity = profile.get("trading_activity") or trading_activity((report or {}).get("events") or [])
     audited = independently_audited(report, profile)
-    rate = trade_rate_from(report, profile)
-    if rate["max"] > _qual_gates.MAX_ECONOMIC_TRADES_PER_UTC_DAY:
+    if rate.get("incomplete"):
+        reason = with_gt25_blocker("incomplete_trade_timestamps", rate) or "incomplete_trade_timestamps"
+        return {
+            "level": "insufficient_evidence",
+            "label": "insufficient evidence",
+            "reason": reason,
+            "blocker": reason,
+            "not": "unprofitable",
+            "qualifying_ledger": "completed_episode_ledger",
+            "lead_eligible": False,
+            "max_economic_trades_in_one_day": first_defined_int(rate.get("max")),
+            "max_economic_trades_on": rate.get("max_on"),
+            "max_trades_per_day": first_defined_int(rate.get("max")),
+            "max_trades_per_day_on": rate.get("max_on"),
+        }
+    if first_defined_int(rate.get("max")) is not None and rate["max"] > _qual_gates.MAX_ECONOMIC_TRADES_PER_UTC_DAY:
         reason = f"{GT25_ECONOMIC_TRADES_RULE}: {rate['max']} on {rate['max_on']}"
         return {
             "level": "insufficient_evidence",
@@ -1134,11 +1171,15 @@ def qualification_level(report, profile):
             "max_trades_per_day_on": rate["max_on"],
         }
     if completed < 1:
+        reason = with_gt25_blocker("0 completed episodes", rate)
         return {
             "level": "insufficient_evidence",
             "label": "insufficient evidence",
+            "reason": reason,
+            "blocker": reason,
             "not": "unprofitable",
             "qualifying_ledger": "completed_episode_ledger",
+            **rate_fields,
         }
     unresolved_accounting = unresolved > 0 or bool(cost_dependency) or not audited
     clean = (
@@ -1177,10 +1218,10 @@ def qualification_level(report, profile):
         "independently_audited": audited,
         "active_trading_days": activity.get("active_trading_days"),
         "span_days": activity.get("span_days"),
-        "max_economic_trades_in_one_day": rate["max"],
-        "max_economic_trades_on": rate["max_on"],
-        "max_trades_per_day": rate["max"],
-        "max_trades_per_day_on": rate["max_on"],
+        "max_economic_trades_in_one_day": first_defined_int(rate.get("max")),
+        "max_economic_trades_on": rate.get("max_on"),
+        "max_trades_per_day": first_defined_int(rate.get("max")),
+        "max_trades_per_day_on": rate.get("max_on"),
     }
 
 
@@ -1263,7 +1304,7 @@ def _merge_decoded_taints(mapped, decoded):
     return out
 
 
-def build_research_profile(report, *, filters=None, classification=None, decoded=None):
+def build_research_profile(report, *, filters=None, classification=None, decoded=None, records=None, address=None):
     """Build a scoped research profile from a reconstructed report. Unset ≠ passed."""
     filters = filters or default_filters()
     classification = classification or report.get("classification") or {}
@@ -1540,12 +1581,16 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         rate_events = list(report.get("captured_history_events") or [])
     else:
         rate_events = list(events)
-    attach_economic_trade_rate(profile, rate_events)
+    attach_economic_trade_rate(
+        profile, rate_events, records=records, address=address or report.get("address"),
+    )
     if report.get("captured_history_events") in (None, []):
         report["captured_history_events"] = [
             row for row in rate_events if isinstance(row, dict) and row.get("kind") in ("buy", "sell")
         ]
-    attach_economic_trade_rate(report, rate_events)
+    attach_economic_trade_rate(
+        report, rate_events, records=records, address=address or report.get("address"),
+    )
     if "sensitivity_unverified_debits_sol" in (report or {}):
         profile["sensitivity_unverified_debits_sol"] = report.get("sensitivity_unverified_debits_sol")
         profile["sensitivity_evidence_state"] = "measured" if report.get("sensitivity_unverified_debits_sol") not in (None, "") else "not_established"

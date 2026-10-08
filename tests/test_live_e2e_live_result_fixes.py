@@ -127,7 +127,7 @@ def test_phase4_uses_genuine_replay(tmp_path, monkeypatch, fake_keys):
     )
     monkeypatch.setattr(
         "scanner.mass_search.live_e2e.build_research_profile",
-        lambda report, filters=None, decoded=None: {
+        lambda report, filters=None, decoded=None, **_kwargs: {
             "qualification_level": {"level": "insufficient_evidence"},
             "independent_audit": {},
             "completed_known_cost_positions": 0,

@@ -43,6 +43,12 @@ SPEND_KEYS = (
     "birdeye_units",
     "helius_requests",
     "helius_units",
+    "nansen_requests",
+    "nansen_units",
+)
+PHASE_CAP_KEYS = SPEND_KEYS + (
+    "leaderboard_requests",
+    "leaderboard_units",
 )
 
 _THREAD_LOCKS = {}
@@ -97,9 +103,12 @@ def provider_caps(grant):
     caps = empty_spend()
     for entry in grant.get("providers") or []:
         provider = entry.get("provider_id")
-        if provider in ("birdeye", "helius"):
+        if provider in ("birdeye", "helius", "nansen"):
             caps[f"{provider}_requests"] = int(entry.get("max_requests") or 0)
             caps[f"{provider}_units"] = int(entry.get("max_units") or 0)
+        elif provider == "leaderboard":
+            caps["leaderboard_requests"] = int(entry.get("max_requests") or 0)
+            caps["leaderboard_units"] = int(entry.get("max_units") or 0)
     return caps
 
 
@@ -111,7 +120,7 @@ def phase_caps_from_grant(grant):
         if not isinstance(entry, dict):
             continue
         cleaned = {}
-        for key in SPEND_KEYS:
+        for key in PHASE_CAP_KEYS:
             if entry.get(key) is not None:
                 cleaned[key] = int(entry[key])
         if cleaned:
@@ -133,13 +142,13 @@ def ledger_root(explicit=None):
     return ledger_home()
 
 
-def grant_ledger_path(authorization_id, explicit=None):
+def grant_ledger_path(authorization_id, explicit=None, *, home=None):
     ident = str(authorization_id or "unknown").replace("/", "_").replace("..", "_")
-    home = ledger_home()
+    home = Path(home).expanduser().resolve() if home is not None else ledger_home()
     canonical = home / ident
     if explicit:
-        requested = Path(explicit)
-        if requested.resolve() != home.resolve():
+        requested = Path(explicit).expanduser().resolve()
+        if requested != home:
             raise ValueError(
                 f"refusing second ledger dir {requested} for {ident}; "
                 f"grant ledger is {canonical}"
@@ -147,8 +156,8 @@ def grant_ledger_path(authorization_id, explicit=None):
     return canonical
 
 
-def open_grant_store(authorization_id, explicit=None):
-    path = grant_ledger_path(authorization_id, explicit)
+def open_grant_store(authorization_id, explicit=None, *, home=None):
+    path = grant_ledger_path(authorization_id, explicit, home=home)
     if path.exists() and path.is_file():
         raise ValueError("grant ledger path must be a directory")
     path.mkdir(parents=True, exist_ok=True)
@@ -273,7 +282,7 @@ def _reservation_spend(store):
     except Exception:
         return spend
     for provider, cost, state, charged in rows:
-        if provider not in ("birdeye", "helius"):
+        if provider not in ("birdeye", "helius", "nansen"):
             continue
         if state not in ("reserved", "dispatched") and not (state == "settled" and charged):
             continue
@@ -289,7 +298,7 @@ def _receipt_spend(store):
         if not receipt_is_spent(row):
             continue
         provider = row.get("provider")
-        if provider not in ("birdeye", "helius"):
+        if provider not in ("birdeye", "helius", "nansen"):
             continue
         units = int(row.get("units") or 0)
         spend[f"{provider}_requests"] += 1

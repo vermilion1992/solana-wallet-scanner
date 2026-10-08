@@ -1,0 +1,46 @@
+{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "address": "So11111111111111111111111111111111111111112",
+        "liquidity": 500000000,
+        "mc": 80000000000,
+        "recent_listing_time": 1600000000,
+        "last_trade_unix_time": 1791300000,
+        "note": "quote mint; skipped"
+      },
+      {
+        "address": "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+        "liquidity": 25000000,
+        "mc": 1800000000,
+        "recent_listing_time": 1700000000,
+        "last_trade_unix_time": 1791300000
+      },
+      {
+        "address": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+        "liquidity": 8000000,
+        "mc": 900000000,
+        "recent_listing_time": 1680000000,
+        "last_trade_unix_time": 1791290000,
+        "price_change_24h_percent": -3.5
+      },
+      {
+        "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "liquidity": 400000000,
+        "mc": 40000000000,
+        "recent_listing_time": 1600000000,
+        "last_trade_unix_time": 1791300000,
+        "note": "USDC quote mint; skipped"
+      },
+      {
+        "address": "39i5b9Q3UWpsxaEVqmtyXLzYBFijBN9f6GsRGyY8pump",
+        "liquidity": 250000,
+        "mc": 800000,
+        "recent_listing_time": 1791200000,
+        "last_trade_unix_time": 1791300000,
+        "note": "1-day pump; rejected"
+      }
+    ]
+  }
+}

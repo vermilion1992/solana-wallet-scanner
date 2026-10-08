@@ -27,6 +27,8 @@ LIVE_E2E_DRAFT = ROOT / "config/live_authorization.live-e2e-proof-2026-10-07-mit
 LIVE_E2E_DRAFT_NEXT = ROOT / "config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json"
 LIVE_E2E_DRAFT_11 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json"
 LIVE_E2E_DRAFT_12 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json"
+LIVE_E2E_DRAFT_13 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-13-mitch-draft.json"
+LIVE_E2E_DRAFT_14 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-14-mitch-draft.json"
 MANDATORY = [
     "tests/test_chatgpt_review_2026_10_07.py",
     "tests/test_chatgpt_review_2026_10_07_rereview.py",
@@ -48,8 +50,12 @@ MANDATORY = [
     "tests/test_live_e2e_affc623_s9.py",
     "tests/test_live_e2e_d1_d9.py",
     "tests/test_bot_rate_lead_gate.py",
+    "tests/test_live_e2e_seed_sources.py",
+    "tests/test_live_e2e_run8b.py",
+    "tests/test_live_e2e_verify84.py",
+    "tests/test_live_e2e_run9.py",
 ]
-FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL")
+FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL", "NANSEN_API_KEY")
 
 
 def _run(command, log_path, env):
@@ -111,6 +117,20 @@ def main():
         return 2
     if live_e2e_12.get("PRODUCT_READY") is not False:
         result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_12_product_ready"}, indent=2), encoding="utf-8")
+        return 2
+    live_e2e_13 = json.loads(LIVE_E2E_DRAFT_13.read_text(encoding="utf-8"))
+    if live_e2e_13.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_13_draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if live_e2e_13.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_13_product_ready"}, indent=2), encoding="utf-8")
+        return 2
+    live_e2e_14 = json.loads(LIVE_E2E_DRAFT_14.read_text(encoding="utf-8"))
+    if live_e2e_14.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_14_draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if live_e2e_14.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_14_product_ready"}, indent=2), encoding="utf-8")
         return 2
 
     steps = []
