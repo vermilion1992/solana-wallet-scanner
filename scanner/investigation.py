@@ -1892,7 +1892,6 @@ def _third_party_pool_leg(raw, address, keys):
     owned, vaults = _swap_route_vaults(raw, address, keys)
     if not vaults:
         return False
-    mints = _account_mint_map(raw, keys)
     for instruction in _iter_all_instructions(raw):
         try:
             program = _program(instruction, keys)
@@ -1922,9 +1921,8 @@ def _third_party_pool_leg(raw, address, keys):
             continue
         if source not in owned:
             return True
-        if info.get('authority') != address:
-            return True
-        if _token_transfer_leg(instruction, keys, mints) is None:
+        authority = info.get('authority')
+        if authority not in (None, '', address):
             return True
     return False
 

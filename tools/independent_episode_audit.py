@@ -1655,8 +1655,6 @@ def _auditor_third_party_pool_leg(raw, address, keys):
     """
     if not isinstance(raw, dict) or not address or not keys:
         return False
-    if _auditor_token_owner_unreadable(raw):
-        return True
     owned = _lifecycle_owned_accounts(raw, address, keys)
     signers = _auditor_signers(raw, keys)
     owners = _auditor_token_owners(raw, keys)
@@ -1696,7 +1694,8 @@ def _auditor_third_party_pool_leg(raw, address, keys):
             continue
         if source not in owned:
             return True
-        if info.get("authority") != address:
+        authority = info.get("authority")
+        if authority not in (None, "", address):
             return True
     return False
 
