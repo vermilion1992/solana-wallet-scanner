@@ -25,6 +25,7 @@ from scanner.mass_search.live_e2e import (
 )
 from scanner.mass_search.qualification_gates import (
     MAX_ECONOMIC_TRADES_PER_UTC_DAY,
+    qualifying_profit,
     raw_economic_keys_for_tx as app_raw_keys,
 )
 from scanner.mass_search.readable_first import (
@@ -117,6 +118,13 @@ def test_9dk_shape_includes_omitted_losing_episode():
     apply_headline_losing_pnl(profile, {}, headline, unit)
     assert abs(Decimal(profile["completed_episode_net"]) - Decimal("3752.30")) <= Decimal("0.01")
     assert profile["scoped_pnl_unit"] == "USDC"
+    assert profile["headline_includes_losing_episodes"] is True
+    amount, unit, _vector = qualifying_profit(profile, {"completed_episode_ledger": [
+        {"mint": "HNTWin", "close_signature": "c1", "net": "4003.43", "unit": "USDC",
+         "acquisition": "5000", "proceeds": "9003.43", "costs": "0"},
+    ]})
+    assert unit == "USDC"
+    assert abs(amount - Decimal("3752.30")) <= Decimal("0.01")
 
 
 def test_9bfcmf_shape_includes_unclosed_losing_inventory():
@@ -341,7 +349,8 @@ def test_resumed_walk_accumulates():
 
 
 def test_mew_and_built_in_mints_have_sources():
-    assert MEW_MINT == "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScDhz"
+    assert MEW_MINT == "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5"
+    assert MEW_MINT != "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScDhz"
     assert MEW_MINT in DISCOVERY_LIQUID_MINTS
     assert set(DISCOVERY_LIQUID_MINTS) == set(PINNED_MINT_SOURCES)
     for mint, (ticker, source) in PINNED_MINT_SOURCES.items():

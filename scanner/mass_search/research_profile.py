@@ -934,6 +934,7 @@ def apply_headline_losing_pnl(profile, report, headline_net, headline_unit):
         return profile
     profile["completed_episode_net"] = headline_net
     profile["completed_episode_net_unit"] = headline_unit
+    profile["headline_includes_losing_episodes"] = True
     if isinstance(profile.get("completed_episode_net_vector"), dict):
         vector = dict(profile["completed_episode_net_vector"])
         vector[headline_unit] = headline_net
@@ -947,6 +948,7 @@ def apply_headline_losing_pnl(profile, report, headline_net, headline_unit):
     if isinstance(report, dict):
         report["completed_episode_net"] = headline_net
         report["completed_episode_net_unit"] = headline_unit
+        report["headline_includes_losing_episodes"] = True
     return profile
 
 

@@ -1225,12 +1225,17 @@ PINNED_MINT_SOURCES = {
     "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump": ("FARTCOIN", "https://token.jup.ag"),
     "2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv": ("PENGU", "https://token.jup.ag"),
     "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN": ("TRUMP", "https://token.jup.ag"),
-    "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScDhz": ("MEW", "https://token.jup.ag"),
+    "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5": ("MEW", "https://mew.xyz"),
+    "orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE": ("ORCA", "https://www.orca.so"),
+    "hntyVP6YFm1Hg25TN9WGLqM12b8TQmcknKrdu1oxWux": ("HNT", "https://www.helium.com"),
+    "KMNo3nJsBXfcpJTVhZcXLW7RmTwTt4GVFE7suUBo9sS": ("KMNO", "https://kamino.finance"),
+    "rndrizKT3MK1iimdxRdWabcF7Zg7AR5T4nud4EkHBof": ("RENDER", "https://rendernetwork.com"),
+    "DriFtupJYLTosbwoN8koPeVaVrZK8QhKKKgqq0XKjz9": ("DRIFT", "https://www.drift.trade"),
     "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL": ("JTO", "https://token.jup.ag"),
     "85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ": ("W", "https://token.jup.ag"),
     "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3": ("PYTH", "https://token.jup.ag"),
 }
-MEW_MINT = "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScDhz"
+MEW_MINT = "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5"
 DISCOVERY_LIQUID_MINTS = tuple(PINNED_MINT_SOURCES)
 
 
