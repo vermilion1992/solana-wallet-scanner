@@ -87,6 +87,71 @@ def test_both_down_pump_sell_counts():
     assert auditor.raw_economic_keys_for_tx(tx, A) == 1
 
 
+def test_whirlpool_open_position_both_down_is_not_a_sell():
+    """DQcmxgGC shape: token −, USDC −, SOL rent, +1 0-decimal NFT."""
+    lp = rec(
+        "wp-open",
+        pre_tok=[tb(1, X, 1_000_000), tb(2, USDC, 5_000_000), tb(3, NFT, 0)],
+        post_tok=[tb(1, X, 0), tb(2, USDC, 0), tb(3, NFT, 1)],
+        native=-7_980_000,
+        logs=["Program log: Instruction: OpenPosition"],
+        programs=[auditor.WHIRLPOOL],
+    )
+    # decimals=0 on the NFT so dust filter drops +1 and the rest looks both-down.
+    lp["meta"]["preTokenBalances"][2]["uiTokenAmount"]["decimals"] = 0
+    lp["meta"]["postTokenBalances"][2]["uiTokenAmount"]["decimals"] = 0
+    assert Q.raw_economic_keys_for_tx(lp, A) == 0
+    assert auditor.raw_economic_keys_for_tx(lp, A) == 0
+
+
+def test_rent_only_and_tip_transfer_and_300k_airdrop_are_not_trades():
+    rent = rec(
+        "rent-out",
+        pre_tok=[tb(1, X, 1_000_000)],
+        post_tok=[tb(1, X, 0)],
+        native=-2_039_280,
+        logs=[],
+    )
+    tip_out = rec(
+        "tip-out",
+        pre_tok=[tb(1, X, 1_000_000)],
+        post_tok=[tb(1, X, 0)],
+        native=-2_000_000,
+        logs=[],
+    )
+    airdrop = rec(
+        "tip-airdrop-300k",
+        pre_tok=[tb(1, X, 0)],
+        post_tok=[tb(1, X, 50)],
+        native=-300_000,
+        logs=[],
+    )
+    assert Q.raw_economic_keys_for_tx(rent, A) == 0
+    assert Q.raw_economic_keys_for_tx(tip_out, A) == 0
+    assert Q.raw_economic_keys_for_tx(airdrop, A) == 0
+
+
+def test_auditor_excludes_meteora_dlmm_liquidity():
+    add = rec(
+        "dlmm-add",
+        pre_tok=[tb(1, X, 1_000_000)],
+        post_tok=[tb(1, X, 0)],
+        native=-50_000,
+        logs=["Program log: Instruction: addLiquidityByStrategy"],
+        programs=[auditor.METEORA_DLMM],
+    )
+    remove = rec(
+        "dlmm-remove",
+        pre_tok=[tb(1, X, 0)],
+        post_tok=[tb(1, X, 800_000)],
+        native=40_000,
+        logs=["Program log: Instruction: removeLiquidity"],
+        programs=[auditor.METEORA_DLMM],
+    )
+    assert auditor.raw_economic_keys_for_tx(add, A) == 0
+    assert auditor.raw_economic_keys_for_tx(remove, A) == 0
+
+
 def test_lp_open_and_nft_mint_and_tip_airdrop_are_not_trades():
     lp = rec(
         "lp",

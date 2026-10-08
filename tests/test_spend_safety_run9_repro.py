@@ -136,7 +136,7 @@ def test_dry_run_refuses_armed_ledger_path(tmp_path, how):
     assert tree_hash(REAL_SCANNER) == before
 
 
-# ---------------------------------------------------------------- 3. plan == runtime (or strict upper bound)
+# ---------------------------------------------------------------- 3. plan >= runtime (retry headroom is allowed)
 def _cfg(tmp_path, **raw):
     base = {"mode": "dry-run", "grant_path": str(ROOT / L.DRAFT_REL_13), "output_dir": str(tmp_path / "out"),
             "phases": "1", "discovery": True, "wallets": ""}

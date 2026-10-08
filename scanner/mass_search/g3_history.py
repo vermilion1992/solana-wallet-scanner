@@ -263,36 +263,63 @@ def load_cached_page(store, authorization_id, address, page_index):
     return marked
 
 
+def _chunked_payload_size(meta, record_sizes):
+    """Byte size of one chunk payload. Each record is measured once; commas are +1 each."""
+    empty = {**meta, "records": [], "chunked": True}
+    base = len(_encode_cache_payload(empty))
+    if not record_sizes:
+        return base
+    return base - 2 + sum(record_sizes) + (len(record_sizes) - 1)
+
+
+def split_records_to_sqlite_chunks(records, meta, max_bytes):
+    """Linear chunking: size each record once and keep a running total plus meta overhead."""
+    sizes = [len(_encode_cache_payload(record)) for record in records]
+    chunks = []
+    current = []
+    current_sizes = []
+    for record, size in zip(records, sizes):
+        trial_sizes = current_sizes + [size]
+        if _chunked_payload_size(meta, trial_sizes) > max_bytes:
+            if not current:
+                raise sqlite3.DataError("single history record exceeds sqlite payload limit")
+            chunks.append(current)
+            current = [record]
+            current_sizes = [size]
+            if _chunked_payload_size(meta, current_sizes) > max_bytes:
+                raise sqlite3.DataError("single history record exceeds sqlite payload limit")
+        else:
+            current.append(record)
+            current_sizes = trial_sizes
+    if current or not chunks:
+        chunks.append(current)
+    return chunks
+
+
 def persist_page(store, authorization_id, address, page_index, payload):
-    """Store one logical page. Chunks under SQLITE_LIMIT_LENGTH so one wallet cannot DataError the run."""
+    """Store one logical page. Chunks under SQLITE_LIMIT_LENGTH so one wallet cannot DataError the run.
+
+    Record sizes are measured once. Chunking is linear in the number of records.
+    The full growing payload is never re-encoded on every append.
+    """
     if store is None:
         return payload
     if payload.get("kind") == PAGE_KIND_V1 or payload.get("legacy_cache"):
         return payload
     key = page_cache_key(authorization_id, address, page_index, version=2)
-    encoded = _encode_cache_payload(payload)
     max_bytes = max(1024, int(sqlite_payload_byte_limit(store) * 0.75))
-    if len(encoded) <= max_bytes:
-        store.put(CACHE_KIND, key, payload)
-        return payload
     records = list(payload.get("records") or [])
     meta = {name: value for name, value in payload.items() if name != "records"}
-    chunks = []
-    current = []
-    for record in records:
-        trial = current + [record]
-        trial_size = len(_encode_cache_payload({**meta, "records": trial, "chunked": True}))
-        if trial_size > max_bytes:
-            if not current:
-                raise sqlite3.DataError("single history record exceeds sqlite payload limit")
-            chunks.append(current)
-            current = [record]
-            if len(_encode_cache_payload({**meta, "records": current, "chunked": True})) > max_bytes:
-                raise sqlite3.DataError("single history record exceeds sqlite payload limit")
-        else:
-            current = trial
-    if current or not chunks:
-        chunks.append(current)
+    record_sizes = [len(_encode_cache_payload(record)) for record in records]
+    empty_full = {**meta, "records": []}
+    full_est = len(_encode_cache_payload(empty_full))
+    if record_sizes:
+        full_est = full_est - 2 + sum(record_sizes) + (len(record_sizes) - 1)
+    # Slack so an underestimate cannot sneak a too-big single row through.
+    if full_est + 256 <= max_bytes:
+        store.put(CACHE_KIND, key, payload)
+        return payload
+    chunks = split_records_to_sqlite_chunks(records, meta, max_bytes)
     manifest = {
         **meta,
         "records": [],

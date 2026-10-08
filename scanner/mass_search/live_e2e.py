@@ -30,6 +30,7 @@ import logging
 import math
 import os
 import shutil
+import signal
 import sys
 import time
 import uuid
@@ -197,6 +198,7 @@ from scanner.mass_search.seed_sources import (
     token_tx_items,
     token_tx_owners,
     utc_now_unix,
+    _safe_address,
 )
 from scanner.mass_search.research_profile import (
     attach_live_independent_audit,
@@ -2501,6 +2503,58 @@ def _token_intersect_tokens_from_payload(payload):
     return []
 
 
+def _looks_like_token_list_page(body):
+    items = token_list_items(body)
+    if not items or not isinstance(items[0], dict):
+        return False
+    first = items[0]
+    return any(key in first for key in ("liquidity", "mc", "market_cap", "recent_listing_time", "last_trade_unix_time"))
+
+
+def _tokens_from_imported_page_bodies(bodies):
+    """Recover mints from token-list pages or request metadata on saved pages."""
+    ordered = []
+    seen = set()
+
+    def add(value):
+        address = _safe_address(value)
+        if address and address not in seen:
+            seen.add(address)
+            ordered.append(address)
+
+    for body in bodies or []:
+        if not isinstance(body, dict):
+            continue
+        for blob in (body.get("request"), body.get("params"), body.get("_request"), body.get("query")):
+            if not isinstance(blob, dict):
+                continue
+            for key in ("address", "token", "token_address", "tokenAddress", "mint"):
+                add(blob.get(key))
+        if _looks_like_token_list_page(body):
+            for item in token_list_items(body):
+                if isinstance(item, dict):
+                    add(item.get("address") or item.get("mint"))
+        for item in token_tx_items(body):
+            if not isinstance(item, dict):
+                continue
+            for key in ("tokenAddress", "token_address", "token", "mint"):
+                add(item.get(key))
+    return ordered
+
+
+def _tokens_from_import_filenames(paths):
+    ordered = []
+    seen = set()
+    for path in paths or []:
+        stem = Path(path).stem
+        for part in stem.split("-"):
+            address = _safe_address(part)
+            if address and address not in seen:
+                seen.add(address)
+                ordered.append(address)
+    return ordered
+
+
 def _token_intersect_tokens_from_import(config, root):
     tokens = list(config.get("birdeye_tokens") or [])
     if tokens:
@@ -2513,7 +2567,13 @@ def _token_intersect_tokens_from_import(config, root):
         if parent == parent.parent:
             break
         search.append(parent)
-    names = ("RUN_STATE.json", "STATE.json", "state.json", "RESULTS.json")
+    names = (
+        "token-intersect.tokens.json",
+        "RUN_STATE.json",
+        "STATE.json",
+        "state.json",
+        "RESULTS.json",
+    )
     for folder in search:
         for name in names:
             candidate = folder / name
@@ -2523,6 +2583,8 @@ def _token_intersect_tokens_from_import(config, root):
                 payload = json.loads(candidate.read_text(encoding="utf-8"))
             except (OSError, UnicodeDecodeError, json.JSONDecodeError):
                 continue
+            if name == "token-intersect.tokens.json" and isinstance(payload, dict) and payload.get("tokens"):
+                return list(payload["tokens"])
             found = _token_intersect_tokens_from_payload(payload)
             if found:
                 return found
@@ -2583,6 +2645,15 @@ def _import_token_intersect_pages(config):
                 raise SourceError("MISSING_CAPTURE", f"imported TI page is not an object: {item['path']}")
             bodies.append(page)
             raw_parts.append(json.dumps(page, separators=(",", ":")).encode())
+    if not tokens:
+        tokens = _tokens_from_imported_page_bodies(bodies)
+    if not tokens:
+        tokens = _tokens_from_import_filenames(item["path"] for item in imported)
+    if not tokens:
+        raise SourceError(
+            "MISSING_CAPTURE",
+            "token_intersect import: tokens unknown; pass --birdeye-tokens",
+        )
     return {"raw_parts": raw_parts, "bodies": bodies, "tokens": tokens, "imported": imported}
 
 
@@ -3608,12 +3679,19 @@ async def _phase1_token_intersect(store, grant, config, state, recorder, identit
         "seed_source": SEED_TOKEN_INTERSECT,
         "seed_is_not": "evidence",
     }
+    chosen_tokens = [row.get("address") for row in chosen if row.get("address")]
     state.setdefault("seed_source_progress", {})[SEED_TOKEN_INTERSECT] = {
         "paid_pages": len(raw_parts),
         "addresses": list(addresses),
+        "tokens": list(chosen_tokens),
         "partial": bool(rate_limited),
         "seed_source": SEED_TOKEN_INTERSECT,
     }
+    if chosen_tokens:
+        _write_json(
+            Path(config["output_dir"]) / "raw" / "phase1" / "token-intersect.tokens.json",
+            {"tokens": list(chosen_tokens), "seed_source": SEED_TOKEN_INTERSECT},
+        )
     _merge_discovery_wallets(config, state, addresses, source=SEED_TOKEN_INTERSECT, extras=extras)
     if rate_limited:
         _record_seed_source_failure(state, SEED_TOKEN_INTERSECT, rate_limited, retained_pages=len(raw_parts))
@@ -4517,11 +4595,54 @@ def _phase4_wallet_row(report, profile):
     }
 
 
+PHASE4_WALLET_TIMEOUT_SEC = 600
+
+
+class Phase4Timeout(Exception):
+    """Fail-closed: one wallet exceeded the Phase 4 wall-clock budget."""
+
+
+def phase4_wallet_timeout_sec(config=None):
+    for source in (
+        (config or {}).get("phase4_wallet_timeout_sec"),
+        os.environ.get("SCANNER_PHASE4_WALLET_TIMEOUT_SEC"),
+    ):
+        if source not in (None, ""):
+            return max(1, int(source))
+    return PHASE4_WALLET_TIMEOUT_SEC
+
+
+def _phase4_insufficient_row(state, address, reason, expected_pages):
+    known = known_trade_rate_from_state(state, address)
+    return {
+        "address": address,
+        "coverage_count_share": None,
+        "coverage_value_share": None,
+        "completed_trades": 0,
+        "realized_pnl_sol": None,
+        "realized_pnl_usdc": None,
+        "audit_status": "not_independently_audited",
+        "independently_audited": False,
+        "lead_level": "insufficient_evidence",
+        "blocker": with_gt25_blocker(reason, known),
+        "max_economic_trades_in_one_day": None if not known else known.get("max"),
+        "max_economic_trades_on": None if not known else known.get("max_on"),
+        "history_pages_fetched": expected_pages,
+        "history_reached_window_start": False,
+        "not_audited_reason": with_gt25_blocker(reason, known),
+        "coverage_status": "blocked",
+        "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
+        **seed_fields_for_wallet(state, address),
+        "PRODUCT_READY": False,
+    }
+
+
 def phase4_offline(store, config, state):
     if 4 not in config["phases"]:
         return {"skipped": True}
     bounds = config["bounds"]
     rows = []
+    timeout_sec = phase4_wallet_timeout_sec(config)
     for address in config["wallets"]:
         raw_dir = Path(config["output_dir"]) / "raw" / "phase3" / address
         records = []
@@ -4614,7 +4735,14 @@ def phase4_offline(store, config, state):
                 "PRODUCT_READY": False,
             })
             continue
+        def _on_phase4_alarm(signum, frame):
+            raise Phase4Timeout(f"wallet {address} exceeded {timeout_sec}s")
+
+        old_handler = None
         try:
+            if timeout_sec:
+                old_handler = signal.signal(signal.SIGALRM, _on_phase4_alarm)
+                signal.setitimer(signal.ITIMER_REAL, timeout_sec)
             from scanner.mass_search.canonical_records import canonical_decode_records
             decoded = inject_undecoded_buy_taints(
                 decode_supported_swaps(canonical_decode_records(records), address),
@@ -4686,30 +4814,21 @@ def phase4_offline(store, config, state):
                 store.put("reports", report["id"], report)
             row = _phase4_wallet_row(report, _authoritative_saved_profile(report) or profile)
             rows.append(row)
+        except Phase4Timeout as error:
+            rows.append(_phase4_insufficient_row(
+                state, address, f"phase4_timeout: {error}", expected_pages,
+            ))
         except Exception as error:
-            known = known_trade_rate_from_state(state, address)
-            reason = f"phase4_wallet_failed:{type(error).__name__}: {error}"
-            rows.append({
-                "address": address,
-                "coverage_count_share": None,
-                "coverage_value_share": None,
-                "completed_trades": 0,
-                "realized_pnl_sol": None,
-                "realized_pnl_usdc": None,
-                "audit_status": "not_independently_audited",
-                "independently_audited": False,
-                "lead_level": "insufficient_evidence",
-                "blocker": with_gt25_blocker(reason, known),
-                "max_economic_trades_in_one_day": None if not known else known.get("max"),
-                "max_economic_trades_on": None if not known else known.get("max_on"),
-                "history_pages_fetched": expected_pages,
-                "history_reached_window_start": False,
-                "not_audited_reason": with_gt25_blocker(reason, known),
-                "coverage_status": "blocked",
-                "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
-                **seed_fields_for_wallet(state, address),
-                "PRODUCT_READY": False,
-            })
+            rows.append(_phase4_insufficient_row(
+                state, address,
+                f"phase4_wallet_failed:{type(error).__name__}: {error}",
+                expected_pages,
+            ))
+        finally:
+            if timeout_sec:
+                signal.setitimer(signal.ITIMER_REAL, 0)
+                if old_handler is not None:
+                    signal.signal(signal.SIGALRM, old_handler)
     return {"wallets": rows}
 
 

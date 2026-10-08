@@ -404,6 +404,17 @@ SWAP_IX_NAME_RE = re.compile(
     r"^(?:\w*Swap\w*|Buy\w*|Sell\w*|\w*Route\w*|Fill\w*|\w*Exact\w*In\w*|\w*Exact\w*Out\w*)$",
     re.I,
 )
+# Meteora DLMM add/remove and Orca Open/ClosePosition are not swaps.
+LP_LOG_RE = re.compile(
+    r"Instruction: \w*(?:AddLiquidity|RemoveLiquidity|OpenPosition|ClosePosition|"
+    r"IncreaseLiquidity|DecreaseLiquidity)\w*",
+    re.I,
+)
+LP_IX_NAME_RE = re.compile(
+    r"^\w*(?:AddLiquidity|RemoveLiquidity|OpenPosition|ClosePosition|"
+    r"IncreaseLiquidity|DecreaseLiquidity)\w*$",
+    re.I,
+)
 
 
 def _inner_venues(raw, keys, route, address, owned_accounts):
@@ -1406,21 +1417,26 @@ def _ix_program_id(ix, pubkeys):
     return None
 
 
-def _ix_looks_like_swap(ix):
+def _ix_name_values(ix):
     if not isinstance(ix, dict):
-        return False
+        return []
     parsed = ix.get("parsed") if isinstance(ix.get("parsed"), dict) else {}
-    for value in (
+    return [
         ix.get("name"),
         ix.get("instruction"),
         ix.get("type"),
         parsed.get("type"),
         parsed.get("instruction"),
         parsed.get("name"),
-    ):
-        if value and SWAP_IX_NAME_RE.search(str(value)):
-            return True
-    return False
+    ]
+
+
+def _ix_looks_like_swap(ix):
+    return any(value and SWAP_IX_NAME_RE.search(str(value)) for value in _ix_name_values(ix))
+
+
+def _ix_looks_like_lp(ix):
+    return any(value and LP_IX_NAME_RE.search(str(value)) for value in _ix_name_values(ix))
 
 
 def _all_instructions(body, meta):
@@ -1462,20 +1478,32 @@ def _auditor_wallet_signed(body, pubkeys, wallet):
     return bool(wallet) and wallet in keys[:needed]
 
 
+def _has_lp_signal(body, meta):
+    logs = " ".join(meta.get("logMessages") or [])
+    if LP_LOG_RE.search(logs):
+        return True
+    return any(_ix_looks_like_lp(ix) for ix in _all_instructions(body, meta))
+
+
 def _has_swap_signal(body, pubkeys, meta, changed):
     logs = " ".join(meta.get("logMessages") or [])
-    if SWAP_LOG_RE.search(logs):
-        return True
+    swap_log = bool(SWAP_LOG_RE.search(logs))
+    swap_ix = False
     saw_reviewed = False
     for ix in _all_instructions(body, meta):
         if _ix_looks_like_swap(ix):
-            return True
+            swap_ix = True
         if _ix_program_id(ix, pubkeys) in REVIEWED_SWAP_PROGRAM_IDS:
             saw_reviewed = True
+    if _has_lp_signal(body, meta) and not swap_log and not swap_ix:
+        return False
+    if swap_log or swap_ix:
+        return True
     if not (saw_reviewed and changed):
         return False
     # Unknown / log-stripped venue: reviewed swap program plus a material
     # wallet-owned token move. +1-only (LP position NFT / mint) is not a swap.
+    # Meteora add/remove-liquidity is excluded above by instruction name.
     if any(abs(qty) > 1 for qty in changed.values()):
         return True
     return any(qty < 0 for qty in changed.values())

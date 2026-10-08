@@ -674,7 +674,20 @@ RAW_QUOTE_ASSETS = frozenset({WSOL_MINT, USDC_MINT, USDT_MINT, "SOL"})
 RAW_SOL_FLOOR_LAMPORTS = 100_000
 RAW_SOL_NOISE_LAMPORTS = RAW_SOL_FLOOR_LAMPORTS
 RAW_TOKEN_DUST_UNITS = 1
-RAW_TIP_SOL_LAMPORTS = 200_000
+RAW_TIP_SOL_LAMPORTS = 300_000
+# LP position NFTs / Meteora add-remove / Orca OpenPosition. Used only to
+# exclude non-trades; both-down real sells still count.
+LP_LOG_RE = re.compile(
+    r"Instruction: \w*(?:OpenPosition|ClosePosition|IncreaseLiquidity|"
+    r"DecreaseLiquidity|AddLiquidity|RemoveLiquidity)\w*",
+    re.I,
+)
+SWAP_LIKE_LOG_RE = re.compile(
+    r"Instruction: (?:\w*Swap\w*|Buy\w*|Sell\w*|\w*Route\w*|Fill\w*|"
+    r"\w*Exact\w*In\w*|\w*Exact\w*Out\w*)|SwapEvent",
+    re.I,
+)
+ATA_RENT_LAMPORTS = 2_039_280
 
 
 def _first_present(*values):
@@ -1083,6 +1096,74 @@ def _wallet_signed(record, address):
     return address in keys[:needed]
 
 
+def _logs_text(record):
+    raw = _unwrap_raw_record(record)
+    meta = _record_meta(raw)
+    if not isinstance(meta, dict):
+        return ""
+    return " ".join(str(item) for item in (meta.get("logMessages") or []) if item)
+
+
+def _wallet_lp_nft_moved(record, address):
+    """True when a 1-unit, 0-decimal mint (LP position NFT) moved for the wallet."""
+    raw = _unwrap_raw_record(record)
+    meta = _record_meta(raw)
+    if not isinstance(meta, dict) or not address:
+        return False
+    keys = _tx_account_keys(raw)
+    pre, post, decimals = {}, {}, {}
+    for field, dest in (("preTokenBalances", pre), ("postTokenBalances", post)):
+        for balance in meta.get(field) or []:
+            if not isinstance(balance, dict) or _token_balance_owner(balance, keys) != address:
+                continue
+            mint = balance.get("mint")
+            if not mint:
+                continue
+            dest[mint] = _token_amount_raw(balance)
+            ui = balance.get("uiTokenAmount") if isinstance(balance.get("uiTokenAmount"), dict) else {}
+            if type(ui.get("decimals")) is int:
+                decimals[mint] = ui["decimals"]
+    for mint in set(pre) | set(post):
+        delta = post.get(mint, 0) - pre.get(mint, 0)
+        if decimals.get(mint) == 0 and abs(delta) == 1:
+            return True
+    return False
+
+
+def _has_lp_instruction(record):
+    return bool(LP_LOG_RE.search(_logs_text(record)))
+
+
+def _has_swap_like_log(record):
+    return bool(SWAP_LIKE_LOG_RE.search(_logs_text(record)))
+
+
+def _is_lp_or_rent_or_tip_non_trade(record, address, material, token_downs, token_ups, quote_downs, quote_ups):
+    """Exclude LP opens/closes and rent-only / tip-plus-airdrop transfers.
+
+    Both-down real sells (token down, proceeds elsewhere, swap signal or a
+    stable quote move) stay counted.
+    """
+    if _wallet_lp_nft_moved(record, address) or _has_lp_instruction(record):
+        return True
+    sol_down = -material["SOL"] if material.get("SOL", 0) < 0 else 0
+    stable_down = any(material.get(mint, 0) < 0 for mint in (USDC_MINT, USDT_MINT))
+    swap_log = _has_swap_like_log(record)
+    # Rent-only or tip + token transfer out: token down, SOL-only quote down
+    # at rent/tip size, no swap signal. Real both-down sells have Swap/Sell
+    # logs or a stable quote move.
+    if token_downs and not token_ups and quote_downs and not quote_ups:
+        rent_or_tip = ATA_RENT_LAMPORTS + RAW_TIP_SOL_LAMPORTS
+        if not stable_down and not swap_log and 0 < sol_down <= rent_or_tip:
+            return True
+    # Tip + airdrop: token up, SOL down at or below the tip cutoff, no stable.
+    # 300k tip+airdrop is excluded; 400k Titan fills still count.
+    if token_ups and quote_downs and not token_downs:
+        if not stable_down and 0 < sol_down <= RAW_TIP_SOL_LAMPORTS:
+            return True
+    return False
+
+
 def raw_economic_keys_for_tx(record, address):
     """Signed economic-swap keys for one successful tx.
 
@@ -1106,6 +1187,10 @@ def raw_economic_keys_for_tx(record, address):
     token_ups = [mint for mint, qty in material.items() if qty > 0 and mint not in RAW_QUOTE_ASSETS]
     quote_downs = [mint for mint, qty in material.items() if qty < 0 and mint in RAW_QUOTE_ASSETS]
     quote_ups = [mint for mint, qty in material.items() if qty > 0 and mint in RAW_QUOTE_ASSETS]
+    if _is_lp_or_rent_or_tip_non_trade(
+        record, address, material, token_downs, token_ups, quote_downs, quote_ups,
+    ):
+        return 0
     if token_downs and token_ups:
         return len(token_downs + token_ups)
     if token_downs and (quote_downs or quote_ups):

@@ -495,3 +495,323 @@ def test_disk_sensitive_tests_skip_with_reason_when_volume_is_tiny(tmp_path, mon
     monkeypatch.setattr("shutil.disk_usage", lambda _path: type("U", (), {"free": 1024})())
     with pytest.raises(pytest.skip.Exception, match="free disk"):
         skip_if_low_disk(tmp_path, need_mb=256)
+
+
+def _bjcx_shaped_record(i, pad=4000):
+    """Realistic GTA-sized record: signature, keys, meta, and a large pad."""
+    return {
+        "blockTime": 1_791_000_000 - i,
+        "slot": 400_000_000 - i,
+        "transaction": {
+            "signatures": [f"BJcxSig{i:06d}" + "x" * 40],
+            "message": {
+                "accountKeys": [
+                    "BJcxXxr2mSr71SVJaqvHHmdxHUrYRvC4sct1wMNZxirK",
+                    JUPITER,
+                    USDC,
+                ],
+                "instructions": [{"programId": JUPITER, "data": "x" * 80}],
+            },
+        },
+        "meta": {
+            "err": None,
+            "fee": 5000,
+            "preBalances": [10**10, 1, 1],
+            "postBalances": [10**10 - 5000, 1, 1],
+            "preTokenBalances": [],
+            "postTokenBalances": [],
+            "logMessages": ["Program log: Instruction: Route"],
+            "pad": "R" * pad,
+        },
+    }
+
+
+def test_d10_6_persist_20k_realistic_records_is_linear(tmp_path):
+    """≥20k BJcx-shaped records must chunk in linear time, not re-encode the growing blob."""
+    skip_if_low_disk(tmp_path, need_mb=512)
+    store = Store(tmp_path)
+    store.db.setlimit(sqlite3.SQLITE_LIMIT_LENGTH, 512_000)
+    records = [_bjcx_shaped_record(i, pad=4000) for i in range(20_000)]
+    payload = {"kind": "g3-history-page-v2", "records": records, "address": "BJcx"}
+    started = datetime.now(timezone.utc)
+    persist_page(store, "auth", "BJcxXxr2mSr71SVJaqvHHmdxHUrYRvC4sct1wMNZxirK", 0, payload)
+    elapsed = (datetime.now(timezone.utc) - started).total_seconds()
+    loaded = load_cached_page(store, "auth", "BJcxXxr2mSr71SVJaqvHHmdxHUrYRvC4sct1wMNZxirK", 0)
+    store.close()
+    assert loaded is not None
+    assert len(loaded.get("records") or []) == 20_000
+    assert elapsed < 25, f"persist_page of 20k realistic records took {elapsed:.1f}s; still quadratic?"
+
+
+def test_d10_6_bjcx_synthetic_capture_finishes_phase4(tmp_path, monkeypatch):
+    skip_if_low_disk(tmp_path, need_mb=256)
+    big = "BJcxXxr2mSr71SVJaqvHHmdxHUrYRvC4sct1wMNZxirK"
+    small = "7jsNiaEV8HzBHjYPDEddeZGJsmNwkCvdaPqDdgptc7WA"
+    out = tmp_path / "out"
+    cfg = L.validate_config({
+        "mode": "dry-run",
+        "grant_path": str(ROOT / L.DRAFT_REL_13),
+        "output_dir": str(out),
+        "phases": "4",
+        "discovery": False,
+        "wallets": f"{big},{small}",
+    })
+    cfg["phase4_wallet_timeout_sec"] = 120
+    records = [_bjcx_shaped_record(i, pad=2500) for i in range(3000)]
+    raw_dir = out / "raw" / "phase3" / big
+    raw_dir.mkdir(parents=True)
+    body = json.dumps({"jsonrpc": "2.0", "id": 1, "result": {"data": records, "paginationToken": None}}).encode()
+    _sha_sidecar(raw_dir / "page0.bin", body)
+    small_dir = out / "raw" / "phase3" / small
+    small_dir.mkdir(parents=True)
+    tiny = [_bjcx_shaped_record(0, pad=20)]
+    _sha_sidecar(
+        small_dir / "page0.bin",
+        json.dumps({"jsonrpc": "2.0", "id": 1, "result": {"data": tiny, "paginationToken": None}}).encode(),
+    )
+    state = {
+        "phase3": {big: {"pages": 1, "done": True}, small: {"pages": 1, "done": True}},
+        "phase2": {},
+        "seed_metadata": {},
+    }
+
+    def persist_then_stub(store, **kwargs):
+        address = kwargs.get("address")
+        persist_page(
+            store,
+            kwargs.get("authorization_id") or "auth",
+            address,
+            0,
+            {"kind": "g3-history-page-v2", "records": kwargs.get("records") or []},
+        )
+        return {
+            "report": {
+                "id": f"stub-{address}",
+                "address": address,
+                "window": {"start": "2026-01-01T00:00:00Z", "end": "2026-10-01T00:00:00Z"},
+                "metrics": {},
+                "record_breakdown": {
+                    "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {}},
+                },
+            }
+        }
+
+    monkeypatch.setattr(L, "replay_cached_history_to_report", persist_then_stub)
+    monkeypatch.setattr(L, "decode_supported_swaps", lambda *args, **kwargs: {"events": [], "unresolved": []})
+    monkeypatch.setattr(L, "inject_undecoded_buy_taints", lambda decoded, *args, **kwargs: decoded)
+    monkeypatch.setattr(L, "build_research_profile", lambda *args, **kwargs: {
+        "qualification_level": "insufficient_evidence",
+        "completed_trades": 0,
+    })
+    monkeypatch.setattr(L, "attach_live_independent_audit", lambda *args, **kwargs: {
+        "status": "not_independently_audited",
+    })
+    store = Store(tmp_path / "store")
+    store.db.setlimit(sqlite3.SQLITE_LIMIT_LENGTH, 256_000)
+    started = datetime.now(timezone.utc)
+    result = L.phase4_offline(store, cfg, state)
+    elapsed = (datetime.now(timezone.utc) - started).total_seconds()
+    loaded = load_cached_page(store, cfg.get("authorization_id") or L.AUTHORIZATION_ID, big, 0)
+    store.close()
+    by_addr = {row["address"]: row for row in result["wallets"]}
+    assert set(by_addr) == {big, small}
+    assert by_addr[big]["lead_level"] is not None
+    assert "phase4_timeout" not in str(by_addr[big].get("blocker") or "")
+    assert loaded is not None
+    assert len(loaded.get("records") or []) == 3000
+    assert elapsed < 60, f"BJcx synthetic Phase 4 took {elapsed:.1f}s"
+
+
+def test_d10_6_phase4_timeout_is_fail_closed_and_batch_continues(tmp_path, monkeypatch):
+    skip_if_low_disk(tmp_path, need_mb=64)
+    slow = "BJcxXxr2mSr71SVJaqvHHmdxHUrYRvC4sct1wMNZxirK"
+    fast = "7jsNiaEV8HzBHjYPDEddeZGJsmNwkCvdaPqDdgptc7WA"
+    out = tmp_path / "out"
+    cfg = L.validate_config({
+        "mode": "dry-run",
+        "grant_path": str(ROOT / L.DRAFT_REL_13),
+        "output_dir": str(out),
+        "phases": "4",
+        "discovery": False,
+        "wallets": f"{slow},{fast}",
+    })
+    cfg["phase4_wallet_timeout_sec"] = 1
+    for address, sig in ((slow, "slow-sig"), (fast, "fast-sig")):
+        rec = [{
+            "blockTime": 1_791_000_000,
+            "transaction": {"signatures": [sig], "message": {"accountKeys": [address]}},
+            "meta": {"err": None, "fee": 5000, "preBalances": [10**9], "postBalances": [10**9 - 5000]},
+        }]
+        raw_dir = out / "raw" / "phase3" / address
+        raw_dir.mkdir(parents=True)
+        _sha_sidecar(
+            raw_dir / "page0.bin",
+            json.dumps({"jsonrpc": "2.0", "id": 1, "result": {"data": rec, "paginationToken": None}}).encode(),
+        )
+    state = {
+        "phase3": {slow: {"pages": 1, "done": True}, fast: {"pages": 1, "done": True}},
+        "phase2": {},
+        "seed_metadata": {},
+    }
+
+    def maybe_sleep(*args, **kwargs):
+        address = kwargs.get("address")
+        if address == slow:
+            import time
+            time.sleep(3)
+        return {
+            "report": {
+                "id": f"stub-{address}",
+                "address": address,
+                "window": {"start": "2026-01-01T00:00:00Z", "end": "2026-10-01T00:00:00Z"},
+                "metrics": {},
+                "record_breakdown": {
+                    "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {}},
+                },
+            }
+        }
+
+    monkeypatch.setattr(L, "replay_cached_history_to_report", maybe_sleep)
+    monkeypatch.setattr(L, "decode_supported_swaps", lambda *args, **kwargs: {"events": [], "unresolved": []})
+    monkeypatch.setattr(L, "inject_undecoded_buy_taints", lambda decoded, *args, **kwargs: decoded)
+    monkeypatch.setattr(L, "build_research_profile", lambda *args, **kwargs: {
+        "qualification_level": "insufficient_evidence",
+        "completed_trades": 0,
+    })
+    monkeypatch.setattr(L, "attach_live_independent_audit", lambda *args, **kwargs: {
+        "status": "not_independently_audited",
+    })
+    store = Store(tmp_path / "store")
+    result = L.phase4_offline(store, cfg, state)
+    store.close()
+    by_addr = {row["address"]: row for row in result["wallets"]}
+    assert set(by_addr) == {slow, fast}
+    assert by_addr[slow]["lead_level"] == "insufficient_evidence"
+    assert "phase4_timeout" in str(by_addr[slow]["blocker"])
+    assert by_addr[fast]["lead_level"] is not None
+    assert "phase4_timeout" not in str(by_addr[fast].get("blocker") or "")
+
+
+def test_d10_2_ti_import_recovers_tokens_from_page_bodies(tmp_path):
+    prior = tmp_path / "prior"
+    phase1 = prior / "raw" / "phase1"
+    phase1.mkdir(parents=True)
+    listing = _fx("token_list_durable.json")
+    txs = _fx("token_txs_seek.json")
+    pages = [listing] + [txs] * 18
+    raw = b"\n".join(json.dumps(page, separators=(",", ":")).encode() for page in pages)
+    _sha_sidecar(phase1 / "token-intersect-deadbeefcafe.bin", raw)
+    (prior / "RUN_STATE.json").write_text(json.dumps({
+        "seed_source_progress": {SEED_TOKEN_INTERSECT: {"paid_pages": 13}},
+    }), encoding="utf-8")
+    cfg = _cfg(tmp_path, seed_source="token_intersect", import_raw_dir=str(prior), out="fresh")
+    store, _ = open_grant_store(cfg["authorization_id"])
+    rec = L.RecorderTransport()
+    st = {"spend": L.empty_spend(), "phase_spend": L.empty_phase_spend(), "wallets": []}
+    result = asyncio.run(L.phase1_discovery(store, L.load_grant(ROOT / L.DRAFT_REL_13), cfg, st, rec))
+    store.close()
+    assert rec.calls == []
+    ti = (result.get("per_source") or {}).get(SEED_TOKEN_INTERSECT) or result
+    assert ti.get("imported") is True
+    assert ti.get("tokens") or st.get("wallets")
+    assert st.get("wallets")
+
+
+def test_d10_2_ti_import_without_tokens_fails_loudly(tmp_path):
+    prior = tmp_path / "prior"
+    phase1 = prior / "raw" / "phase1"
+    phase1.mkdir(parents=True)
+    page = {"success": True, "data": {"items": [{"owner": W1, "blockUnixTime": 1900000000, "txType": "swap"}]}}
+    raw = json.dumps(page, separators=(",", ":")).encode()
+    _sha_sidecar(phase1 / "token-intersect-abad1dea0001.bin", raw)
+    (prior / "RUN_STATE.json").write_text("{}", encoding="utf-8")
+    cfg = _cfg(tmp_path, seed_source="token_intersect", import_raw_dir=str(prior), out="fresh")
+    store, _ = open_grant_store(cfg["authorization_id"])
+    rec = L.RecorderTransport()
+    st = {"spend": L.empty_spend(), "phase_spend": L.empty_phase_spend(), "wallets": []}
+    with pytest.raises(SourceError, match="tokens unknown"):
+        asyncio.run(L.phase1_discovery(store, L.load_grant(ROOT / L.DRAFT_REL_13), cfg, st, rec))
+    store.close()
+    assert rec.calls == []
+    assert not st.get("wallets")
+
+
+def test_usdt_quoted_unsupported_moves_value_share():
+    wallet = "UsdtCov11111111111111111111111111111111111"
+    stamp = int(datetime(2026, 5, 28, tzinfo=timezone.utc).timestamp())
+    from scanner.investigation import USDT
+    decoded_events = [{
+        "signature": f"sol-buy-{i}",
+        "kind": "buy",
+        "amount_sol": "0.5",
+        "mint": TOKEN_X,
+    } for i in range(200)]
+    records = []
+    for i in range(200):
+        records.append({
+            "blockTime": stamp + i,
+            "transaction": {
+                "signatures": [f"sol-buy-{i}"],
+                "message": {"accountKeys": [wallet, JUPITER], "instructions": [{"programId": JUPITER}]},
+            },
+            "meta": {
+                "err": None,
+                "fee": 5000,
+                "preBalances": [10**10, 1],
+                "postBalances": [10**10 - 500_000_000, 1],
+                "preTokenBalances": [{"owner": wallet, "mint": TOKEN_X, "uiTokenAmount": {"amount": "0"}}],
+                "postTokenBalances": [{"owner": wallet, "mint": TOKEN_X, "uiTokenAmount": {"amount": "1000"}}],
+            },
+        })
+    for i in range(2):
+        records.append({
+            "blockTime": stamp + 300 + i,
+            "transaction": {
+                "signatures": [f"usdt-undecoded-{i}"],
+                "message": {"accountKeys": [wallet, JUPITER], "instructions": [{"programId": JUPITER}]},
+            },
+            "meta": {
+                "err": None,
+                "fee": 5000,
+                "preBalances": [10**10, 1],
+                "postBalances": [10**10 - 5000, 1],
+                "preTokenBalances": [
+                    {"owner": wallet, "mint": USDT, "uiTokenAmount": {"amount": "5000000000"}},
+                    {"owner": wallet, "mint": TOKEN_X, "uiTokenAmount": {"amount": "0"}},
+                ],
+                "postTokenBalances": [
+                    {"owner": wallet, "mint": USDT, "uiTokenAmount": {"amount": "0"}},
+                    {"owner": wallet, "mint": TOKEN_X, "uiTokenAmount": {"amount": "1000"}},
+                ],
+            },
+        })
+    start = datetime.fromtimestamp(stamp - 3600, tz=timezone.utc).isoformat()
+    end = datetime.fromtimestamp(stamp + 3600, tz=timezone.utc).isoformat()
+    breakdown = partition_records(
+        records, {"events": decoded_events, "unresolved": []}, wallet,
+        window_start=start, window_end=end,
+    )
+    shares = breakdown["unsupported_swap_share_in_window"]["by_consideration"]
+    assert "USDT" in shares
+    assert Decimal(str(shares["USDT"])) == Decimal("1")
+    cov = coverage_shares({"record_breakdown": breakdown})
+    assert cov["value_share"] == Decimal("0")
+    gate = mandatory_coverage_gate({"record_breakdown": breakdown}, min_share=Decimal("0.95"))
+    assert gate.get("passed") is not True
+
+
+@pytest.mark.skip(reason=(
+    "asserts archived run-10 RUN_STATE / misplaced dry-run page files that are "
+    "not in this tree; behavioural D10-7 checks cover the defect"
+))
+def test_d10_7_dry_run_placeholder_page_shape():
+    root = Path(__file__).resolve().parents[1] / "logs/misplaced_dry_pages_p3x"
+    pages = sorted(root.glob("*/page0.bin"))
+    assert len(pages) == 6
+    bodies = {p.read_bytes() for p in pages}
+    assert bodies == {b'{"jsonrpc":"2.0","result":{"data":[],"paginationToken":null}}'}
+    state = json.loads((
+        Path(__file__).resolve().parents[1] / "logs/RUN_STATE.nansen10.after_p3x_refused.json"
+    ).read_text())
+    cursor = state["phase3"]["47hGpFXAkbWFtfpeAo4Hr2KcxAWVpaUH5ojAbwzzxobN"]
+    assert cursor["history_complete_reason"] != "unreceipted_page", cursor

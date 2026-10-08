@@ -20,6 +20,7 @@ from scanner.investigation import (
     WHIRLPOOL,
     WSOL,
     USDC,
+    USDT,
     _keys,
 )
 from scanner.mass_search.canonical_records import unwrap_gta_record
@@ -181,15 +182,21 @@ def _consideration(raw, address, keys, event=None):
     """Quote consideration for coverage. Fee/rent residual SOL is not a quote asset."""
     if event:
         usdc = event.get("amount_usdc") or event.get("consideration_usdc")
+        usdt = event.get("amount_usdt") or event.get("consideration_usdt")
         sol = event.get("amount_sol") or event.get("consideration_sol")
         if usdc not in (None, ""):
             return "USDC", Decimal(str(usdc))
+        if usdt not in (None, ""):
+            return "USDT", Decimal(str(usdt))
         if sol not in (None, ""):
             return "SOL", Decimal(str(sol))
     deltas = _owned_asset_deltas(raw, address, keys)
     usdc = abs(deltas.get(USDC, Decimal("0")))
     if usdc:
         return "USDC", usdc / Decimal(1_000_000)
+    usdt = abs(deltas.get(USDT, Decimal("0")))
+    if usdt:
+        return "USDT", usdt / Decimal(1_000_000)
     sol = abs(deltas.get("SOL", Decimal("0")))
     if sol <= SOL_SWAP_FLOOR:
         return None, Decimal("0")
@@ -233,8 +240,10 @@ def partition_records(records, decoded, address, *, window_start, window_end, ac
     unsupported = []
     decoded_trade = 0
     decoded_conversion = 0
-    consideration = {"decoded": {"SOL": Decimal("0"), "USDC": Decimal("0")},
-                     "unsupported": {"SOL": Decimal("0"), "USDC": Decimal("0")}}
+    consideration = {
+        "decoded": {"SOL": Decimal("0"), "USDC": Decimal("0"), "USDT": Decimal("0")},
+        "unsupported": {"SOL": Decimal("0"), "USDC": Decimal("0"), "USDT": Decimal("0")},
+    }
     in_window_times = []
     venue_counts = Counter()
     for record in records or []:
@@ -310,7 +319,7 @@ def partition_records(records, decoded, address, *, window_start, window_end, ac
     by_consideration = {}
     if in_window_swaps:
         by_count = _display_decimal(Decimal(counts["unsupported_swap"]) / Decimal(in_window_swaps))
-    for asset in ("SOL", "USDC"):
+    for asset in ("SOL", "USDC", "USDT"):
         total = consideration["decoded"][asset] + consideration["unsupported"][asset]
         if total:
             by_consideration[asset] = _display_decimal(consideration["unsupported"][asset] / total)
