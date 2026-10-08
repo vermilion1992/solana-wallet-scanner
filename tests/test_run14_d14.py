@@ -1963,6 +1963,12 @@ def test_d14_15_unpriced_token_for_token_makes_value_unknown():
     assert aud.get("value_unknown") is True
     assert aud["value_share"] is None
     assert aud["gate_passed"] is False
+    gate = mandatory_coverage_gate({
+        "record_breakdown": {"result_relevant": app},
+        "independent_audit": {"result_relevant": aud},
+    })
+    assert gate["passed"] is False
+    assert gate.get("value_share") is None
     # Neighbour: token→token via nearly-netted SOL is still unknown.
     n1 = _d14_otc("n1", IN_90 + 941, other, other_ata, 2_000_000)
     n1["transaction"]["message"]["instructions"] = [

@@ -622,7 +622,11 @@ def coverage_shares(report, profile=None):
         )
         if relevant.get("count_share") is not None:
             count_share = _decimal(relevant.get("count_share"))
-        if relevant.get("value_share") is not None:
+        if relevant.get("value_unknown"):
+            # Unpriced token-for-token (and similar) is never covered.
+            value_share = None
+            mandatory = None
+        elif relevant.get("value_share") is not None:
             value_share = _decimal(relevant.get("value_share"))
         if count_share is not None and value_share is not None:
             mandatory = min(count_share, value_share)
@@ -679,6 +683,9 @@ def mandatory_coverage_gate(report, profile=None, *, min_share=None):
     elif relevant.get("empty") or relevant.get("size") == 0 or relevant.get("denominator") == 0:
         passed = False
         reason = "empty result-relevant set"
+    elif relevant.get("value_unknown"):
+        passed = False
+        reason = "unpriced token-for-token makes value share unknown"
     else:
         passed = (
             count_share is not None
