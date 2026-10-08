@@ -60,20 +60,37 @@ GATES_UNCHANGED = (
     "bot_gt_15_economic_trades_full_history",
 )
 EARLY_WATCH_MIN_EPISODES = 1
-# Lending / limit-order / dedicated MM programs. Spot-swap venues (Jupiter,
-# Pump, Raydium, Orca) are not on this list even when they also host LPs.
-INFRA_PRESCREEN_PROGRAMS = frozenset({
-    "KLend2g3cP87szom1FxFdkHw6cCLVYqPAFHL7Lw5EJx",  # Kamino lend
-    "So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo",  # Solend
-    "MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnkobGM7s",  # Marginfi
-    "PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjHFBjDz",  # Phoenix
-    "srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX",  # OpenBook
-    "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",  # Serum
+# Exact (program, instruction) pairs for real LP add/remove. Never generic
+# Withdraw/Deposit substrings and never OpenBook/Serum account keys — those
+# appear on ordinary Raydium v4 swaps and Token-2022 fee withdrawals.
+LP_ADD_REMOVE_PAIRS = frozenset({
+    ("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8", "AddLiquidity"),
+    ("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8", "RemoveLiquidity"),
+    ("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8", "AddLiquidity2"),
+    ("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8", "RemoveLiquidity2"),
+    ("CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C", "AddLiquidity"),
+    ("CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C", "RemoveLiquidity"),
+    ("CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK", "IncreaseLiquidity"),
+    ("CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK", "DecreaseLiquidity"),
+    ("CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK", "OpenPosition"),
+    ("CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK", "ClosePosition"),
+    ("whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc", "IncreaseLiquidity"),
+    ("whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc", "DecreaseLiquidity"),
+    ("whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc", "IncreaseLiquidityV2"),
+    ("whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc", "DecreaseLiquidityV2"),
+    ("whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc", "OpenPosition"),
+    ("whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc", "ClosePosition"),
+    ("LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo", "addLiquidity"),
+    ("LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo", "addLiquidityByWeight"),
+    ("LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo", "removeLiquidity"),
+    ("LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo", "removeAllLiquidity"),
+    ("cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG", "AddLiquidity"),
+    ("cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG", "RemoveLiquidity"),
+    ("9W959dqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP", "DepositAllTokenTypes"),
+    ("9W959dqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP", "WithdrawAllTokenTypes"),
+    ("DjVE6JNiYqPL2QXyCUUh8rNjHrbz9hXHNYt99MQ59qw1", "DepositAllTokenTypes"),
+    ("DjVE6JNiYqPL2QXyCUUh8rNjHrbz9hXHNYt99MQ59qw1", "WithdrawAllTokenTypes"),
 })
-LP_LOG_HINTS = (
-    "AddLiquidity", "RemoveLiquidity", "OpenPosition", "ClosePosition",
-    "IncreaseLiquidity", "DecreaseLiquidity", "Deposit", "Withdraw",
-)
 
 
 def _dec(value):
@@ -279,6 +296,35 @@ def _sample_programs(records):
     return programs, " ".join(logs)
 
 
+def sample_lp_add_remove_hits(records):
+    """Exact program+instruction LP add/remove pairs in sample logs.
+
+    Pre-score only. Never proves a wallet. Generic Withdraw/Deposit
+    substrings and OpenBook/Serum account keys are ignored.
+    """
+    hits = []
+    for record in records or []:
+        raw = unwrap_gta_record(record) if isinstance(record, dict) else None
+        if not isinstance(raw, dict):
+            continue
+        meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+        current = None
+        for line in meta.get("logMessages") or []:
+            if not isinstance(line, str):
+                continue
+            if line.startswith("Program ") and " invoke" in line:
+                parts = line.split()
+                if len(parts) >= 2:
+                    current = parts[1]
+                continue
+            marker = "Instruction: "
+            if current and marker in line:
+                ix = line.split(marker, 1)[1].strip()
+                if (current, ix) in LP_ADD_REMOVE_PAIRS:
+                    hits.append({"program": current, "instruction": ix})
+    return hits
+
+
 def estimate_full_gate_prescore(records, address, *, decoded=None, signature_rows=None, nansen_row=None):
     """Cheap full-gate estimate from already-paid data. Never passes a wallet.
 
@@ -300,9 +346,10 @@ def estimate_full_gate_prescore(records, address, *, decoded=None, signature_row
     except (TypeError, ValueError):
         sig_max_i = 0
     max_day = max(int(rate.get("max") or 0), sig_max_i)
-    programs, logs = _sample_programs(records)
-    infra = sorted(programs & INFRA_PRESCREEN_PROGRAMS)
-    lp_hint = any(hint in logs for hint in LP_LOG_HINTS)
+    programs, _logs = _sample_programs(records)
+    lp_hits = sample_lp_add_remove_hits(records)
+    infra = sorted({row["program"] for row in lp_hits})
+    lp_hint = bool(lp_hits)
     readable_count = _dec(shares.get("count_share"))
     readable_value = _dec(shares.get("value_share"))
     sells = int(trips.get("sell_mints") or 0)
@@ -435,11 +482,23 @@ def decide_sample(shares, *, threshold=None):
     }
 
 
-def bot_prescreen_decision(signature_rows, *, dex_stats=None, max_per_day=None, history_cap=None):
-    """Cheap signatures screen, then optional dex-trades. Drop or defer only."""
+def bot_prescreen_decision(signature_rows, *, dex_stats=None, max_per_day=None, history_cap=None, economic_drop=None):
+    """Cheap signatures screen, then optional dex-trades. Drop or defer only.
+
+    A proven >15 economic-trade day drops even when history would otherwise
+    defer as history_above_cap. Raw tx count alone never drops.
+    """
     screen = helius_signatures_prescreen(
         signature_rows, max_per_day=max_per_day, history_cap=history_cap,
     )
+    if isinstance(economic_drop, dict) and economic_drop.get("dropped"):
+        return {
+            "decision": DROP,
+            "reason": GT_ECONOMIC_TRADES_RULE,
+            "screen": {**screen, "deferred": False, "dropped": True},
+            "economic": economic_drop,
+            "can_only_drop_or_defer": True,
+        }
     if screen.get("deferred"):
         return {
             "decision": DEFER_UNREADABLE,
@@ -451,7 +510,7 @@ def bot_prescreen_decision(signature_rows, *, dex_stats=None, max_per_day=None, 
         return {
             "decision": KEEP,
             "reason": None,
-            "screen": screen,
+            "screen": {**screen, "cannot_fail_bot_rule": True},
             "needs_decode": False,
             "can_only_drop_or_defer": True,
         }
@@ -485,7 +544,7 @@ def _pnl(row):
             return amount
     metrics = (row.get("vendor_metrics") if isinstance(row, dict) else None) or {}
     amount = _dec(metrics.get("realized_pnl_usd") or metrics.get("realizedPnlUsd"))
-    return amount if amount is not None else Decimal("0")
+    return amount
 
 
 def _expected_episodes(row):
@@ -507,15 +566,21 @@ def _pass_probability(row):
 
 
 def rank_by_nansen_pnl(rows):
-    """Rank by estimated early_watch pass probability, then realized PnL."""
-    return sorted(
-        list(rows or []),
-        key=lambda row: (
+    """Rank cannot-fail-bot first, then pass probability, then realized PnL.
+
+    Missing vendor PnL is unknown (not 0) and ranks after a known figure.
+    A wallet with ≤15 txs on every UTC day cannot fail the bot rule.
+    """
+    def _key(row):
+        pnl = _pnl(row)
+        return (
+            0 if (row or {}).get("cannot_fail_bot_rule") else 1,
             -_pass_probability(row),
-            -_pnl(row),
+            0 if pnl is not None else 1,
+            Decimal("0") if pnl is None else -pnl,
             str((row or {}).get("address") or ""),
-        ),
-    )
+        )
+    return sorted(list(rows or []), key=_key)
 
 
 def walk_ranked(rows, *, n, cap=None):

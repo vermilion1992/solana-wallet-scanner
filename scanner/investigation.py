@@ -127,7 +127,8 @@ UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 # discriminator in _route. Jupiter/Whirlpool/AMMv4 stay in both sets so an
 # unknown discriminator can still reconstruct when the net is unambiguous.
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v29-jup6-exact-out-v2-v1'
+DECODER_VERSION = 'spot-v30-d14-top3-net-v1'
+D14_TOP3_DEFERRED_PROGRAMS = frozenset({OKX_DEX_ROUTER, JUPITER, WHIRLPOOL})
 NET_BALANCE_INSTRUCTION = 'net_balance'
 NET_BALANCE_SOL_DUST_LAMPORTS = 100_000
 # Fee/referral SOL residue that may be peeled as cost, never as a third trade leg.
@@ -3074,7 +3075,7 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 or reason.startswith('Transaction version has no reviewed')
                 or (
                     reason.startswith('No reviewed spot swap instruction for this program')
-                    and first_nb == JUPITER
+                    and first_nb in D14_TOP3_DEFERRED_PROGRAMS
                 )
             )
             if allow_net_balance and coverage_gap:

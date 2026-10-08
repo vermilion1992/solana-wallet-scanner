@@ -1195,6 +1195,7 @@ def tgm_row_metrics(row):
         "n_trades": row.get("nof_trades") or row.get("n_trades") or row.get("trades"),
         "unrealized_pnl_usd": row.get("pnl_usd_unrealised") or row.get("unrealized_pnl_usd"),
         "win_rate": row.get("win_rate"),
+        "address_label": row.get("address_label") or row.get("label"),
         "is_not": "independently_verified_profit_or_copyability",
     }
 
@@ -1481,36 +1482,61 @@ def nansen_high_frequency_drop(
     }
 
 
-NANSEN_INFRA_LABEL_TOKENS = frozenset({
-    "lp", "liquidity provider", "liquidity_provider", "liquidityprovider",
-    "lending", "lend", "borrow", "market maker", "market_maker", "marketmaker",
-    "mm", "limit order", "limit_order", "limitorder", "orderbook",
+NANSEN_INFRA_LABEL_WORDS = frozenset({
+    "lp", "lending", "lend", "borrow", "mm", "orderbook",
+})
+NANSEN_INFRA_LABEL_PHRASES = frozenset({
+    "liquidity provider", "market maker", "limit order",
 })
 
 
-def nansen_infra_label_drop(meta):
-    """Pre-drop LP / lending / market-maker wallets from Nansen row labels."""
+def _nansen_label_texts(meta):
+    """Collect Nansen label strings, including address_label on real rows."""
     labels = []
-    if isinstance(meta, dict):
-        raw = meta.get("labels") or meta.get("nansen_labels") or []
-        vendor = meta.get("vendor_metrics") or {}
-        raw = list(raw) + list(vendor.get("labels") or [])
-        for item in raw:
-            if isinstance(item, str):
-                labels.append(item)
-            elif isinstance(item, dict):
-                labels.append(str(item.get("label") or item.get("name") or item.get("type") or ""))
+    if not isinstance(meta, dict):
+        return labels
+
+    def _push(item):
+        if isinstance(item, str) and item.strip():
+            labels.append(item)
+        elif isinstance(item, dict):
+            text = item.get("label") or item.get("name") or item.get("type") or item.get("address_label")
+            if isinstance(text, str) and text.strip():
+                labels.append(text)
+
+    raw = []
+    raw.extend(meta.get("labels") or [])
+    raw.extend(meta.get("nansen_labels") or [])
+    _push(meta.get("address_label"))
+    _push(meta.get("label"))
+    vendor = meta.get("vendor_metrics") or {}
+    if isinstance(vendor, dict):
+        raw.extend(vendor.get("labels") or [])
+        _push(vendor.get("address_label"))
+        _push(vendor.get("label"))
+    for item in raw:
+        _push(item)
+    return labels
+
+
+def nansen_infra_label_drop(meta):
+    """Pre-drop LP / lending / market-maker wallets from Nansen row labels.
+
+    Real Nansen rows carry address_label (vendor_metrics.address_label).
+    Match whole words/tokens only: 'alpha' must not match 'lp', and
+    'community' must not match 'mm'. Empty or missing labels are no drop.
+    """
+    import re
+    labels = _nansen_label_texts(meta)
     hits = []
     for label in labels:
-        folded = "".join(ch for ch in label.lower() if ch.isalnum() or ch in " _")
-        compact = folded.replace(" ", "_")
-        if folded.strip() in NANSEN_INFRA_LABEL_TOKENS or compact in NANSEN_INFRA_LABEL_TOKENS:
+        tokens = set(re.findall(r"[a-z0-9]+", label.lower()))
+        phrase = " ".join(re.findall(r"[a-z0-9]+", label.lower()))
+        if tokens & NANSEN_INFRA_LABEL_WORDS:
             hits.append(label)
             continue
-        for token in NANSEN_INFRA_LABEL_TOKENS:
-            if token.replace("_", " ") in folded or token.replace(" ", "_") in compact:
-                hits.append(label)
-                break
+        if any(item in phrase for item in NANSEN_INFRA_LABEL_PHRASES):
+            hits.append(label)
     if not hits:
         return None
     return {
@@ -1603,8 +1629,10 @@ def helius_signatures_prescreen(rows, *, max_per_day=None, history_cap=None):
     # D12-7: a history exactly at the cap is incomplete (pagination stopped).
     deferred = bool(total >= length_cap)
     passed = bool(by_day) and not over_days and incomplete == 0 and not deferred
+    cannot_fail_bot = bool(by_day) and not over_days and incomplete == 0
     return {
         "passed": passed,
+        "cannot_fail_bot_rule": cannot_fail_bot,
         "needs_decode": bool(over_days) or bool(incomplete) or not by_day,
         "deferred": deferred,
         "dropped": False,

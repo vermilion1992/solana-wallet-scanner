@@ -320,6 +320,9 @@ FATAL_SEED_STATES = frozenset({
     "RATE_LIMITED",
     "PAYMENT_REQUIRED",
 })
+NANSEN_DEFAULT_TIMEOUT_S = 25
+NANSEN_TGM_TIMEOUT_S = 90
+NANSEN_TGM_CONSECUTIVE_TIMEOUTS = 3
 # Ledger home is pinned here and in the committed draft, not in the armed copy.
 # --live uses this absolute path. It must not depend on HOME.
 PINNED_LEDGER_REL = ".scanner/live-e2e-ledgers"
@@ -2473,8 +2476,104 @@ def _nansen_error_from_response(status, payload, billing):
         return SourceError("ENTITLEMENT_BLOCKED", message, http_status=status, extras=extras)
     if status == 429:
         return SourceError("RATE_LIMITED", envelope.get("message") or "Nansen rate limit", http_status=status, retryable=False, extras=extras)
+    if status in (408, 504):
+        message = envelope.get("message") or "Nansen request timed out"
+        return SourceError("TIMEOUT", message, http_status=status, extras=extras)
     message = envelope.get("message") or "Unexpected Nansen response"
     return SourceError("UNSUPPORTED_SCHEMA", message, http_status=status, extras=extras)
+
+
+def _rid(config, provider, **kwargs):
+    """Receipt id namespaced by this output dir and grant so re-buys append."""
+    return request_identity(
+        provider,
+        output_dir=config.get("output_dir"),
+        run_id=config.get("authorization_id"),
+        **kwargs,
+    )
+
+
+def _nansen_timeout_was_billed(billing):
+    """None = unknown (conservative). False = receipt shows unbilled."""
+    if not isinstance(billing, dict):
+        return None
+    cost = billing.get("credits_cost")
+    if cost in (None, ""):
+        cost = billing.get("credits_used")
+    if cost in (None, ""):
+        return None
+    try:
+        return Decimal(str(cost)) > 0
+    except (ArithmeticError, TypeError, ValueError):
+        return None
+
+
+def _nansen_call_stem(operation, wallet, page, identity):
+    digest = hashlib.sha256(
+        f"{identity}:{operation}:{wallet}:{page}".encode("utf-8")
+    ).hexdigest()[:16]
+    return f"{operation}-{digest}"
+
+
+def _nansen_parse_rows(path, body):
+    if path in (NANSEN_LEADERBOARD_PATH, NANSEN_TGM_PNL_LEADERBOARD_PATH):
+        return nansen_leaderboard_rows(body)
+    if path == NANSEN_DEX_TRADES_PATH:
+        return nansen_dex_trades_rows(body)
+    return []
+
+
+def _persist_nansen_paid(config, state, *, operation, wallet, page, identity, response, parsed_rows):
+    """Write one paid Nansen response and its parsed rows as soon as it arrives."""
+    stem = _nansen_call_stem(operation, wallet, page, identity)
+    raw = response.get("raw_bytes") or b"{}"
+    digest = _save_raw(config["output_dir"], f"raw/phase1/nansen-paid/{stem}.bin", raw)
+    sidecar = {
+        "operation": operation,
+        "wallet": wallet,
+        "page": page,
+        "identity": identity,
+        "rows": list(parsed_rows or []),
+        "billing": response.get("billing"),
+        "sha256": digest,
+        "fetched_at": response.get("fetched_at"),
+        "status": response.get("status"),
+    }
+    _write_json(Path(config["output_dir"]) / f"raw/phase1/nansen-paid/{stem}.rows.json", sidecar)
+    state.setdefault("nansen_paid_calls", {})[stem] = {
+        "operation": operation,
+        "wallet": wallet,
+        "page": page,
+        "identity": identity,
+        "sha256": digest,
+        "row_count": len(parsed_rows or []),
+        "replayable": True,
+    }
+    save_state(config["output_dir"], state)
+    return sidecar
+
+
+def _load_nansen_paid(config, *, operation, wallet, page, identity):
+    stem = _nansen_call_stem(operation, wallet, page, identity)
+    path = Path(config["output_dir"]) / f"raw/phase1/nansen-paid/{stem}.bin"
+    rows_path = path.with_name(path.name.replace(".bin", ".rows.json"))
+    if not path.is_file() or path.stat().st_size == 0:
+        return None
+    raw = path.read_bytes()
+    try:
+        body = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    sidecar = _read_json(rows_path) if rows_path.is_file() else {}
+    return {
+        "status": sidecar.get("status") or 200,
+        "body": body,
+        "fetched_at": sidecar.get("fetched_at") or utc_now(),
+        "raw_bytes": raw,
+        "billing": sidecar.get("billing"),
+        "replayed_from_receipt": True,
+        "rows": list((sidecar or {}).get("rows") or []),
+    }
 
 
 def _put_receipt(config, store, grant, key, payload):
@@ -2540,7 +2639,7 @@ def _save_seed_raw_parts(config, identity, source, raw_parts):
     return digest
 
 
-async def _live_nansen(method, path, body=None):
+async def _live_nansen(method, path, body=None, *, timeout=None):
     """Official Nansen POST. Missing key disables the source; never a dummy call."""
     key = os.environ.get(NANSEN_KEY_ENV)
     if not key:
@@ -2548,12 +2647,16 @@ async def _live_nansen(method, path, body=None):
     _validate_nansen_request(path, body)
     import httpx
 
+    try:
+        timeout_s = float(timeout) if timeout not in (None, "") else NANSEN_DEFAULT_TIMEOUT_S
+    except (TypeError, ValueError):
+        timeout_s = NANSEN_DEFAULT_TIMEOUT_S
     headers = {"apikey": key, "content-type": "application/json", "accept": "application/json"}
     try:
         async with httpx.AsyncClient(
             base_url=f"https://{NANSEN_HOST}",
             follow_redirects=False,
-            timeout=httpx.Timeout(25, connect=10),
+            timeout=httpx.Timeout(timeout_s, connect=10),
         ) as client:
             response = await client.request(method, path, json=body or {}, headers=headers)
     except (httpx.TimeoutException, TimeoutError) as error:
@@ -3188,7 +3291,7 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
     entry = provider_entry(grant, "helius")
     units = documented_units(options.get("transactionDetails"), int(options.get("limit") or 0))
     cursor = (options or {}).get("paginationToken")
-    base = request_identity("helius", wallet=address, phase=phase, page=page_index, cursor=cursor)
+    base = _rid(config, "helius", wallet=address, phase=phase, page=page_index, cursor=cursor)
     key, existing, replay = _next_receipt_key(store, base, explicit_retry=config.get("explicit_retry"))
     if replay:
         reconcile_state_spend(store, state)
@@ -3342,7 +3445,7 @@ async def _dispatch_signatures(store, grant, config, state, transport, address, 
     )
     if cached is not None:
         return cached
-    base = request_identity("helius", wallet=address, phase=phase, page=page_index, cursor=cursor)
+    base = _rid(config, "helius", wallet=address, phase=phase, page=page_index, cursor=cursor)
     key, existing, replay = _next_receipt_key(store, base, explicit_retry=config.get("explicit_retry"))
     if replay:
         reconcile_state_spend(store, state)
@@ -3446,8 +3549,56 @@ async def _dispatch_signatures(store, grant, config, state, transport, address, 
         raise
 
 
-async def _phase2_cheap_signatures(store, grant, config, state, transport, address):
-    """Full-history getSignaturesForAddress walk. Drop or defer only."""
+async def _phase2_economic_probe_over_days(store, grant, config, state, transport, address, over_days):
+    """Targeted GTA for UTC days whose raw tx count is >15. Drop only when proven."""
+    if not over_days:
+        return {"dropped": False}
+    bounds = config.get("bounds") or {}
+    for index, day in enumerate(sorted(over_days)):
+        try:
+            start = datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        except ValueError:
+            continue
+        end = start + timedelta(days=1)
+        options = gta_options(
+            details="full",
+            limit=100,
+            start_unix=int(start.timestamp()),
+            end_unix=int(end.timestamp()),
+            sort_order="desc",
+        )
+        page_index = 900000 + (int(day.replace("-", "")) % 100000)
+        page = await _dispatch_helius(
+            store, grant, config, state, transport, address, options,
+            phase=2, page_index=page_index,
+        )
+        records = [row for row in (page.get("records") or []) if isinstance(row, dict)]
+        decoded = decode_supported_swaps(canonical_decode_records(records), address)
+        rate = combined_economic_trade_rate(
+            events=decoded.get("events") if isinstance(decoded, dict) else None,
+            records=records,
+            address=address,
+        )
+        maximum = int(rate.get("max") or 0)
+        if maximum > MAX_ECONOMIC_TRADES_PER_UTC_DAY:
+            return {
+                "dropped": True,
+                "reason": GT_ECONOMIC_TRADES_RULE,
+                "max": maximum,
+                "max_on": rate.get("max_on") or day,
+                "day": day,
+                "can_only_drop_or_defer": True,
+            }
+    return {"dropped": False, "probed_days": list(over_days)}
+
+
+async def _phase2_cheap_signatures(store, grant, config, state, transport, address, *, helius_transport=None):
+    """Full-history getSignaturesForAddress walk. Drop or defer only.
+
+    After the first page, a day with >15 economic trades drops immediately
+    even if history would hit the 10k signature cap. Raw tx count alone
+    never drops. Every-day ≤15 txs cannot fail the bot rule.
+    """
     history_cap = first_defined_int(config.get("helius_signatures_history_cap"))
     if history_cap is None:
         history_cap = HELIUS_SIGNATURES_HISTORY_CAP
@@ -3457,6 +3608,8 @@ async def _phase2_cheap_signatures(store, grant, config, state, transport, addre
     before = None
     requests = 0
     units = 0
+    economic_drop = None
+    probe_transport = helius_transport or transport
     for page_index in range(max_pages):
         page = await _dispatch_signatures(
             store, grant, config, state, transport, address,
@@ -3466,6 +3619,27 @@ async def _phase2_cheap_signatures(store, grant, config, state, transport, addre
         requests += 1
         units += int(page.get("units") or 0)
         rows.extend(records)
+        screen = screen_signatures(rows, history_cap=history_cap)
+        over_days = screen.get("over_days") or {}
+        if over_days and economic_drop is None:
+            try:
+                economic_drop = await _phase2_economic_probe_over_days(
+                    store, grant, config, state, probe_transport, address, over_days,
+                )
+            except SourceError as error:
+                if getattr(error, "state", None) == "CAP_EXCEEDED":
+                    raise
+                economic_drop = {"dropped": False, "probe_error": getattr(error, "state", None)}
+            if economic_drop.get("dropped"):
+                screen = {**screen, "dropped": True, "deferred": False}
+                return {
+                    "screen": screen,
+                    "rows": rows,
+                    "requests": requests,
+                    "units": units,
+                    "credit_note": signatures_credit_note(),
+                    "economic_drop": economic_drop,
+                }
         if len(records) < page_size:
             break
         before = records[-1].get("signature")
@@ -3480,6 +3654,7 @@ async def _phase2_cheap_signatures(store, grant, config, state, transport, addre
         "requests": requests,
         "units": units,
         "credit_note": signatures_credit_note(),
+        "economic_drop": economic_drop,
     }
 
 
@@ -3512,7 +3687,7 @@ async def _birdeye_seed_call(store, grant, config, state, recorder, *, path, par
 
 async def _birdeye_seed_call_once(store, grant, config, state, recorder, *, path, params, operation, units, wallet, page, identity, source=None, attempt=0):
     """Ledgered, grant-gated Birdeye GET. Dry-run uses the recorder only."""
-    token_key = request_identity("birdeye", wallet=wallet, phase=1, page=page, cursor=f"{identity}:{path}:{wallet}:a{attempt}")
+    token_key = _rid(config, "birdeye", wallet=wallet, phase=1, page=page, cursor=f"{identity}:{path}:{wallet}:a{attempt}")
     hard_stop_if_needed(
         config, state["spend"], provider="birdeye", units=units,
         phase=1, phase_spend=state.get("phase_spend"),
@@ -3579,10 +3754,22 @@ async def _birdeye_seed_call_once(store, grant, config, state, recorder, *, path
         raise
 
 
-async def _nansen_seed_call(store, grant, config, state, recorder, *, path, body, operation, units, wallet, page, identity):
-    """Ledgered, grant-gated Nansen POST. Absent key never produces a dummy live call."""
+async def _nansen_seed_call(store, grant, config, state, recorder, *, path, body, operation, units, wallet, page, identity, timeout=None):
+    """Ledgered, grant-gated Nansen POST. Resume reuses a paid response; never re-buys."""
     _validate_nansen_request(path, body)
-    token_key = request_identity("nansen", wallet=wallet, phase=1, page=page, cursor=f"{identity}:{path}:{wallet}")
+    token_key = _rid(config, "nansen", wallet=wallet, phase=1, page=page, cursor=f"{identity}:{path}:{wallet}")
+    saved = _load_nansen_paid(config, operation=operation, wallet=wallet, page=page, identity=identity)
+    if saved:
+        return saved
+    existing = load_receipt(store, token_key)
+    if receipt_is_spent(existing) and existing.get("state") == "consumed":
+        saved = _load_nansen_paid(config, operation=operation, wallet=wallet, page=page, identity=identity)
+        if saved:
+            return saved
+        raise SourceError(
+            "MISSING_CAPTURE",
+            "paid Nansen response missing for consumed receipt; refusing re-buy",
+        )
     hard_stop_if_needed(
         config, state["spend"], provider="nansen", units=units,
         phase=1, phase_spend=state.get("phase_spend"),
@@ -3595,6 +3782,11 @@ async def _nansen_seed_call(store, grant, config, state, recorder, *, path, body
             "path": path, "body": body,
         })
         response = await recorder.nansen("POST", path, body)
+        parsed = _nansen_parse_rows(path, response.get("body"))
+        _persist_nansen_paid(
+            config, state, operation=operation, wallet=wallet, page=page,
+            identity=identity, response=response, parsed_rows=parsed,
+        )
         _account_spend(state, provider="nansen", units=units, phase=1)
         _account_source_spend(state, SEED_NANSEN, provider="nansen", units=units)
         return response
@@ -3615,32 +3807,43 @@ async def _nansen_seed_call(store, grant, config, state, recorder, *, path, body
             "units": units, "state": "dispatched", "reservation_id": reservation,
             "discovery_identity": identity, "path": path, "body": body,
         })
-        response = await _live_nansen("POST", path, body)
+        response = await _live_nansen("POST", path, body, timeout=timeout)
         store.settle(reservation, charge=True)
+        parsed = _nansen_parse_rows(path, response.get("body"))
+        _persist_nansen_paid(
+            config, state, operation=operation, wallet=wallet, page=page,
+            identity=identity, response=response, parsed_rows=parsed,
+        )
         _put_receipt(config, store, grant, token_key, {
             "provider": "nansen", "wallet": wallet, "phase": 1, "page": page,
             "units": units, "state": "consumed", "reservation_id": reservation,
             "discovery_identity": identity, "path": path,
             "billing": response.get("billing"),
+            "sha256": _sha256_bytes(response.get("raw_bytes") or b""),
         })
         _account_spend(state, provider="nansen", units=units, phase=1)
         _account_source_spend(state, SEED_NANSEN, provider="nansen", units=units)
         return response
     except Exception as error:
+        extras = getattr(error, "extras", None) or {}
+        billed = _nansen_timeout_was_billed(extras.get("billing"))
+        unbilled_timeout = getattr(error, "state", None) == "TIMEOUT" and billed is False
         if reservation:
             try:
-                store.settle(reservation, charge=True)
+                store.settle(reservation, charge=not unbilled_timeout)
             except ValueError:
                 pass
-        extras = getattr(error, "extras", None) or {}
         _put_receipt(config, store, grant, token_key, {
             "provider": "nansen", "wallet": wallet, "phase": 1, "page": page,
-            "units": units, "state": "failed", "reservation_id": reservation,
+            "units": 0 if unbilled_timeout else units,
+            "state": "failed", "reservation_id": reservation,
             "path": path, "billing": extras.get("billing"),
             "error_body": extras.get("error_body"),
+            "unbilled_timeout": unbilled_timeout,
         })
-        _account_spend(state, provider="nansen", units=units, phase=1)
-        _account_source_spend(state, SEED_NANSEN, provider="nansen", units=units)
+        if not unbilled_timeout:
+            _account_spend(state, provider="nansen", units=units, phase=1)
+            _account_source_spend(state, SEED_NANSEN, provider="nansen", units=units)
         raise
 
 
@@ -3702,6 +3905,7 @@ async def _phase1_nansen_dex_trades(
         address = row["address"]
         left = remaining_caps(config, state["spend"])
         if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_DEX_TRADES_UNITS:
+            state["nansen_cap_reached"] = True
             unscreened.append(row)
             continue
         collected = []
@@ -3710,6 +3914,7 @@ async def _phase1_nansen_dex_trades(
         for page_num in range(1, max_pages + 1):
             left = remaining_caps(config, state["spend"])
             if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_DEX_TRADES_UNITS:
+                state["nansen_cap_reached"] = True
                 if not collected:
                     unscreened.append(row)
                     failed = None
@@ -3813,25 +4018,52 @@ async def _phase1_nansen_token_pnl(store, grant, config, state, recorder, identi
     seen = {}
     selected = []
     used = 0
+    consecutive_timeouts = 0
+    try:
+        tgm_timeout = float(config.get("nansen_tgm_timeout_seconds") or NANSEN_TGM_TIMEOUT_S)
+    except (TypeError, ValueError):
+        tgm_timeout = NANSEN_TGM_TIMEOUT_S
+    try:
+        timeout_limit = max(1, int(config.get("nansen_tgm_consecutive_timeouts") or NANSEN_TGM_CONSECUTIVE_TIMEOUTS))
+    except (TypeError, ValueError):
+        timeout_limit = NANSEN_TGM_CONSECUTIVE_TIMEOUTS
     for token in tokens:
         if used >= max_calls:
             break
         left = remaining_caps(config, state["spend"])
         if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_TGM_PNL_LEADERBOARD_UNITS:
+            state["nansen_cap_reached"] = True
             break
         body = nansen_tgm_pnl_leaderboard_body(
             token_address=token, date_from=date_from, date_to=date_to, page=1, per_page=1000,
         )
-        response = await _nansen_seed_call(
-            store, grant, config, state, recorder,
-            path=NANSEN_TGM_PNL_LEADERBOARD_PATH,
-            body=body,
-            operation="tgm_pnl_leaderboard",
-            units=NANSEN_TGM_PNL_LEADERBOARD_UNITS,
-            wallet=f"_tgm_{token[:8]}",
-            page=page + used,
-            identity=identity,
-        )
+        try:
+            response = await _nansen_seed_call(
+                store, grant, config, state, recorder,
+                path=NANSEN_TGM_PNL_LEADERBOARD_PATH,
+                body=body,
+                operation="tgm_pnl_leaderboard",
+                units=NANSEN_TGM_PNL_LEADERBOARD_UNITS,
+                wallet=f"_tgm_{token[:8]}",
+                page=page + used,
+                identity=identity,
+                timeout=tgm_timeout,
+            )
+        except SourceError as error:
+            if getattr(error, "state", None) == "TIMEOUT":
+                consecutive_timeouts += 1
+                state.setdefault("tgm_skipped", []).append({
+                    "token": token,
+                    "reason": "nansen_timeout",
+                    "consecutive_timeouts": consecutive_timeouts,
+                    "seed_is_not": "evidence",
+                })
+                if consecutive_timeouts >= timeout_limit:
+                    state["tgm_stopped_reason"] = f"nansen_timeout_consecutive_{consecutive_timeouts}"
+                    break
+                continue
+            raise
+        consecutive_timeouts = 0
         raw_parts.append(response.get("raw_bytes") or b"{}")
         used += 1
         billing = response.get("billing")
@@ -3974,9 +4206,12 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
         page = 0
         frames = tuple(config.get("nansen_timeframes") or NANSEN_TIMEFRAMES)
         for timeframe in frames:
+            if state.get("nansen_cap_reached"):
+                break
             for page_num in range(1, pages_per_tf + 1):
                 left = remaining_caps(config, state["spend"])
                 if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_LEADERBOARD_UNITS:
+                    state["nansen_cap_reached"] = True
                     break
                 body = nansen_leaderboard_body(timeframe=timeframe, page=page_num, per_page=per_page)
                 response = await _nansen_seed_call(
@@ -4056,6 +4291,7 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
                 break
             left = remaining_caps(config, state["spend"])
             if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_PROFILER_UNITS:
+                state["nansen_cap_reached"] = True
                 break
             if not nansen_first_funder_supported():
                 pass
@@ -4101,6 +4337,8 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
     _merge_discovery_wallets(config, state, kept_addresses, source=SEED_NANSEN, extras=extras)
     apply_nansen_vendor_prefilter(config, state)
     save_state(config["output_dir"], state)
+    if state.get("nansen_cap_reached"):
+        raise SourceError("CAP_EXCEEDED", "Nansen cap reached; hard stop")
     return {
         "addresses": addresses,
         "sha256": digest,
@@ -4488,7 +4726,7 @@ async def _phase1_birdeye_top(store, grant, config, state, recorder, identity):
         sort = params.get("sort_by") or BIRDEYE_TOP_TRADERS_DEFAULT_SORT
         if sort not in BIRDEYE_TOP_TRADERS_SORTS:
             params["sort_by"] = BIRDEYE_TOP_TRADERS_DEFAULT_SORT
-    base = request_identity("birdeye", wallet="_", phase=1, page=0, cursor=identity)
+    base = _rid(config, "birdeye", wallet="_", phase=1, page=0, cursor=identity)
     key, existing, replay = _next_receipt_key(store, base, explicit_retry=config.get("explicit_retry"))
     if replay:
         reconcile_state_spend(store, state)
@@ -4533,8 +4771,8 @@ async def _phase1_birdeye_top(store, grant, config, state, recorder, identity):
                 if "token_top_traders" not in (provider_entry(grant, "birdeye").get("allowed_operations") or []):
                     raise SourceError("UNAUTHORIZED", "Authorization does not include Birdeye token_top_traders")
             for index, token in enumerate(tokens):
-                token_key = request_identity(
-                    "birdeye", wallet=token, phase=1, page=index, cursor=f"{identity}:{token}",
+                token_key = _rid(
+                    config, "birdeye", wallet=token, phase=1, page=index, cursor=f"{identity}:{token}",
                 )
                 token_units = BIRDEYE_TOP_TRADERS_UNITS
                 hard_stop_if_needed(
@@ -4868,6 +5106,7 @@ async def _phase2_one_wallet(
         try:
             cheap = await _phase2_cheap_signatures(
                 store, grant, config, state, sig_transport, address,
+                helius_transport=transport,
             )
         except SourceError as error:
             state_name = getattr(error, "state", None)
@@ -4913,6 +5152,31 @@ async def _phase2_one_wallet(
                 return row
             raise
         screen = cheap["screen"]
+        economic_drop = cheap.get("economic_drop") or {}
+        if economic_drop.get("dropped") or screen.get("dropped"):
+            row = {
+                "address": address,
+                "dropped": True,
+                "deferred": False,
+                "drop_reason": GT_ECONOMIC_TRADES_RULE,
+                "funnel_decision": "dropped",
+                "funnel_reason": GT_ECONOMIC_TRADES_RULE,
+                "done": True,
+                "history_complete": True,
+                "signatures_screen": screen,
+                "economic_drop": economic_drop,
+                "max_economic_trades_in_one_day": economic_drop.get("max"),
+                "max_economic_trades_on": economic_drop.get("max_on") or economic_drop.get("day"),
+                "requests": cheap["requests"],
+                "can_only_drop_or_defer": True,
+                "cannot_fail_bot_rule": False,
+                "helius_signatures": cheap.get("credit_note"),
+                **seed_fields_for_wallet(state, address),
+            }
+            async with state_lock:
+                state.setdefault("phase2", {})[address] = row
+                save_state(config["output_dir"], state)
+            return row
         if screen.get("deferred"):
             row = {
                 "address": address,
@@ -4927,6 +5191,7 @@ async def _phase2_one_wallet(
                 "first_sig_unix": screen.get("first_sig_unix"),
                 "requests": cheap["requests"],
                 "can_only_drop_or_defer": True,
+                "cannot_fail_bot_rule": bool(screen.get("cannot_fail_bot_rule")),
                 "helius_signatures": cheap.get("credit_note"),
                 **seed_fields_for_wallet(state, address),
             }
@@ -5061,6 +5326,7 @@ async def _phase2_one_wallet(
             row["first_sig_unix"] = cheap["screen"].get("first_sig_unix")
             row["requests"] = int(row.get("requests") or 0) + int(cheap.get("requests") or 0)
             row["can_only_drop_or_defer"] = True
+            row["cannot_fail_bot_rule"] = bool(cheap["screen"].get("cannot_fail_bot_rule"))
         async with state_lock:
             state.setdefault("phase2", {})[address] = row
             save_state(config["output_dir"], state)
@@ -5206,6 +5472,7 @@ async def _phase2_one_wallet(
         row["first_sig_unix"] = cheap["screen"].get("first_sig_unix")
         row["can_only_drop_or_defer"] = True
         row["helius_signatures"] = cheap.get("credit_note")
+        row["cannot_fail_bot_rule"] = bool(cheap["screen"].get("cannot_fail_bot_rule"))
     row = _stamp_readable_first(row, sample_records, address, config)
     async with state_lock:
         state.setdefault("phase2", {})[address] = row
@@ -6082,6 +6349,18 @@ def validate_config(raw):
     dex_pages = raw.get("nansen_dex_trades_max_pages")
     if dex_pages not in (None, "") and int(dex_pages) < 1:
         raise LiveE2EError("nansen_dex_trades_max_pages must be >= 1")
+    if raw.get("nansen_tgm_timeout_seconds") not in (None, ""):
+        try:
+            if float(raw.get("nansen_tgm_timeout_seconds")) <= 0:
+                raise LiveE2EError("nansen_tgm_timeout_seconds must be > 0")
+        except (TypeError, ValueError) as error:
+            raise LiveE2EError("nansen_tgm_timeout_seconds must be a number") from error
+    if raw.get("nansen_tgm_consecutive_timeouts") not in (None, ""):
+        try:
+            if int(raw.get("nansen_tgm_consecutive_timeouts")) < 1:
+                raise LiveE2EError("nansen_tgm_consecutive_timeouts must be >= 1")
+        except (TypeError, ValueError) as error:
+            raise LiveE2EError("nansen_tgm_consecutive_timeouts must be an integer") from error
     return {
         "mode": raw["mode"],
         "dry_run": raw["mode"] == "dry-run",
@@ -6231,6 +6510,16 @@ def validate_config(raw):
             )
         ),
         "page_cache_dir": raw.get("page_cache_dir") or None,
+        "nansen_tgm_timeout_seconds": (
+            float(raw["nansen_tgm_timeout_seconds"])
+            if raw.get("nansen_tgm_timeout_seconds") not in (None, "")
+            else NANSEN_TGM_TIMEOUT_S
+        ),
+        "nansen_tgm_consecutive_timeouts": (
+            max(1, int(raw["nansen_tgm_consecutive_timeouts"]))
+            if raw.get("nansen_tgm_consecutive_timeouts") not in (None, "")
+            else NANSEN_TGM_CONSECUTIVE_TIMEOUTS
+        ),
         "PRODUCT_READY": False,
     }
 
@@ -6737,6 +7026,20 @@ def build_arg_parser():
         type=int,
         default=0,
         help="Hard cap on tgm/pnl-leaderboard calls (default 0 = off; funnel defaults to the liquid pin).",
+    )
+    parser.add_argument(
+        "--nansen-tgm-timeout-seconds",
+        dest="nansen_tgm_timeout_seconds",
+        type=float,
+        default=NANSEN_TGM_TIMEOUT_S,
+        help="Per-token tgm/pnl-leaderboard timeout (default 90s). A timeout skips that token.",
+    )
+    parser.add_argument(
+        "--nansen-tgm-consecutive-timeouts",
+        dest="nansen_tgm_consecutive_timeouts",
+        type=int,
+        default=NANSEN_TGM_CONSECUTIVE_TIMEOUTS,
+        help="Stop tgm discovery after this many consecutive token timeouts (default 3).",
     )
     parser.add_argument(
         "--run-caps",

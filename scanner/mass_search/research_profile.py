@@ -1245,6 +1245,8 @@ def _attach_live_independent_audit_body(report, profile, records, address):
         net, unit, in_window_drops,
     )
     if included_drops and len(included_drops) == len(in_window_drops) and headline_net not in (None, ""):
+        # Both surfaces include every in-window loser. Labels are not swapped:
+        # independently_* is the auditor headline; app_* is the app headline.
         base["independently_audited_episode_net"] = headline_net
         base["independently_audited_episode_net_unit"] = headline_unit
         base["included_dropped_losing_pnl"] = included_drops

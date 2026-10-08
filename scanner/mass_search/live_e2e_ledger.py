@@ -176,10 +176,31 @@ def open_grant_store(authorization_id, explicit=None, *, home=None):
     return store, path
 
 
-def request_identity(provider, *, wallet, phase, page, cursor=None):
+def _identity_namespace(output_dir=None, run_id=None):
+    if not output_dir and not run_id:
+        return ""
+    try:
+        resolved = str(Path(output_dir).resolve()) if output_dir else ""
+    except (TypeError, ValueError, OSError):
+        resolved = str(output_dir or "")
+    blob = f"{resolved}|{run_id or ''}"
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:12]
+
+
+def request_identity(provider, *, wallet, phase, page, cursor=None, output_dir=None, run_id=None):
+    """Stable request id. Namespaced by output dir and run so re-buys append.
+
+    The same output dir + grant reuses the key (resume replay). A second
+    output dir under the same grant gets a different id and cannot overwrite
+    the first receipt. The ledger row itself stays append-only: a consumed
+    body is never rewritten in place.
+    """
     cursor_text = "" if cursor in (None, "") else str(cursor)
     cursor_part = hashlib.sha256(cursor_text.encode("utf-8")).hexdigest()[:16]
     wallet_part = str(wallet or "_")
+    ns = _identity_namespace(output_dir, run_id)
+    if ns:
+        return f"{provider}:{ns}:{wallet_part}:{int(phase)}:{int(page)}:{cursor_part}"
     return f"{provider}:{wallet_part}:{int(phase)}:{int(page)}:{cursor_part}"
 
 
@@ -335,21 +356,37 @@ def _write_spend_seal(store, spend, phase_spend):
 
 
 def put_receipt(store, grant, key, payload):
+    existing = load_receipt(store, key)
+    write_key = key
+    if isinstance(existing, dict) and existing.get("state") == "consumed":
+        new_sha = payload.get("sha256")
+        same_consumed = (
+            payload.get("state") == "consumed"
+            and new_sha
+            and existing.get("sha256")
+            and new_sha == existing.get("sha256")
+        )
+        if same_consumed:
+            return existing
+        index = 1
+        while load_receipt(store, f"{key}:dup{index}"):
+            index += 1
+        write_key = f"{key}:dup{index}"
     head = store.get(CHAIN_HEAD_KIND, "head") if hasattr(store, "get") else None
     prev_hash = (head or {}).get("receipt_hash") if isinstance(head, dict) else None
     seq = int((head or {}).get("seq") or 0) + 1
     receipt = {
-        "request_id": key,
+        "request_id": write_key,
         "authorization_id": grant.get("authorization_id"),
         "consumed": payload.get("state") == "consumed",
         "prev_receipt_hash": prev_hash,
         **payload,
     }
     receipt["receipt_hash"] = hashlib.sha256(_receipt_canonical_bytes(receipt)).hexdigest()
-    store.put(RECEIPT_KIND, key, receipt)
+    store.put(RECEIPT_KIND, write_key, receipt)
     store.put(CHAIN_ENTRY_KIND, f"{seq:08d}", {
         "seq": seq,
-        "request_id": key,
+        "request_id": write_key,
         "receipt_hash": receipt["receipt_hash"],
         "prev_receipt_hash": prev_hash,
         "state": receipt.get("state"),
