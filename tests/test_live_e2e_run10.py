@@ -109,7 +109,7 @@ class FakeNansen:
             })
         return out
 
-    async def __call__(self, method, path, body=None):
+    async def __call__(self, method, path, body=None, *, timeout=None):
         self.calls.append((path, json.loads(json.dumps(body or {}))))
         if path == NANSEN_LEADERBOARD_PATH:
             tf = body.get("timeframe") or body.get("date", {}).get("from")
