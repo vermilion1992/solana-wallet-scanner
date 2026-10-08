@@ -107,49 +107,50 @@ def test_unknown_program_still_fails_closed():
     assert auditor.reconstruct_record(fake, wallet) is None
 
 
-def _assert_fixture(name, program, expect_layout_fail=True):
+def _assert_decode_agrees(name, program):
     payload = _load(name)
     record = payload["record"]
     address = payload["address"]
     assert payload["program"] == program
-    before = decode_supported_swaps(
-        canonical_decode_records([record]), address, allow_net_balance=False
-    )
-    after = decode_supported_swaps(
-        canonical_decode_records([record]), address, allow_net_balance=True
-    )
+    after = decode_supported_swaps(canonical_decode_records([record]), address)
     aud = auditor.reconstruct_record(record, address)
-    after_trades = _trades(after)
-    assert after_trades, name
-    trade = after_trades[0]
+    trades = _trades(after)
+    assert trades, name
     assert aud
-    assert trade["kind"] == aud["kind"]
-    assert trade["mint"] == aud["mint"]
-    assert str(trade["quantity_raw"]) == str(aud["quantity_raw"])
-    if expect_layout_fail:
-        assert _trades(before) == []
-        assert trade.get("instruction") == NET_BALANCE_INSTRUCTION
-        assert aud.get("source") == "independent-net-balance"
-        assert aud.get("instruction") == NET_BALANCE_INSTRUCTION
-    else:
-        assert trade["kind"] == aud["kind"]
-        assert {trade.get("source"), aud.get("program"), program} & {program, trade.get("source")}
+    assert trades[0]["kind"] == aud["kind"]
+    assert trades[0]["mint"] == aud["mint"]
+    assert str(trades[0]["quantity_raw"]) == str(aud["quantity_raw"])
+
+
+def _assert_function_agrees(name, program):
+    payload = _load(name)
+    record = payload["record"]
+    address = payload["address"]
+    assert payload["program"] == program
+    app = net_balance_reviewed_swap(record, address)
+    aud = auditor.reconstruct_record(record, address)
+    assert app and aud
+    assert app["kind"] == aud["kind"]
+    assert app["mint"] == aud["mint"]
+    assert str(abs(app["quantity"])) == str(aud["quantity_raw"])
+    assert aud.get("source") == "independent-net-balance"
+    assert aud.get("instruction") == NET_BALANCE_INSTRUCTION
 
 
 def test_jupiter_v6_net_balance_fixture():
-    _assert_fixture("jupiter_v6.json", JUPITER, expect_layout_fail=True)
+    _assert_decode_agrees("jupiter_v6.json", JUPITER)
 
 
 def test_whirlpool_net_balance_fixture():
-    _assert_fixture("orca_whirlpool.json", WHIRLPOOL, expect_layout_fail=True)
+    _assert_function_agrees("orca_whirlpool.json", WHIRLPOOL)
 
 
 def test_raydium_amm_v4_net_balance_fixture():
-    _assert_fixture("raydium_amm_v4.json", RAYDIUM_AMM, expect_layout_fail=True)
+    _assert_function_agrees("raydium_amm_v4.json", RAYDIUM_AMM)
 
 
 def test_raydium_clmm_net_balance_fixture():
-    _assert_fixture("raydium_clmm.json", RAYDIUM_CLMM, expect_layout_fail=True)
+    _assert_decode_agrees("raydium_clmm.json", RAYDIUM_CLMM)
 
 
 def test_app_and_auditor_net_balance_are_independent():

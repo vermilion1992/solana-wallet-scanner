@@ -1,11 +1,11 @@
 {
   "jupiter_v6": {
-    "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
-    "signature": "AFhqH6Zy9BX5ZLLAMwBHWd6btFqFMN98drxKNtrgWHt7Jy5NLnya3PfZAmMgH5UUEyueZdnokJ4Z7HTJM5jku2d",
+    "address": "6qVcd9kp5XURL5Bj5Qf1CCwKwoX3fQZopXxZb96WquHm",
+    "signature": "2pB26PQRMJtWwr5YFi4ES4mqZDwTnNMLUt1n4ZYPjv6Shj83BUzxgTpDVq3y1KBuN6PbQVdkw1RxiNdymgG2mB3T",
     "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-    "kind": "buy",
-    "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
-    "source_path": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/attempt-1/raw/58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL_page0.json.gz",
+    "kind": null,
+    "mint": null,
+    "source_path": "tests/fixtures/live-e2e-f635a45/qvc-sigh-jupiter.json",
     "file": "jupiter_v6.json"
   },
   "orca_whirlpool": {
@@ -18,12 +18,12 @@
     "file": "orca_whirlpool.json"
   },
   "raydium_clmm": {
-    "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
-    "signature": "3FhKXWDoZuRMfb1dqwwJ8Z88yLA4HBDYQKjecX7DoxwWVd4UawbBYhZ6TnyXsuzqwXzMqy2GHJbgCrgDZT9dc4E",
+    "address": "9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE",
+    "signature": "3JLYRQNqstAi83bNRGwiJaGzoDErxr3HxL5KjJ3d3S8to4po6A2dYunpMvQncC3DDdJKtvzSwbyBTMxRtnvJaT2D",
     "program": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
-    "kind": "sell",
-    "mint": "JARREAJNfY9XA5zJexn2BNehFDqzsiSJwSYVst5pump",
-    "source_path": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/attempt-1/raw/AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6_page1.json.gz",
+    "kind": "buy",
+    "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+    "source_path": "tests/fixtures/live-raw/4bbb364-a/9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE/page0.bin",
     "file": "raydium_clmm.json"
   },
   "raydium_amm_v4": {

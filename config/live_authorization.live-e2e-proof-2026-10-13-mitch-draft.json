@@ -50,7 +50,7 @@
     },
     {
       "provider_id": "nansen",
-      "allowed_operations": ["smart_money_pnl_leaderboard", "profiler_pnl_summary", "profiler_dex_trades", "tgm_pnl_leaderboard"],
+      "allowed_operations": ["smart_money_pnl_leaderboard", "profiler_pnl_summary"],
       "billing_unit": "nansen_credit",
       "existing_plan_confirmed": false,
       "remaining_quota_confirmed_at": null,
@@ -60,7 +60,7 @@
       "max_units": 100,
       "max_concurrency": 1,
       "max_duration_seconds": 600,
-      "purpose": "Optional. Disabled when NANSEN_API_KEY is absent; never a dummy call. Allowlisted: POST /api/v1/smart-money/pnl-leaderboard (5 credits), profiler pnl-summary (1, default off), profiler/dex-trades (1, drop-only), tgm/pnl-leaderboard (5; premium_labels refused). First-funder is EVM-only. Forbidden: labels (100 credits) and premium_labels."
+      "purpose": "Optional. Disabled when NANSEN_API_KEY is absent; never a dummy call. Allowlisted: POST /api/v1/smart-money/pnl-leaderboard (5 credits, bodies use chains[] + timeframe) and profiler pnl-summary (1 credit, required date DateRange). First-funder is EVM-only and is not called for Solana. Forbidden: labels (100 credits) and premium_labels."
     },
     {
       "provider_id": "leaderboard",

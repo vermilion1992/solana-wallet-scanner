@@ -1082,10 +1082,10 @@ def _iter_outer_instructions(raw):
 
 def _net_balance_skip_outer(instruction, program, keys):
     """Known non-swap siblings stay unresolved. Unknown DFlow/FLASHX discs too."""
-    if program == DFLOW:
-        return not _dflow_is_reviewed_swap(instruction, keys)
-    if program == FLASHX:
-        return not _flashx_is_reviewed_swap(instruction, keys)
+    if program in {DFLOW, FLASHX, OKX_DEX_ROUTER}:
+        # Layout path already owns these. Net-balance must not decode
+        # sponsored/truncated siblings that look like a clean wallet net.
+        return True
     if program == PUMP:
         try:
             payload = _data(instruction.get('data'))
@@ -2068,7 +2068,13 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                     direction=movement['direction'], facts={'source': movement['source'], 'destination': movement['destination']})
         except (ValueError, KeyError, IndexError, TypeError, OverflowError) as exc:
             net = None
-            if allow_net_balance:
+            reason = str(exc)
+            coverage_gap = (
+                reason.startswith('No reviewed outer spot swap')
+                or reason.startswith('No reviewed spot swap instruction for this program')
+                or reason.startswith('Jupiter route')
+            )
+            if allow_net_balance and coverage_gap:
                 try:
                     net = net_balance_reviewed_swap(raw, address)
                 except (ValueError, KeyError, IndexError, TypeError, OverflowError):

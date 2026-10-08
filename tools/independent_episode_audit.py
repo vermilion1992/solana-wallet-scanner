@@ -391,12 +391,6 @@ NET_BALANCE_SWAP_PROGRAMS = frozenset({
     PUMP, PUMP_SWAP, JUPITER, METEORA_DAMM_V2, RFQ_FILL, OKX, DFLOW, FLASHX,
     DGMG, RAYDIUM_CLMM, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL, GMGN, METEORA_DLMM,
 })
-# Independent DFlow swap vs non-swap discs. Copied here; no scanner import.
-_DFLOW_SWAP_DISCS = frozenset({
-    "f8c69e91e17587c8",
-    "a8ac184dc59c8765",
-    "414b3f4ceb5b5b88",
-})
 NET_BALANCE_SOL_DUST_LAMPORTS = Decimal("100000")
 NET_BALANCE_INSTRUCTION = "net_balance"
 # v3 / probe counter: swap-type log or instruction name. Unknown venues that
@@ -771,11 +765,7 @@ def _first_net_balance_program(raw, keys):
         if program not in NET_BALANCE_SWAP_PROGRAMS:
             continue
         payload = _b58decode(instruction.get("data"))
-        if program == DFLOW:
-            disc = payload[:8].hex() if len(payload) >= 8 else ""
-            if disc not in _DFLOW_SWAP_DISCS:
-                continue
-        if program == FLASHX and not (payload and payload[0] == 0 and len(payload) >= 16):
+        if program in {DFLOW, FLASHX, OKX}:
             continue
         return program
     return None

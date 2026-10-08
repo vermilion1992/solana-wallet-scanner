@@ -180,8 +180,9 @@ def test_s3_nansen_dry_run_sends_official_bodies(tmp_path, monkeypatch):
         validate_nansen_body("leaderboard", body)
         assert body["chains"] == ["solana"]
         assert body["timeframe"] in (90, 180)
-    summaries = [body for body in bodies if "date" in body]
-    assert summaries
+    summaries = [body for body in bodies if "date" in body and "address" in body]
+    # pnl-summary is off by default (nansen_profiles=0). If a test config
+    # enables it, the body must still be the official schema.
     for body in summaries:
         validate_nansen_body("pnl_summary", body)
         assert body["chain"] == "solana"
