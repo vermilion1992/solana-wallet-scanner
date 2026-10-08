@@ -195,6 +195,25 @@ def _accounts(instruction, keys):
     return resolved
 
 
+def _auditor_token_owner_unreadable(raw):
+    """True when any token-balance row omits owner. Missing owner is unknown."""
+    meta = raw.get("meta") if isinstance(raw, dict) else None
+    if not isinstance(meta, dict):
+        return True
+    for field in ("preTokenBalances", "postTokenBalances"):
+        rows = meta.get(field)
+        if rows is None:
+            continue
+        if not isinstance(rows, list):
+            return True
+        for row in rows:
+            if not isinstance(row, dict):
+                return True
+            if "owner" not in row or row.get("owner") in (None, ""):
+                return True
+    return False
+
+
 def _owned_token_deltas(raw, address):
     meta = raw.get("meta") or {}
     deltas = defaultdict(lambda: Decimal("0"))
@@ -202,7 +221,11 @@ def _owned_token_deltas(raw, address):
     post = {}
     for field, dest in (("preTokenBalances", pre), ("postTokenBalances", post)):
         for balance in meta.get(field) or []:
-            if not isinstance(balance, dict) or balance.get("owner") != address:
+            if not isinstance(balance, dict):
+                continue
+            if "owner" not in balance or balance.get("owner") in (None, ""):
+                continue
+            if balance.get("owner") != address:
                 continue
             mint = balance.get("mint")
             amount = (balance.get("uiTokenAmount") or {}).get("amount")
@@ -1038,7 +1061,7 @@ def _token_hop_fields(instruction, keys):
     return kind, {"account": accounts[0]} if accounts else {}
 
 
-def _hop_token_op_ok(instruction, owned, address, keys):
+def _hop_token_op_ok(instruction, owned, address, keys, hop_named=None):
     kind, info = _token_hop_fields(instruction, keys)
     touched = _touched_accounts(instruction, keys)
     for field in ("source", "destination", "account", "authority", "owner", "wallet", "newAccount"):
@@ -1049,12 +1072,17 @@ def _hop_token_op_ok(instruction, owned, address, keys):
         return True
     if kind in _TOKEN_HOP_FORBIDDEN or kind not in _TOKEN_HOP_OK:
         return False
-    authority = info.get("authority") or info.get("multisigAuthority")
     destination = info.get("destination")
-    return authority == address or destination in owned
+    if destination in owned:
+        return True
+    # Independent dest allowlist: only accounts named on the hop instruction.
+    # Wallet-signed transfer to an unnamed third-party ATA is not a hop leg.
+    return bool(hop_named) and destination in hop_named
 
 
 def _jup_hop_children_ok(inners, start, owned, address, keys):
+    hop = inners[start - 1] if start else None
+    hop_named = _touched_accounts(hop, keys) if isinstance(hop, dict) else set()
     for instruction in inners[start:]:
         if instruction.get("stackHeight") == 2:
             break
@@ -1062,7 +1090,7 @@ def _jup_hop_children_ok(inners, start, owned, address, keys):
         if not program:
             return False
         if program in TOKEN_PROGRAMS:
-            if not _hop_token_op_ok(instruction, owned, address, keys):
+            if not _hop_token_op_ok(instruction, owned, address, keys, hop_named):
                 return False
         elif program == SYSTEM:
             # Hop SOL movement is never a swap leg. Written as a dest/src pair
@@ -1331,18 +1359,27 @@ def _token_transfer_leg(instruction, keys, mints):
 
 
 def _token_close_to_wallet(instruction, keys, owned):
-    """Closed token account whose rent/wSOL native is paid to the wallet."""
+    """closeAccount whose destination is the wallet. Account must be owned.
+
+    Destination-only matching would treat a third-party ATA close as a
+    wallet wrap. The closed account itself has to be in `owned`.
+    """
     parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
     info = parsed.get("info") if isinstance(parsed, dict) else None
     kind = parsed.get("type") if isinstance(parsed, dict) else None
     if kind == "closeAccount" and isinstance(info, dict):
         account, dest = info.get("account"), info.get("destination")
-        if dest in owned and account:
+        if dest in owned and account in owned:
             return account, dest
         return None
     payload = _b58decode(instruction.get("data"))
     accounts = _accounts(instruction, keys)
-    if payload[:1] == b"\x09" and len(accounts) >= 2 and accounts[1] in owned:
+    if (
+        payload[:1] == b"\x09"
+        and len(accounts) >= 2
+        and accounts[0] in owned
+        and accounts[1] in owned
+    ):
         return accounts[0], accounts[1]
     return None
 
@@ -1358,8 +1395,6 @@ def _route_cpi_wallet_flows(raw, address, keys):
     message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
     meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
     outers = message.get("instructions") or []
-    pre = meta.get("preBalances") or []
-    post = meta.get("postBalances") or []
     sol = Decimal("0")
     tokens = {}
     saw = False
@@ -1400,16 +1435,9 @@ def _route_cpi_wallet_flows(raw, address, keys):
                     continue
                 if inner_program not in TOKEN_PROGRAMS:
                     continue
-                closed = _token_close_to_wallet(instruction, keys, owned)
-                if closed:
-                    account, _dest = closed
-                    if account in keys:
-                        index = keys.index(account)
-                        if index < len(pre) and index < len(post):
-                            credit = Decimal(pre[index] - post[index])
-                            if credit > 0:
-                                sol += credit
-                                saw = True
+                # closeAccount rent is leftover, not a CPI trade leg. A
+                # third-party close into the wallet must not understate cost.
+                if _token_close_to_wallet(instruction, keys, owned):
                     continue
                 leg = _token_transfer_leg(instruction, keys, mints)
                 if not leg:
@@ -1423,25 +1451,6 @@ def _route_cpi_wallet_flows(raw, address, keys):
                     saw = True
                     if mint:
                         tokens[mint] = tokens.get(mint, Decimal("0")) - qty
-    # Jupiter wrap/unwrap often closes the temp wSOL ATA as a sibling outer.
-    for _outer, _path, instruction, nested in _iter_instructions(raw):
-        if nested or _program(instruction, keys) not in TOKEN_PROGRAMS:
-            continue
-        closed = _token_close_to_wallet(instruction, keys, owned)
-        if not closed:
-            continue
-        account, _dest = closed
-        if account not in route_accounts and account not in owned:
-            continue
-        if account not in keys:
-            continue
-        index = keys.index(account)
-        if index >= len(pre) or index >= len(post):
-            continue
-        credit = Decimal(pre[index] - post[index])
-        if credit > 0:
-            sol += credit
-            saw = True
     return saw, sol, tokens
 
 
@@ -1480,22 +1489,116 @@ def _auditor_prop_amm_native_taken(raw, keys):
     return taken
 
 
-def _route_cpi_disagrees_with_wallet(raw, address, keys):
-    """Fail closed when route CPI sums disagree with wallet balance deltas."""
+def _auditor_compiled_close(instruction, keys):
+    payload = _b58decode(instruction.get("data")) if isinstance(instruction, dict) else b""
+    accounts = _accounts(instruction, keys)
+    if payload[:1] == b"\x09" and len(accounts) >= 2:
+        return accounts[0], accounts[1]
+    return None, None
+
+
+def _auditor_wallet_close_rent(raw, address, keys):
+    """Independently derived own-ATA rent refund.
+
+    Walks closeAccount CPIs and proves the closed account from the auditor
+    token-account map (owner field present and equal to the wallet) plus
+    same-tx initialize. Refund is the rent portion only: native pre minus
+    wSOL token pre, and the account must end at 0 lamports. A third-party
+    close or an account that never closed contributes 0.
+    """
+    if _auditor_token_owner_unreadable(raw):
+        return Decimal("0")
+    accounts = _token_accounts(raw, address, keys)
+    inits = {}
+    for _outer, _path, instruction, _nested in _iter_instructions(raw):
+        program = _program(instruction, keys)
+        parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
+        info = parsed.get("info") if isinstance(parsed, dict) else None
+        kind = parsed.get("type") if isinstance(parsed, dict) else None
+        if program in TOKEN_PROGRAMS and kind in (
+            "initializeAccount", "initializeAccount2", "initializeAccount3",
+        ) and isinstance(info, dict) and info.get("account") and info.get("owner"):
+            inits[info["account"]] = info["owner"]
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    pre_native = meta.get("preBalances") or []
+    post_native = meta.get("postBalances") or []
+    refund = Decimal("0")
+    for _outer, _path, instruction, _nested in _iter_instructions(raw):
+        if _program(instruction, keys) not in TOKEN_PROGRAMS:
+            continue
+        parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
+        info = parsed.get("info") if isinstance(parsed, dict) else None
+        kind = parsed.get("type") if isinstance(parsed, dict) else None
+        account = dest = None
+        if kind == "closeAccount" and isinstance(info, dict):
+            account, dest = info.get("account"), info.get("destination")
+        else:
+            account, dest = _auditor_compiled_close(instruction, keys)
+        if dest != address or not account:
+            continue
+        record = accounts.get(account)
+        init_owner = inits.get(account)
+        if record is None and init_owner != address:
+            continue
+        if record is not None and record.get("mint") and init_owner not in (None, address):
+            continue
+        try:
+            index = keys.index(account) if account in keys else (record or {}).get("index")
+        except (ValueError, TypeError):
+            continue
+        if type(index) is not int or isinstance(index, bool) or index < 0:
+            continue
+        if index >= len(pre_native) or index >= len(post_native):
+            continue
+        try:
+            pre_lamports = Decimal(str(pre_native[index]))
+            post_lamports = Decimal(str(post_native[index]))
+        except (InvalidOperation, ValueError, TypeError, OverflowError):
+            continue
+        if post_lamports != 0:
+            continue
+        rent = pre_lamports
+        if record and record.get("mint") == WSOL:
+            rent = pre_lamports - record.get("pre", Decimal("0"))
+        if rent <= 0:
+            continue
+        refund += rent
+    return refund
+
+
+def _auditor_documented_cpi_sol(raw, address, keys):
+    """CPI-leg SOL used as the trade price. Distinct from the wallet net."""
     saw, cpi_sol, cpi_tokens = _route_cpi_wallet_flows(raw, address, keys)
     taken = _auditor_prop_amm_native_taken(raw, keys)
     wsol_cpi = Decimal(cpi_tokens.get(WSOL, 0) or 0)
-    # Program-id take is the wrap/pool counterpart of a wSOL or native CPI
-    # leg. Do not stack it on an already-counted SOL flow.
     if taken and cpi_sol == 0 and wsol_cpi == 0:
         cpi_sol -= taken
         saw = True
-        # taken is raw hop-program lamports; `_native_delta` already added fee.
         meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
         fee = meta.get("fee") if isinstance(meta.get("fee"), int) else 0
         if keys and keys[0] == address and fee:
             cpi_sol += Decimal(fee)
     if not saw:
+        return None, None, taken
+    cpi_sol += cpi_tokens.pop(WSOL, Decimal("0"))
+    return cpi_sol, cpi_tokens, taken
+
+
+def _auditor_quote_has_two_non_sol(token_deltas):
+    others = [
+        qty for mint, qty in (token_deltas or {}).items()
+        if mint not in (None, WSOL) and qty != 0
+    ]
+    return len(others) >= 2
+
+
+def _route_cpi_disagrees_with_wallet(raw, address, keys):
+    """Fail closed when route CPI sums disagree with wallet balance deltas."""
+    if _auditor_token_owner_unreadable(raw):
+        return True
+    documented = _auditor_documented_cpi_sol(raw, address, keys)
+    cpi_sol, cpi_tokens, taken = documented
+    if cpi_sol is None:
         return True
     token_deltas, _pre, _post = _owned_token_deltas(raw, address)
     accounts = _token_accounts(raw, address, keys)
@@ -1506,7 +1609,6 @@ def _route_cpi_disagrees_with_wallet(raw, address, keys):
     settlement = native + wsol + rent + tips
     if abs(settlement) <= NET_BALANCE_SOL_DUST_LAMPORTS:
         settlement = Decimal("0")
-    cpi_sol += cpi_tokens.pop(WSOL, Decimal("0"))
     # Unknown hop with native SOL and no program-account take is not a swap leg.
     if (
         taken == 0
@@ -1516,16 +1618,17 @@ def _route_cpi_disagrees_with_wallet(raw, address, keys):
         and _jupiter_hop_inner_ok(raw, address, keys)
     ):
         return True
-    # Extra tips make settlement more negative. Fail when the wallet net is
-    # more profitable than the CPI sum by more than the fee-sized wrap/rent
-    # residue. Third-party System credits are refused separately.
-    if settlement > cpi_sol + NET_BALANCE_COST_SOL_LAMPORTS:
+    allowed = _auditor_wallet_close_rent(raw, address, keys)
+    leftover = settlement - cpi_sol
+    # Two-leg SOL quote: unexplained wallet-favourable SOL fails. A third
+    # token leg is residue, not the CPI price. No fee-sized slack.
+    if leftover > allowed and not _auditor_quote_has_two_non_sol(token_deltas):
         return True
-    for mint in set(cpi_tokens) | set(token_deltas):
+    for mint in set(cpi_tokens or ()) | set(token_deltas):
         if mint in (None, WSOL):
             continue
         wallet_qty = token_deltas.get(mint, Decimal("0"))
-        route_qty = cpi_tokens.get(mint, Decimal("0"))
+        route_qty = (cpi_tokens or {}).get(mint, Decimal("0"))
         if wallet_qty > route_qty + Decimal("1"):
             return True
     return False
@@ -1555,6 +1658,8 @@ def _net_balance_reconstruct(raw, address, keys):
 
     This is not the app's owner-walk + parsed-transfer tip method.
     """
+    if _auditor_token_owner_unreadable(raw):
+        return None
     if not _wallet_is_signer(raw, address, keys):
         return None
     program = _first_net_balance_program(raw, keys)
@@ -1584,10 +1689,18 @@ def _net_balance_reconstruct(raw, address, keys):
         settlement = Decimal("0")
     others = [qty for qty in token_deltas.values() if qty != 0]
     other_funding = _other_owner_open_funding(raw, address, keys)
-    # Other-owner still-open rent stays in settlement (D2p). Peel a leftover
-    # wrap/rent residue of either sign when two other assets already form
-    # the trade. A two-leg SOL inflow stays in settlement (DC9).
-    if (
+    cpi_sol, _cpi_tokens, _taken = _auditor_documented_cpi_sol(raw, address, keys)
+    allowed = _auditor_wallet_close_rent(raw, address, keys)
+    # Price a two-leg SOL quote from the CPI legs. Own-ATA rent leftover
+    # is ignored for consideration. Extra outbound stays (conservative).
+    # A third token leg still peels residue; that residue is not the price.
+    if len(others) < 2 and cpi_sol is not None:
+        leftover = settlement - cpi_sol
+        if leftover > allowed:
+            return None
+        if leftover >= 0:
+            settlement = cpi_sol
+    elif (
         other_funding <= 0
         and len(others) >= 2
         and settlement != 0
@@ -2534,9 +2647,12 @@ def _auditor_block_time(record, raw):
 def _auditor_touched_mints(raw, address):
     """Owner-field mint set. Does not use the app's key-index path.
 
-    Wallet-not-in-keys still reads owner rows. Malformed rows return None.
+    Wallet-not-in-keys still reads owner rows. A missing owner field is
+    unknown (unreadable), not 'not the wallet'. Malformed rows return None.
     """
     if not isinstance(raw, dict) or not address:
+        return None
+    if _auditor_token_owner_unreadable(raw):
         return None
     meta = raw.get("meta")
     if not isinstance(meta, dict):
@@ -2553,6 +2669,8 @@ def _auditor_touched_mints(raw, address):
             amount = (row.get("uiTokenAmount") or {}).get("amount")
             mint = row.get("mint")
             if mint in (None, "") or amount in (None, ""):
+                return None
+            if "owner" not in row or row.get("owner") in (None, ""):
                 return None
             if row.get("owner") != address:
                 continue
@@ -2671,6 +2789,10 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
         elif mints is None:
             include = True
         elif in_report and mints - AUDITOR_QUOTE_MINTS:
+            include = True
+        elif in_report and mints and (mints & {USDC, USDT, WSOL}):
+            # In-window quote-stable movement is result-relevant even when
+            # the wallet is absent from keys (DC-11). Fail closed.
             include = True
         elif in_report and "SOL" in mints:
             keys = _keys(raw) if isinstance(raw, dict) else []

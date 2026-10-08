@@ -1263,7 +1263,7 @@ def _token_hop_fields(instruction, keys):
     return kind, {'account': accounts[0]} if accounts else {}
 
 
-def _hop_token_op_ok(instruction, owned, address, keys):
+def _hop_token_op_ok(instruction, owned, address, keys, hop_accounts=None):
     kind, info = _token_hop_fields(instruction, keys)
     touched = _instruction_account_keys(instruction, keys)
     for field in ('source', 'destination', 'account', 'authority', 'owner', 'wallet', 'newAccount'):
@@ -1274,12 +1274,17 @@ def _hop_token_op_ok(instruction, owned, address, keys):
         return True
     if kind in _TOKEN_HOP_FORBIDDEN or kind not in _TOKEN_HOP_OK:
         return False
-    authority = info.get('authority') or info.get('multisigAuthority')
     destination = info.get('destination')
-    return authority == address or destination in owned
+    if destination in owned:
+        return True
+    # Wallet authority alone is not enough: a hop child that sends the
+    # wallet's tokens to a third-party ATA is not a documented hop leg.
+    return bool(hop_accounts) and destination in hop_accounts
 
 
 def _jup_hop_children_ok(inners, start, owned, address, keys):
+    hop = inners[start - 1] if start else None
+    hop_accounts = _instruction_account_keys(hop, keys) if isinstance(hop, dict) else set()
     for instruction in inners[start:]:
         if instruction.get('stackHeight') == 2:
             break
@@ -1288,7 +1293,7 @@ def _jup_hop_children_ok(inners, start, owned, address, keys):
         except (ValueError, TypeError, KeyError, IndexError):
             return False
         if program in TOKEN_IDS:
-            if not _hop_token_op_ok(instruction, owned, address, keys):
+            if not _hop_token_op_ok(instruction, owned, address, keys, hop_accounts):
                 return False
         elif program == SYSTEM_ID and (
             _system_transfer_from_wallet(instruction, address, keys)
@@ -1423,7 +1428,11 @@ def _app_owned_net_assets(raw, address, keys):
     account_token_delta = {}
     for field, sign in (('preTokenBalances', -1), ('postTokenBalances', 1)):
         for balance in meta.get(field) or []:
-            if not isinstance(balance, dict) or balance.get('owner') != address:
+            if not isinstance(balance, dict):
+                return None
+            if 'owner' not in balance or balance.get('owner') in (None, ''):
+                return None
+            if balance.get('owner') != address:
                 continue
             mint = balance.get('mint')
             amount = (balance.get('uiTokenAmount') or {}).get('amount')
@@ -1910,8 +1919,121 @@ def _hop_counterparty_sol_gain(raw, address, keys):
     return gained
 
 
-def _route_flow_disagrees_with_wallet(raw, address, keys, assets):
-    """Reconcile route transfers against the wallet net. Disagree → fail closed."""
+def _close_account_fields(instruction, keys):
+    """Parsed or compiled closeAccount (account, destination). Owner is not used.
+
+    closeAccount.owner is the close authority, not the SPL token owner.
+    """
+    parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+    info = parsed.get('info') if isinstance(parsed, dict) else None
+    kind = parsed.get('type') if isinstance(parsed, dict) else None
+    if kind == 'closeAccount' and isinstance(info, dict):
+        return info.get('account'), info.get('destination')
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return None, None
+    if payload[:1] == b'\x09' and len(accounts) >= 2:
+        return accounts[0], accounts[1]
+    return None, None
+
+
+def _own_ata_close_refund_lamports(raw, address, keys):
+    """Rent refunded by closing the wallet's own token accounts.
+
+    A leftover is allowed only when the closed account's SPL token owner is
+    the wallet (balance row or same-tx initialize) and the refund is no
+    more than that account's rent. Unproved owner or a still-open account
+    contributes nothing.
+    """
+    if not isinstance(raw, dict) or not address or not keys:
+        return Decimal(0)
+    meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
+    pre_native = meta.get('preBalances') or []
+    post_native = meta.get('postBalances') or []
+    owners = {}
+    token_pre = {}
+    mints = {}
+    unproved = set()
+    for field, side in (('preTokenBalances', 'pre'), ('postTokenBalances', 'post')):
+        for row in meta.get(field) or []:
+            if not isinstance(row, dict):
+                continue
+            index = row.get('accountIndex')
+            if type(index) is not int or isinstance(index, bool) or index < 0 or index >= len(keys):
+                continue
+            account = keys[index]
+            if 'owner' not in row or row.get('owner') in (None, ''):
+                unproved.add(account)
+                continue
+            owner = row.get('owner')
+            if account in owners and owners[account] != owner:
+                unproved.add(account)
+            else:
+                owners[account] = owner
+            mint = row.get('mint')
+            if isinstance(mint, str) and mint:
+                mints[account] = mint
+            amount = (row.get('uiTokenAmount') or {}).get('amount')
+            if side == 'pre' and amount not in (None, ''):
+                try:
+                    token_pre[account] = Decimal(str(amount))
+                except (InvalidOperation, ValueError, TypeError, OverflowError):
+                    unproved.add(account)
+    for instruction in _iter_all_instructions(raw):
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+        info = parsed.get('info') if isinstance(parsed, dict) else None
+        kind = parsed.get('type') if isinstance(parsed, dict) else None
+        if program in TOKEN_IDS and kind in (
+            'initializeAccount', 'initializeAccount2', 'initializeAccount3',
+        ) and isinstance(info, dict) and info.get('account') and info.get('owner'):
+            owners.setdefault(info['account'], info['owner'])
+        if program == ASSOCIATED_ID:
+            owner, account = _ata_create_owner_account(instruction, keys)
+            if owner and account:
+                owners.setdefault(account, owner)
+    refund = Decimal(0)
+    for instruction in _iter_all_instructions(raw):
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        if program not in TOKEN_IDS:
+            continue
+        account, destination = _close_account_fields(instruction, keys)
+        if destination != address or not account or account in unproved:
+            continue
+        if owners.get(account) != address:
+            continue
+        try:
+            index = keys.index(account)
+        except ValueError:
+            continue
+        if index >= len(pre_native) or index >= len(post_native):
+            continue
+        try:
+            pre_lamports = Decimal(str(pre_native[index]))
+            post_lamports = Decimal(str(post_native[index]))
+        except (InvalidOperation, ValueError, TypeError, OverflowError):
+            continue
+        if post_lamports != 0:
+            continue
+        rent = pre_lamports
+        if mints.get(account) == WSOL:
+            rent = pre_lamports - token_pre.get(account, Decimal(0))
+        if rent <= 0:
+            continue
+        refund += rent
+    return refund
+
+
+def _documented_route_sol(raw, address, keys):
+    """Route-leg SOL (native + wSOL + hop take). None when no route leg exists."""
     saw, route_sol, route_tokens = _route_wallet_flows(raw, address, keys)
     hop_gain = _hop_counterparty_sol_gain(raw, address, keys)
     wsol_flow = Decimal(route_tokens.get(WSOL, 0) or 0)
@@ -1922,16 +2044,52 @@ def _route_flow_disagrees_with_wallet(raw, address, keys, assets):
     if hop_gain and route_sol == 0 and wsol_flow == 0:
         route_sol -= hop_gain
         saw = True
-        # hop_gain is raw lamports on the hop account. Wallet assets already
-        # added meta.fee back; align the documented take with that convention.
         meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
         fee = meta.get('fee') if type(meta.get('fee')) is int and not isinstance(meta.get('fee'), bool) else 0
         if keys and keys[0] == address and fee:
             route_sol += Decimal(fee)
     if not saw:
+        return None, None, hop_gain
+    route_sol += route_tokens.pop(WSOL, Decimal(0))
+    return route_sol, route_tokens, hop_gain
+
+
+def _sol_is_third_leg(assets):
+    others = [qty for mint, qty in (assets or {}).items() if mint != 'SOL' and qty != 0]
+    return len(others) >= 2
+
+
+def _price_sol_from_route_legs(assets, route_sol, allowed_refund):
+    """Book SOL from the route. Extra inbound is only own-ATA rent.
+
+    A two-leg SOL quote uses the route amount. Wallet-favourable leftover
+    above the proved own-ATA rent refund fails closed. Extra outbound
+    stays on the wallet net (conservative cost). A third-leg SOL residue
+    is left for _peel_fee_sol_residue and is not the trade price.
+    """
+    if not isinstance(assets, dict) or route_sol is None:
+        return False
+    if _sol_is_third_leg(assets):
         return True
     wallet_sol = Decimal(assets.get('SOL', 0) or 0)
-    route_sol += route_tokens.pop(WSOL, Decimal(0))
+    leftover = wallet_sol - Decimal(route_sol)
+    if leftover > Decimal(allowed_refund or 0):
+        return True
+    if leftover >= 0:
+        if Decimal(route_sol) != 0:
+            assets['SOL'] = Decimal(route_sol)
+        else:
+            assets.pop('SOL', None)
+    return True
+
+
+def _route_flow_disagrees_with_wallet(raw, address, keys, assets):
+    """Reconcile route transfers against the wallet net. Disagree → fail closed."""
+    documented = _documented_route_sol(raw, address, keys)
+    route_sol, route_tokens, hop_gain = documented
+    if route_sol is None:
+        return True
+    wallet_sol = Decimal(assets.get('SOL', 0) or 0)
     # An unknown prop-AMM hop that moved native SOL without a visible
     # counterparty take is not a documented swap leg (H5).
     if (
@@ -1942,20 +2100,19 @@ def _route_flow_disagrees_with_wallet(raw, address, keys, assets):
         and _unknown_inner_touches_wallet(raw, address, keys)
     ):
         return True
-    # Extra outbound tips make wallet SOL more negative (conservative).
-    # Fail when the wallet net is more profitable than the route by more
-    # than the fee-sized wrap/rent residue bound. Third-party System
-    # inbound is already refused by _non_route_wallet_flow (DC9), including
-    # fee-sized credits. Residue here is closeAccount/unwrap dust only.
-    if wallet_sol > route_sol + Decimal(NET_BALANCE_COST_SOL_LAMPORTS):
+    allowed = _own_ata_close_refund_lamports(raw, address, keys)
+    leftover = wallet_sol - route_sol
+    # Two-leg SOL quote: wallet-favourable leftover is only own-ATA rent.
+    # Third-leg SOL is residue, not the trade price (C7). Extra outbound
+    # is conservative. Fees are meta.fee plus a verified tip, already
+    # added back into the wallet net.
+    if leftover > allowed and not _sol_is_third_leg(assets):
         return True
-    # Same rule for tokens: fee-sized extra outbound (C7) is conservative.
-    # Extra inbound or a smaller sell than the route overstates profit.
-    for mint in set(route_tokens) | set(assets):
+    for mint in set(route_tokens or ()) | set(assets):
         if mint in (None, WSOL, 'SOL') or mint == 'SOL':
             continue
         wallet_qty = Decimal(assets.get(mint, 0) or 0)
-        route_qty = Decimal(route_tokens.get(mint, 0) or 0)
+        route_qty = Decimal((route_tokens or {}).get(mint, 0) or 0)
         if wallet_qty > route_qty + Decimal(1):
             return True
     return False
@@ -2049,9 +2206,13 @@ def net_balance_reviewed_swap(raw, address):
         return None
     if _non_route_wallet_flow(raw, address, keys):
         return None
-    cost_sol = _peel_fee_sol_residue(assets)
     if _route_flow_disagrees_with_wallet(raw, address, keys, assets):
         return None
+    documented = _documented_route_sol(raw, address, keys)
+    route_sol, _route_tokens, _hop_gain = documented
+    allowed = _own_ata_close_refund_lamports(raw, address, keys)
+    _price_sol_from_route_legs(assets, route_sol, allowed)
+    cost_sol = _peel_fee_sol_residue(assets)
     classified = classify_net_balance_assets(assets, decimals)
     if classified is None:
         return None

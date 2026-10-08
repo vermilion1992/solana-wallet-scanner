@@ -738,35 +738,76 @@ def format_funnel_markdown(report):
     return "\n".join(lines) + "\n"
 
 
+_FUNNEL_STATUS_KEYS = ("kept", "deferred_unreadable", "dropped", "unscreened")
+
+
+def _funnel_status_entries(report):
+    """Map address → (status, row). kept is a list of addresses."""
+    entries = {}
+    if not isinstance(report, dict):
+        return entries
+    for address in report.get("kept") or []:
+        if address:
+            entries[address] = ("kept", {"address": address, "status": "kept"})
+    for key in ("deferred_unreadable", "dropped", "unscreened"):
+        for row in report.get(key) or []:
+            if not isinstance(row, dict):
+                continue
+            address = row.get("address")
+            if address:
+                entries[address] = (key, dict(row))
+    return entries
+
+
 def merge_funnel_reports(prior, incoming):
-    """D12-8: accumulate funnel rows across batches. Address is the identity."""
+    """Accumulate funnel rows. One status per address; latest decision wins."""
     if not isinstance(prior, dict) or prior.get("kind") != "readable-first-funnel-v1":
         return incoming
-    merged = dict(incoming or {})
-    for key in ("kept",):
-        seen = set(prior.get(key) or [])
-        out = list(prior.get(key) or [])
-        for address in (incoming or {}).get(key) or []:
-            if address not in seen:
-                out.append(address)
-                seen.add(address)
-        merged[key] = out
-    for key in ("deferred_unreadable", "dropped", "unscreened"):
-        seen = {row.get("address") for row in (prior.get(key) or []) if isinstance(row, dict)}
-        out = list(prior.get(key) or [])
-        for row in (incoming or {}).get(key) or []:
-            address = row.get("address") if isinstance(row, dict) else None
-            if address and address not in seen:
-                out.append(row)
-                seen.add(address)
-        merged[key] = out
+    incoming = incoming or {}
+    merged = dict(incoming)
+    history = [dict(item) for item in (prior.get("history") or []) if isinstance(item, dict)]
+    prior_entries = _funnel_status_entries(prior)
+    incoming_entries = _funnel_status_entries(incoming)
+    for address, (status, row) in prior_entries.items():
+        history.append({
+            "address": address,
+            "status": status,
+            "reason": row.get("reason") if isinstance(row, dict) else None,
+        })
+    final = dict(prior_entries)
+    for address, (status, row) in incoming_entries.items():
+        previous = prior_entries.get(address)
+        history.append({
+            "address": address,
+            "status": status,
+            "reason": row.get("reason") if isinstance(row, dict) else None,
+            "supersedes": previous[0] if previous else None,
+        })
+        final[address] = (status, row)
+    by_status = {key: [] for key in _FUNNEL_STATUS_KEYS}
+    seen = set()
+    # Prior order first, then newly seen incoming addresses. Latest status wins.
+    for address, (status, row) in list(prior_entries.items()) + [
+        item for item in incoming_entries.items() if item[0] not in prior_entries
+    ]:
+        if address in seen:
+            continue
+        seen.add(address)
+        current_status, current_row = final[address]
+        if current_status == "kept":
+            by_status["kept"].append(address)
+        else:
+            by_status[current_status].append(current_row)
+    for key in _FUNNEL_STATUS_KEYS:
+        merged[key] = by_status[key]
+    merged["history"] = history
     programs = Counter()
     for program, count in (prior.get("dominant_unreadable_programs") or []):
         programs[program] += int(count or 0)
-    for program, count in (incoming or {}).get("dominant_unreadable_programs") or []:
+    for program, count in incoming.get("dominant_unreadable_programs") or []:
         programs[program] += int(count or 0)
     merged["dominant_unreadable_programs"] = programs.most_common()
-    merged["examined"] = int(prior.get("examined") or 0) + int((incoming or {}).get("examined") or 0)
+    merged["examined"] = int(prior.get("examined") or 0) + int(incoming.get("examined") or 0)
     merged["accumulated"] = True
     return merged
 

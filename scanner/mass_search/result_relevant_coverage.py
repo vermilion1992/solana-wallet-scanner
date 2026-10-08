@@ -105,6 +105,8 @@ def _owner_token_maps(raw, address):
             mint = row.get("mint")
             if mint in (None, "") or amount in (None, ""):
                 return None
+            if "owner" not in row or row.get("owner") in (None, ""):
+                return None
             if row.get("owner") != address:
                 continue
             try:
