@@ -22,6 +22,7 @@ from scanner.mass_search.settlement import isolate_known_cost_events, worksheets
 from scanner.mass_search.verified_costs import classify_native_withdrawal, is_verified_tip_account
 from scanner.mass_search.analytics import build_wallet_analytics
 from scanner.mass_search.workflow import coverage_eligibility, research_screen_run
+from tests.result_relevant_fixtures import attach_result_relevant
 
 ROOT = Path(__file__).resolve().parents[1]
 COVERAGE_DIR = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage"
@@ -122,9 +123,11 @@ def test_item5_default_screen_has_no_pnl_and_count_only_wording():
         "market_vs_rewards": {},
         "sensitivity_evidence_state": "not_established",
     }
-    report = {"address": "count-only", "research_profile": profile, "completed_episode_ledger": ledger, "record_breakdown": {
+    # Count-only wording is the point of this test. Missing R would rewrite
+    # the reason to blocked_unknown_denominator and hide that wording.
+    report = {"address": "count-only", "research_profile": profile, "completed_episode_ledger": ledger, "record_breakdown": attach_result_relevant({
         "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}},
-    }, "worksheet": {"unresolved_basis_sales": 0}}
+    }), "worksheet": {"unresolved_basis_sales": 0}}
     screen = research_screen_run(
         [{"address": "count-only", "capture_available": True}],
         {"count-only": report},
@@ -231,7 +234,12 @@ def test_item11_label_tables_cannot_disagree():
         "corpus_kind": "GENUINE_REPLAY",
         "independent_audit": {"status": "independently_audited", "independently_audited": True},
         "worksheet": {"total_profit_sol": "174.65797861", "settlement_asset": "SOL", "unresolved_basis_sales": 0},
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        # An9s coverage_status is provisional_eligible only when R is present.
+        # Without R the label collapses to blocked_unknown_denominator and
+        # this table-disagreement check cannot see the two distinct axes.
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}},
+        }),
     }
     profile = build_research_profile(report, filters=default_filters())
     profile["completed_known_cost_positions"] = 1
@@ -301,9 +309,13 @@ def test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead():
             {"net": "0.080753918", "mint": "M3", "unit": "SOL", "close_signature": "sig-c"},
         ],
         "worksheet": {"total_profit_sol": "0.242261753", "settlement_asset": "SOL", "unresolved_basis_sales": 0},
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}},
+        }),
         "independent_audit": {"status": "independently_audited", "independently_audited": True},
     }
+    # Sign-flip pending_reassessment is only visible once R exists. Missing R
+    # is a stronger block and would hide this sensitivity assertion.
     profile = build_research_profile(report, filters=default_filters())
     assert profile["qualification_level"]["level"] != "provisional_research_lead"
     assert profile["qualification_level"]["sensitivity_sign_flip"] is True
@@ -313,20 +325,28 @@ def test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead():
 
 
 def test_item12_coverage_policy_99_95_blocked_and_dependency():
+    # Status bands are defined on R, not whole-span. Attach R with the same
+    # unsupported shares so 99 / 95 / blocked / dependency stay testable.
+    # Missing R is blocked_unknown_denominator and is covered elsewhere.
+    def _rr(by_count, by_sol):
+        return attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": by_count, "by_consideration": {"SOL": by_sol}},
+        })
+
     assert coverage_eligibility({
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        "record_breakdown": _rr("0", "0"),
         "worksheet": {"unresolved_basis_sales": 0},
     })["status"] == "provisional_eligible"
     assert coverage_eligibility({
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0.04", "by_consideration": {"SOL": "0.04"}}},
+        "record_breakdown": _rr("0.04", "0.04"),
         "worksheet": {"unresolved_basis_sales": 0},
     })["status"] == "watchlist_incomplete_evidence"
     assert coverage_eligibility({
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0.06", "by_consideration": {"SOL": "0.06"}}},
+        "record_breakdown": _rr("0.06", "0.06"),
         "worksheet": {"unresolved_basis_sales": 0},
     })["status"] == "coverage_blocked"
     assert coverage_eligibility({
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        "record_breakdown": _rr("0", "0"),
         "worksheet": {"unresolved_basis_sales": 2},
     })["status"] == "coverage_eligibility_pending_reassessment"
 

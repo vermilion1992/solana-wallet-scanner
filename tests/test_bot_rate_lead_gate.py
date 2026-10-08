@@ -101,8 +101,15 @@ def test_economic_trades_dedupe_signature_kind_mint():
 
 
 def test_gt25_mutation_without_cap_jxt_would_be_a_lead(tmp_path):
-    """Mutation: raising the cap must restore the previous stronger shortlist."""
+    """The bot-rate cap is not JXT's only honest blocker.
+
+    Pre-DC this mutation restored a lead. Result-relevant coverage on the
+    same capture is ~87% count / ~80% value, and the app and auditor
+    disagree on R membership. Raising the cap must not mint a lead from
+    that incomplete denominator.
+    """
     import scanner.mass_search.qualification_gates as gates
+    from scanner.mass_search.qualification_gates import mandatory_coverage_gate
 
     pages_dir = _require_jxt_pages()
     end = datetime(2026, 10, 4, 17, 22, 3, tzinfo=timezone.utc)
@@ -145,7 +152,12 @@ def test_gt25_mutation_without_cap_jxt_would_be_a_lead(tmp_path):
     try:
         gates.MAX_ECONOMIC_TRADES_PER_UTC_DAY = 10**9
         mutated = qualification_level(report, profile)
-        assert mutated["level"] in LEADS, mutated
+        assert mutated["level"] not in LEADS, mutated
+        gate = mandatory_coverage_gate(report, profile)
+        assert gate["passed"] is False
+        assert mutated.get("independently_audited") is True
+        assert mutated.get("clean_episodes", 0) >= 3
+        assert mutated.get("positive_completed_episode_net") is True
     finally:
         gates.MAX_ECONOMIC_TRADES_PER_UTC_DAY = original
 

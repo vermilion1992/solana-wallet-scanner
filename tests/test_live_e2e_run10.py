@@ -19,6 +19,7 @@ from scanner.mass_search.g3_history import load_cached_page, persist_page
 from scanner.mass_search.live_e2e_ledger import open_grant_store
 from scanner.mass_search.qualification_gates import coverage_shares, mandatory_coverage_gate
 from scanner.mass_search.record_breakdown import SOL_SWAP_FLOOR, partition_records
+from scanner.mass_search.result_relevant_coverage import build_result_relevant
 from scanner.mass_search.seed_sources import (
     NANSEN_LEADERBOARD_PATH,
     NANSEN_PNL_SUMMARY_PATH,
@@ -421,6 +422,12 @@ def test_gu81_usdc_quoted_value_share_not_zeroed_by_sol_residue():
     shares = breakdown["unsupported_swap_share_in_window"]["by_consideration"]
     assert "SOL" not in shares
     assert shares.get("USDC") in (None, "0")
+    # Gate fields are R, not whole-span. Build R from the same records so a
+    # USDC-quoted buy is not unknown just because SOL dust exists.
+    breakdown["result_relevant"] = build_result_relevant(
+        [usdc_raw, dust_raw], decoded, wallet,
+        report_start=start, report_end=end, ledger=[{"mint": TOKEN_X}],
+    )
     report = {"record_breakdown": breakdown}
     cov = coverage_shares(report)
     assert cov["value_share"] is not None
@@ -484,6 +491,10 @@ def test_gu81_real_unsupported_sol_still_blocks_value_share():
     )
     shares = breakdown["unsupported_swap_share_in_window"]["by_consideration"]
     assert Decimal(str(shares["SOL"])) == Decimal("1")
+    breakdown["result_relevant"] = build_result_relevant(
+        [usdc_raw, sol_raw], decoded, wallet,
+        report_start=start, report_end=end, ledger=[{"mint": TOKEN_X}],
+    )
     cov = coverage_shares({"record_breakdown": breakdown})
     assert cov["value_share"] == Decimal("0")
     gate = mandatory_coverage_gate({"record_breakdown": breakdown}, min_share=Decimal("0.95"))
@@ -801,6 +812,10 @@ def test_usdt_quoted_unsupported_moves_value_share():
     shares = breakdown["unsupported_swap_share_in_window"]["by_consideration"]
     assert "USDT" in shares
     assert Decimal(str(shares["USDT"])) == Decimal("1")
+    breakdown["result_relevant"] = build_result_relevant(
+        records, {"events": decoded_events, "unresolved": []}, wallet,
+        report_start=start, report_end=end, ledger=[{"mint": TOKEN_X}],
+    )
     cov = coverage_shares({"record_breakdown": breakdown})
     assert cov["value_share"] == Decimal("0")
     gate = mandatory_coverage_gate({"record_breakdown": breakdown}, min_share=Decimal("0.95"))

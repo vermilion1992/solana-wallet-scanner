@@ -34,6 +34,7 @@ from scanner.mass_search.research_profile import (
 )
 from scanner.mass_search.verified_costs import classify_cost_role, classify_native_withdrawal
 from scanner.mass_search.workflow import coverage_eligibility
+from tests.result_relevant_fixtures import attach_result_relevant
 
 
 def _synthetic(payload, reason):
@@ -41,7 +42,10 @@ def _synthetic(payload, reason):
 
 
 def _clean_coverage():
-    return {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}}
+    # Whole-span 100% is not a known denominator without R.
+    return attach_result_relevant(
+        {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+    )
 
 
 def test_stale_audit_does_not_attach():
@@ -93,6 +97,9 @@ def test_stale_audit_does_not_attach():
 
 
 def test_99_5_count_80_value_does_not_qualify():
+    # R carries the same 99.5% count / 80% value the old whole-span claim used.
+    # Missing R would also fail-close; attaching it keeps the value-share
+    # rejection visible instead of collapsing to unknown denominator.
     report = _synthetic({
         "address": "SynthCoverage995080111111111111111111111",
         "events": [],
@@ -100,12 +107,12 @@ def test_99_5_count_80_value_does_not_qualify():
         "completed_episode_net": "20",
         "completed_episode_net_unit": "SOL",
         "completed_episode_ledger": [{"net": "4", "mint": f"M{i}", "unit": "SOL", "close_signature": f"cov-close-{i}"} for i in range(5)],
-        "record_breakdown": {
+        "record_breakdown": attach_result_relevant({
             "unsupported_swap_share_in_window": {
                 "by_count": "0.005",
                 "by_consideration": {"SOL": "0.20"},
             }
-        },
+        }),
         "worksheet": {"total_profit_sol": "20", "settlement_asset": "SOL", "unresolved_basis_sales": 0},
         "independent_audit": {"status": "independently_audited", "independently_audited": True},
         "corpus_kind": "SYNTHETIC",

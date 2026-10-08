@@ -74,8 +74,12 @@ def rec(sig, bt, pre_tok, post_tok, native=0, fee=5000, err=None, n_acc=8, pre_l
 
 
 def test_rent_aware_floor_is_1e5():
+    # DC replaced SWAP_LOG_RE with an independent word-atom scan so the
+    # auditor cannot be a clone of the app's SWAP_LIKE_LOG_RE. The floor
+    # and reviewed-program set stay public; the log signal must still exist.
     assert RAW_SOL_FLOOR_LAMPORTS == 100_000
-    assert hasattr(auditor, "SWAP_LOG_RE")
+    assert hasattr(auditor, "_AUDITOR_SWAP_LOG_ATOMS")
+    assert hasattr(auditor, "_auditor_log_looks_like_swap")
     assert hasattr(auditor, "REVIEWED_SWAP_PROGRAM_IDS")
     assert "INDEPENDENT_SOL_FLOOR_LAMPORTS" not in auditor.__dict__
 
@@ -132,7 +136,9 @@ def test_d2_auditor_count_is_not_a_clone():
     ratio = difflib.SequenceMatcher(None, app_src, aud_src).ratio()
     assert ratio < 0.85
     aud_src = inspect.getsource(auditor)
-    assert "SWAP_LOG_RE" in aud_src
+    # Independence proof: atom scan + reviewed-program set, not the app regex.
+    assert "_AUDITOR_SWAP_LOG_ATOMS" in aud_src
+    assert "_auditor_log_looks_like_swap" in aud_src
     assert "REVIEWED_SWAP_PROGRAM_IDS" in aud_src
     assert "INDEPENDENT_SOL_FLOOR_LAMPORTS" not in aud_src
     assert "_has_swap_signal" in aud_src

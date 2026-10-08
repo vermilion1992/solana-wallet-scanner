@@ -26,6 +26,7 @@ from scanner.mass_search.live_e2e import (
     run_live_e2e,
     validate_config,
 )
+from tests.result_relevant_fixtures import attach_result_relevant
 from scanner.mass_search.research_profile import (
     FilterValidationError,
     default_filters,
@@ -121,12 +122,14 @@ def _report(address, *, completed, sample, coverage_count, coverage_value, pnl_s
         "wallet_completed_episodes": completed,
         "completed_episode_net": str(completed),
         "research_profile": profile,
-        "record_breakdown": {
+        # Filter oracle compares API output to fixture shares. Those shares
+        # must live on R or min_coverage_share fail-closes as unknown.
+        "record_breakdown": attach_result_relevant({
             "unsupported_swap_share_in_window": {
                 "by_count": str(Decimal("1") - Decimal(coverage_count)),
                 "by_consideration": {"SOL": str(Decimal("1") - Decimal(coverage_value))},
             }
-        },
+        }),
         "worksheet": {},
     }
 

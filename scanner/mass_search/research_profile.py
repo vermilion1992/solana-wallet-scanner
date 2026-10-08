@@ -961,7 +961,19 @@ def attach_live_independent_audit(report, profile, records, address):
     """Bind tools/independent_episode_audit.py to this wallet's live Phase 4.
 
     Dropped losers or a net / membership mismatch is never independently_audited.
+    Window globals are restored so a later isolated audit cannot inherit
+    this wallet's report bounds.
     """
+    import tools.independent_episode_audit as auditor
+
+    saved = (auditor.REPORT_START, auditor.REPORT_END, auditor.ACQUISITION)
+    try:
+        return _attach_live_independent_audit_body(report, profile, records, address)
+    finally:
+        auditor.REPORT_START, auditor.REPORT_END, auditor.ACQUISITION = saved
+
+
+def _attach_live_independent_audit_body(report, profile, records, address):
     import tools.independent_episode_audit as auditor
 
     window = (report or {}).get("window") or {}

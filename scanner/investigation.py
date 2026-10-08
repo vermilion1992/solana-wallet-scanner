@@ -1472,13 +1472,14 @@ def _peel_fee_sol_residue(assets):
 
     SOL is the quote when it is one of two legs. Peel only when at least two
     other assets already form the trade, so a 0.01 SOL swap stays a swap.
+    A two-leg SOL inflow is never a fee (DC9). A third-leg wrap/rent residue
+    of either sign under the fee bound is cost, not a third trade asset.
     """
     if not isinstance(assets, dict):
         return Decimal(0)
     sol = assets.get('SOL', Decimal(0))
     others = [qty for mint, qty in assets.items() if mint != 'SOL' and qty != 0]
-    # Inflows are never fees. Peel only a cost-sized SOL *outflow* residue.
-    if len(others) >= 2 and sol < 0 and abs(sol) <= Decimal(NET_BALANCE_COST_SOL_LAMPORTS):
+    if len(others) >= 2 and sol != 0 and abs(sol) <= Decimal(NET_BALANCE_COST_SOL_LAMPORTS):
         assets.pop('SOL', None)
         return sol
     return Decimal(0)
@@ -1913,7 +1914,12 @@ def _route_flow_disagrees_with_wallet(raw, address, keys, assets):
     """Reconcile route transfers against the wallet net. Disagree → fail closed."""
     saw, route_sol, route_tokens = _route_wallet_flows(raw, address, keys)
     hop_gain = _hop_counterparty_sol_gain(raw, address, keys)
-    if hop_gain:
+    wsol_flow = Decimal(route_tokens.get(WSOL, 0) or 0)
+    # Hop-account SOL is the same wrap/pool take already counted as wSOL or
+    # a native route transfer. Stacking it double-counts and refuses a
+    # legitimate AMM/Jupiter net (wallet looks more profitable than the
+    # inflated-negative route). Apply only when no SOL/wSOL route leg exists.
+    if hop_gain and route_sol == 0 and wsol_flow == 0:
         route_sol -= hop_gain
         saw = True
         # hop_gain is raw lamports on the hop account. Wallet assets already
@@ -1937,9 +1943,11 @@ def _route_flow_disagrees_with_wallet(raw, address, keys, assets):
     ):
         return True
     # Extra outbound tips make wallet SOL more negative (conservative).
-    # Fail only when the wallet net is more profitable than the route.
-    # Fees are meta.fee + verified tip only. Any extra inbound SOL is profit.
-    if wallet_sol > route_sol:
+    # Fail when the wallet net is more profitable than the route by more
+    # than the fee-sized wrap/rent residue bound. Third-party System
+    # inbound is already refused by _non_route_wallet_flow (DC9), including
+    # fee-sized credits. Residue here is closeAccount/unwrap dust only.
+    if wallet_sol > route_sol + Decimal(NET_BALANCE_COST_SOL_LAMPORTS):
         return True
     # Same rule for tokens: fee-sized extra outbound (C7) is conservative.
     # Extra inbound or a smaller sell than the route overstates profit.

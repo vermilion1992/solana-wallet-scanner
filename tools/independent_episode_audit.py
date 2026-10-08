@@ -1484,7 +1484,10 @@ def _route_cpi_disagrees_with_wallet(raw, address, keys):
     """Fail closed when route CPI sums disagree with wallet balance deltas."""
     saw, cpi_sol, cpi_tokens = _route_cpi_wallet_flows(raw, address, keys)
     taken = _auditor_prop_amm_native_taken(raw, keys)
-    if taken:
+    wsol_cpi = Decimal(cpi_tokens.get(WSOL, 0) or 0)
+    # Program-id take is the wrap/pool counterpart of a wSOL or native CPI
+    # leg. Do not stack it on an already-counted SOL flow.
+    if taken and cpi_sol == 0 and wsol_cpi == 0:
         cpi_sol -= taken
         saw = True
         # taken is raw hop-program lamports; `_native_delta` already added fee.
@@ -1513,9 +1516,10 @@ def _route_cpi_disagrees_with_wallet(raw, address, keys):
         and _jupiter_hop_inner_ok(raw, address, keys)
     ):
         return True
-    # Extra tips make settlement more negative. Fail only when the wallet
-    # net is more profitable than the route CPI sum.
-    if settlement > cpi_sol:
+    # Extra tips make settlement more negative. Fail when the wallet net is
+    # more profitable than the CPI sum by more than the fee-sized wrap/rent
+    # residue. Third-party System credits are refused separately.
+    if settlement > cpi_sol + NET_BALANCE_COST_SOL_LAMPORTS:
         return True
     for mint in set(cpi_tokens) | set(token_deltas):
         if mint in (None, WSOL):
@@ -1580,12 +1584,13 @@ def _net_balance_reconstruct(raw, address, keys):
         settlement = Decimal("0")
     others = [qty for qty in token_deltas.values() if qty != 0]
     other_funding = _other_owner_open_funding(raw, address, keys)
-    # Other-owner still-open rent stays in settlement (D2p). Peel only a
-    # leftover wrap/fee residue when that funding is absent.
+    # Other-owner still-open rent stays in settlement (D2p). Peel a leftover
+    # wrap/rent residue of either sign when two other assets already form
+    # the trade. A two-leg SOL inflow stays in settlement (DC9).
     if (
         other_funding <= 0
         and len(others) >= 2
-        and settlement < 0
+        and settlement != 0
         and abs(settlement) <= NET_BALANCE_COST_SOL_LAMPORTS
     ):
         settlement = Decimal("0")

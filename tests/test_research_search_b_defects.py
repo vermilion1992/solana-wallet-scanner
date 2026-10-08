@@ -21,6 +21,7 @@ from scanner.mass_search.capture_catalog import (
 )
 from scanner.mass_search.g3_history import completed_episodes, decoder_events_by_mint
 from scanner.mass_search.workflow import load_ranked_universe, replay_captured_wallet
+from tests.result_relevant_fixtures import attach_result_relevant
 from scanner.storage import Store
 from tools.independent_capture_reconciliation import reconcile_address
 
@@ -513,20 +514,31 @@ def test_d15_coverage_gate_a6ps_and_synthetics(tmp_path):
         assert row["outcome"] in ("completed", "zero_qualified")
     store.close()
 
+    # Synthetics attach R with the same shares they already claimed. Missing
+    # R is blocked_unknown_denominator; that is the correct fail-close, but
+    # it is not the band this block is testing.
     pending = {
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}},
+        }),
         "worksheet": {"unresolved_basis_sales": 1},
     }
     watch = {
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0.04", "by_consideration": {"SOL": "0.04"}}},
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0.04", "by_consideration": {"SOL": "0.04"}},
+        }),
         "worksheet": {"unresolved_basis_sales": 0},
     }
     blocked = {
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0.11", "by_consideration": {"SOL": "0.11"}}},
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0.11", "by_consideration": {"SOL": "0.11"}},
+        }),
         "worksheet": {"unresolved_basis_sales": 0},
     }
     eligible = {
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}},
+        }),
         "worksheet": {"unresolved_basis_sales": 0},
     }
     assert coverage_eligibility(pending)["status"] == "coverage_eligibility_pending_reassessment"
