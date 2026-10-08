@@ -255,6 +255,7 @@ COMMITTED_LEDGER_ABSOLUTE = "/home/box/.scanner/live-e2e-ledgers"
 PINNED_LEDGER_ABSOLUTE = COMMITTED_LEDGER_ABSOLUTE
 MIN_FREE_DISK_MB = 2048
 MIN_FREE_DISK_ENV = "SCANNER_MIN_FREE_DISK_MB"
+DRY_RUN_HELIUS_PLACEHOLDER_RAW = b'{"jsonrpc":"2.0","result":{"data":[],"paginationToken":null}}'
 PHASE4_RESULT_VERSION = "phase4-raw-bot-rate-v1"
 DRY_RUN_LEDGER_DIRNAME = ".dry-run-ledger"
 BIRDEYE_KEY_ENV = "BIRDEYE_API_KEY"
@@ -1216,6 +1217,39 @@ def apply_cheap_prescreen_phase1(config, state):
     return dropped
 
 
+def nansen_vendor_drop_decision(meta):
+    """Drop-only decision from leaderboard/profiler vendor fields. Missing fields never pass."""
+    vendor = (meta or {}).get("vendor_metrics") or {}
+    timeframes = (meta or {}).get("timeframes") or {}
+    decisions = []
+    if timeframes:
+        for tf, payload in timeframes.items():
+            vm = dict(vendor)
+            if isinstance(payload, dict) and payload.get("vendor_metrics"):
+                vm.update(payload.get("vendor_metrics") or {})
+            decisions.append(nansen_high_frequency_drop(vm, timeframe=tf))
+    else:
+        decisions.append(nansen_high_frequency_drop(vendor, timeframe=(meta or {}).get("timeframe")))
+    return next((item for item in decisions if item.get("dropped")), None)
+
+
+def merge_nansen_prefilter_dropped(state, dropped_rows):
+    """Keep prior-pass drops. A later empty pass must not erase the list."""
+    existing = list(state.get("nansen_prefilter_dropped_addresses") or [])
+    seen = set(existing)
+    for row in dropped_rows or []:
+        address = row.get("address") if isinstance(row, dict) else row
+        if not address:
+            continue
+        if isinstance(row, dict):
+            state.setdefault("nansen_prefilter_dropped", {})[address] = row
+        if address not in seen:
+            existing.append(address)
+            seen.add(address)
+    state["nansen_prefilter_dropped_addresses"] = existing
+    return existing
+
+
 def apply_nansen_vendor_prefilter(config, state):
     """Drop-only Nansen high-frequency filter. Missing fields never pass a wallet."""
     dropped = []
@@ -1234,32 +1268,21 @@ def apply_nansen_vendor_prefilter(config, state):
         if meta.get("primary_seed_source") != SEED_NANSEN and SEED_NANSEN not in sources:
             kept.append(address)
             continue
-        vendor = meta.get("vendor_metrics") or {}
-        decisions = []
-        timeframes = meta.get("timeframes") or {}
-        if timeframes:
-            for tf, payload in timeframes.items():
-                vm = dict(vendor)
-                if isinstance(payload, dict) and payload.get("vendor_metrics"):
-                    vm.update(payload.get("vendor_metrics") or {})
-                decisions.append(nansen_high_frequency_drop(vm, timeframe=tf))
-        else:
-            decisions.append(nansen_high_frequency_drop(vendor, timeframe=meta.get("timeframe")))
-        hit = next((item for item in decisions if item.get("dropped")), None)
+        hit = nansen_vendor_drop_decision(meta)
         if hit:
             dropped.append(address)
             row = {"address": address, **hit}
-            state.setdefault("nansen_prefilter_dropped", {})[address] = row
             log.append(row)
         else:
             kept.append(address)
     config["wallets"] = kept
     state["wallets"] = kept
-    state["nansen_prefilter_dropped_addresses"] = list(dropped)
-    if log and config.get("output_dir"):
+    merge_nansen_prefilter_dropped(state, log)
+    dropped_rows = list((state.get("nansen_prefilter_dropped") or {}).values())
+    if dropped_rows and config.get("output_dir"):
         _write_json(Path(config["output_dir"]) / "NANSEN_PREFILTER_DROPPED.json", {
-            "dropped": log,
-            "count": len(log),
+            "dropped": dropped_rows,
+            "count": len(dropped_rows),
             "can_only_drop": True,
             "seed_is_not": "evidence",
         })
@@ -1514,7 +1537,9 @@ def phase3_wallets(config, state=None):
 
 
 def plan_request_counts(config, state=None):
-    wallets = list(config["wallets"])
+    wallets = list(config.get("wallets") or [])
+    if not wallets:
+        wallets = discovered_seed_pool(config, state)
     phases = set(config["phases"])
     discovery = bool(config.get("discovery"))
     sources = list(config.get("seed_sources") or [config.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS])
@@ -1733,7 +1758,7 @@ class RecorderTransport:
             "options": {k: v for k, v in (options or {}).items() if k != "paginationToken"},
             "units": units,
         })
-        raw = b'{"jsonrpc":"2.0","result":{"data":[],"paginationToken":null}}'
+        raw = DRY_RUN_HELIUS_PLACEHOLDER_RAW
         return {
             "records": [],
             "pagination_token": None,
@@ -2307,6 +2332,20 @@ def _receipt_sha_for_page(store, address, page_name, phase=None):
     return None
 
 
+def is_dry_run_helius_placeholder(raw):
+    """RecorderTransport empty page. Real Helius JSON-RPC includes an id."""
+    if raw == DRY_RUN_HELIUS_PLACEHOLDER_RAW:
+        return True
+    try:
+        body = json.loads(raw)
+    except (TypeError, UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    if not isinstance(body, dict) or body.get("jsonrpc") != "2.0" or "id" in body:
+        return False
+    result = body.get("result")
+    return isinstance(result, dict) and result.get("data") == [] and result.get("paginationToken") is None
+
+
 def _verify_saved_page(path, relative=None, expected_sha=None, *, require_ledger_sha=False):
     """Require integrity receipt + result body. Sidecar rewrite alone cannot pass.
 
@@ -2406,30 +2445,52 @@ def _verify_imported_seed_file(path):
     return raw, pages, file_sha
 
 
+def _token_intersect_tokens_from_payload(payload):
+    if not isinstance(payload, dict):
+        return []
+    progress = ((payload.get("seed_source_progress") or {}).get(SEED_TOKEN_INTERSECT) or {})
+    if progress.get("tokens"):
+        return list(progress["tokens"])
+    for row in (payload.get("discoveries") or {}).values():
+        if isinstance(row, dict) and row.get("seed_source") == SEED_TOKEN_INTERSECT and row.get("tokens"):
+            return list(row["tokens"])
+    if payload.get("birdeye_tokens"):
+        return list(payload["birdeye_tokens"])
+    return []
+
+
 def _token_intersect_tokens_from_import(config, root):
     tokens = list(config.get("birdeye_tokens") or [])
     if tokens:
         return tokens
     root = Path(root)
-    for candidate in (root / "STATE.json", root / "state.json"):
-        if not candidate.is_file():
-            continue
-        try:
-            payload = json.loads(candidate.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
-            continue
-        progress = ((payload.get("seed_source_progress") or {}).get(SEED_TOKEN_INTERSECT) or {})
-        if progress.get("tokens"):
-            return list(progress["tokens"])
-        for row in (payload.get("discoveries") or {}).values():
-            if isinstance(row, dict) and row.get("seed_source") == SEED_TOKEN_INTERSECT and row.get("tokens"):
-                return list(row["tokens"])
+    search = [root]
+    parent = root
+    for _ in range(4):
+        parent = parent.parent
+        if parent == parent.parent:
+            break
+        search.append(parent)
+    names = ("RUN_STATE.json", "STATE.json", "state.json", "RESULTS.json")
+    for folder in search:
+        for name in names:
+            candidate = folder / name
+            if not candidate.is_file():
+                continue
+            try:
+                payload = json.loads(candidate.read_text(encoding="utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                continue
+            found = _token_intersect_tokens_from_payload(payload)
+            if found:
+                return found
     return []
 
 
 def _import_token_intersect_pages(config):
     """Reuse a prior run's paid token_intersect pages. Integrity sidecar required."""
-    seen = set()
+    seen_paths = set()
+    seen_sha = set()
     imported = []
     tokens = []
     for root in config.get("import_raw_dirs") or []:
@@ -2438,19 +2499,38 @@ def _import_token_intersect_pages(config):
         if root.is_file() and "token-intersect" in root.name:
             candidates.append(root)
         elif root.is_dir():
-            named = root / "raw" / "phase1" / "token-intersect.bin"
-            if named.is_file():
-                candidates.append(named)
-            candidates.extend(sorted(p for p in root.rglob("token-intersect*.bin") if p.is_file()))
+            hashed = sorted(
+                p for p in (root / "raw" / "phase1").glob("token-intersect-*.bin")
+                if p.is_file() and p.with_name(p.name + ".integrity.json").is_file()
+            )
+            candidates.extend(hashed)
+            if not hashed:
+                for path in sorted(root.rglob("token-intersect*.bin")):
+                    if path.is_file() and path.with_name(path.name + ".integrity.json").is_file():
+                        candidates.append(path)
         for candidate in candidates:
             resolved = str(candidate.resolve())
-            if resolved in seen:
+            if resolved in seen_paths:
                 continue
             raw, pages, digest = _verify_imported_seed_file(candidate)
-            seen.add(resolved)
+            if digest in seen_sha:
+                seen_paths.add(resolved)
+                continue
+            seen_paths.add(resolved)
+            seen_sha.add(digest)
             imported.append({"path": candidate, "raw": raw, "pages": pages, "sha256": digest})
             if not tokens:
                 tokens = _token_intersect_tokens_from_import(config, root if root.is_dir() else root.parent)
+            sidecar = candidate.with_name(candidate.name + ".integrity.json")
+            if not tokens and sidecar.is_file():
+                try:
+                    side = json.loads(sidecar.read_text(encoding="utf-8"))
+                except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                    side = {}
+                for key in ("tokens", "birdeye_tokens"):
+                    if side.get(key):
+                        tokens = list(side[key])
+                        break
     if not imported:
         return None
     raw_parts = []
@@ -2556,6 +2636,14 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
     existing_page = Path(config["output_dir"]) / f"raw/phase{phase}/{address}/page{page_index}.bin"
     reserved_pending = isinstance(existing, dict) and existing.get("state") in ("reserved", "dispatched")
     if existing_page.is_file() and existing_page.stat().st_size > 0 and not reserved_pending:
+        planted = existing_page.read_bytes()
+        if is_dry_run_helius_placeholder(planted):
+            raise SourceError(
+                "DRY_RUN_PLACEHOLDER",
+                f"refusing dry-run placeholder page in live output: "
+                f"raw/phase{phase}/{address}/page{page_index}.bin; "
+                f"dry-run must never write into a live output folder",
+            )
         raise SourceError(
             "UNRECEIPTED_PAGE",
             f"refusing unreceipted page in output dir: raw/phase{phase}/{address}/page{page_index}.bin; not covered",
@@ -2633,11 +2721,14 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
             store.settle(reservation, charge=True)
             charged = True
         raw = result.get("raw_bytes") or b""
-        digest = _save_raw(
-            config["output_dir"],
-            f"raw/phase{phase}/{address}/page{page_index}.bin",
-            raw,
-        )
+        if config.get("dry_run"):
+            digest = result.get("evidence_sha256") or _sha256_bytes(raw)
+        else:
+            digest = _save_raw(
+                config["output_dir"],
+                f"raw/phase{phase}/{address}/page{page_index}.bin",
+                raw,
+            )
         _put_receipt(config, store, grant, key, {
             "provider": "helius",
             "wallet": address,
@@ -2920,10 +3011,20 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
                         extras[row["address"]]["timeframes"] = timeframes
                     if not row.get("already_seen"):
                         selected.append(row)
+        prefilter_log = []
+        profile_rows = []
+        for row in selected:
+            meta = extras.get(row["address"]) or {}
+            hit = nansen_vendor_drop_decision(meta)
+            if hit:
+                prefilter_log.append({"address": row["address"], **hit})
+            else:
+                profile_rows.append(row)
+        merge_nansen_prefilter_dropped(state, prefilter_log)
         profile_page = page
         profile_cap = config.get("nansen_profile_cap")
         profiled = 0
-        for row in selected:
+        for row in profile_rows:
             address = row["address"]
             if profile_cap is not None and profiled >= int(profile_cap):
                 break
@@ -2961,6 +3062,7 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
             _save_seed_raw_parts(config, identity, SEED_NANSEN, raw_parts)
         raise
     addresses = [row["address"] for row in selected]
+    kept_addresses = [row["address"] for row in profile_rows]
     digest = _save_seed_raw_parts(config, identity, SEED_NANSEN, raw_parts)
     state.setdefault("discoveries", {})[identity] = {
         "addresses": list(addresses),
@@ -2970,7 +3072,7 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
         "seed_is_not": "evidence",
         "enabled": True,
     }
-    _merge_discovery_wallets(config, state, addresses, source=SEED_NANSEN, extras=extras)
+    _merge_discovery_wallets(config, state, kept_addresses, source=SEED_NANSEN, extras=extras)
     apply_nansen_vendor_prefilter(config, state)
     save_state(config["output_dir"], state)
     return {
@@ -4225,77 +4327,102 @@ def phase4_offline(store, config, state):
                 "PRODUCT_READY": False,
             })
             continue
-        from scanner.mass_search.canonical_records import canonical_decode_records
-        decoded = inject_undecoded_buy_taints(
-            decode_supported_swaps(canonical_decode_records(records), address),
-            records,
-            address,
-        )
-        bundle = detect_bundle_or_distribution(records, address)
-        phase3_cursor = (state.get("phase3") or {}).get(address) or {}
-        history = assess_history_completeness(
-            records,
-            leftover_token if leftover_token is not None else phase3_cursor.get("leftover_pagination_token") or phase3_cursor.get("pagination_token"),
-            address=address,
-            cap_truncated=bool(phase3_cursor) and not phase3_cursor.get("done"),
-            page_cap_hit=bool(phase3_cursor.get("history_complete_reason") == "page_cap_with_leftover_token"),
-        )
-        history["pages_fetched"] = int(phase3_cursor.get("pages") or 0)
-        history["phase3_pages"] = int(phase3_cursor.get("pages") or 0)
-        history["history_reached_window_start"] = bool(
-            phase3_cursor.get("history_reached_window_start")
-            or phase3_cursor.get("window_covered")
-        )
-        if phase3_cursor.get("history_complete") is False:
-            history["history_complete"] = False
-            history["history_complete_reason"] = phase3_cursor.get("history_complete_reason") or history["history_complete_reason"]
-        aligned = align_wallet_bounds(records, bounds)
-        result = replay_cached_history_to_report(
-            store,
-            address=address,
-            records=records,
-            window_start=aligned["report_start_inclusive"],
-            window_end=aligned["report_end_exclusive"],
-            acquisition_start=aligned["history_start_inclusive"],
-            coverage_start=aligned["coverage_start_inclusive"],
-            coverage_end=aligned["coverage_end_exclusive"],
-            corpus_kind="GENUINE_REPLAY",
-            authorization_id=config.get("authorization_id") or AUTHORIZATION_ID,
-            source_id="live-e2e-proof",
-        )
-        report = result["report"]
-        window_doc = dict(report.get("window") or {})
-        window_doc.update({
-            "start": aligned["report_start_inclusive"],
-            "end": aligned["report_end_exclusive"],
-            "configured_report_end_exclusive": aligned.get("configured_report_end_exclusive"),
-            "aligned_report_end_exclusive": aligned.get("aligned_report_end_exclusive") or aligned["report_end_exclusive"],
-            "report_end_anchored_to_last_tx": aligned.get("report_end_anchored_to_last_tx"),
-        })
-        report["window"] = window_doc
-        report["prescreen"] = (state.get("phase2") or {}).get(address) or {}
-        report.update(seed_fields_for_wallet(state, address))
-        report["bundle_or_distribution"] = bundle
-        report["history"] = history
-        report["history_complete"] = history.get("history_complete")
-        profile = build_research_profile(
-            report, filters=default_filters(), decoded=decoded, records=records, address=address,
-        )
-        audit = attach_live_independent_audit(report, profile, records, address)
-        report["independent_audit"] = audit
-        if audit and audit.get("status") == "independently_audited":
+        try:
+            from scanner.mass_search.canonical_records import canonical_decode_records
+            decoded = inject_undecoded_buy_taints(
+                decode_supported_swaps(canonical_decode_records(records), address),
+                records,
+                address,
+            )
+            bundle = detect_bundle_or_distribution(records, address)
+            phase3_cursor = (state.get("phase3") or {}).get(address) or {}
+            history = assess_history_completeness(
+                records,
+                leftover_token if leftover_token is not None else phase3_cursor.get("leftover_pagination_token") or phase3_cursor.get("pagination_token"),
+                address=address,
+                cap_truncated=bool(phase3_cursor) and not phase3_cursor.get("done"),
+                page_cap_hit=bool(phase3_cursor.get("history_complete_reason") == "page_cap_with_leftover_token"),
+            )
+            history["pages_fetched"] = int(phase3_cursor.get("pages") or 0)
+            history["phase3_pages"] = int(phase3_cursor.get("pages") or 0)
+            history["history_reached_window_start"] = bool(
+                phase3_cursor.get("history_reached_window_start")
+                or phase3_cursor.get("window_covered")
+            )
+            if phase3_cursor.get("history_complete") is False:
+                history["history_complete"] = False
+                history["history_complete_reason"] = phase3_cursor.get("history_complete_reason") or history["history_complete_reason"]
+            aligned = align_wallet_bounds(records, bounds)
+            result = replay_cached_history_to_report(
+                store,
+                address=address,
+                records=records,
+                window_start=aligned["report_start_inclusive"],
+                window_end=aligned["report_end_exclusive"],
+                acquisition_start=aligned["history_start_inclusive"],
+                coverage_start=aligned["coverage_start_inclusive"],
+                coverage_end=aligned["coverage_end_exclusive"],
+                corpus_kind="GENUINE_REPLAY",
+                authorization_id=config.get("authorization_id") or AUTHORIZATION_ID,
+                source_id="live-e2e-proof",
+            )
+            report = result["report"]
+            window_doc = dict(report.get("window") or {})
+            window_doc.update({
+                "start": aligned["report_start_inclusive"],
+                "end": aligned["report_end_exclusive"],
+                "configured_report_end_exclusive": aligned.get("configured_report_end_exclusive"),
+                "aligned_report_end_exclusive": aligned.get("aligned_report_end_exclusive") or aligned["report_end_exclusive"],
+                "report_end_anchored_to_last_tx": aligned.get("report_end_anchored_to_last_tx"),
+            })
+            report["window"] = window_doc
+            report["prescreen"] = (state.get("phase2") or {}).get(address) or {}
+            report.update(seed_fields_for_wallet(state, address))
+            report["bundle_or_distribution"] = bundle
+            report["history"] = history
+            report["history_complete"] = history.get("history_complete")
             profile = build_research_profile(
                 report, filters=default_filters(), decoded=decoded, records=records, address=address,
             )
-        else:
-            profile["independent_audit"] = audit
-            from scanner.mass_search.research_profile import qualification_level
-            profile["qualification_level"] = qualification_level(report, profile)
-        report["research_profile"] = profile
-        if not config.get("dry_run"):
-            store.put("reports", report["id"], report)
-        row = _phase4_wallet_row(report, _authoritative_saved_profile(report) or profile)
-        rows.append(row)
+            audit = attach_live_independent_audit(report, profile, records, address)
+            report["independent_audit"] = audit
+            if audit and audit.get("status") == "independently_audited":
+                profile = build_research_profile(
+                    report, filters=default_filters(), decoded=decoded, records=records, address=address,
+                )
+            else:
+                profile["independent_audit"] = audit
+                from scanner.mass_search.research_profile import qualification_level
+                profile["qualification_level"] = qualification_level(report, profile)
+            report["research_profile"] = profile
+            if not config.get("dry_run"):
+                store.put("reports", report["id"], report)
+            row = _phase4_wallet_row(report, _authoritative_saved_profile(report) or profile)
+            rows.append(row)
+        except Exception as error:
+            known = known_trade_rate_from_state(state, address)
+            reason = f"phase4_wallet_failed:{type(error).__name__}: {error}"
+            rows.append({
+                "address": address,
+                "coverage_count_share": None,
+                "coverage_value_share": None,
+                "completed_trades": 0,
+                "realized_pnl_sol": None,
+                "realized_pnl_usdc": None,
+                "audit_status": "not_independently_audited",
+                "independently_audited": False,
+                "lead_level": "insufficient_evidence",
+                "blocker": with_gt25_blocker(reason, known),
+                "max_economic_trades_in_one_day": None if not known else known.get("max"),
+                "max_economic_trades_on": None if not known else known.get("max_on"),
+                "history_pages_fetched": expected_pages,
+                "history_reached_window_start": False,
+                "not_audited_reason": with_gt25_blocker(reason, known),
+                "coverage_status": "blocked",
+                "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
+                **seed_fields_for_wallet(state, address),
+                "PRODUCT_READY": False,
+            })
     return {"wallets": rows}
 
 

@@ -184,8 +184,8 @@ def test_birdeye_token_intersect_plan_equals_runtime(tmp_path, scratch_home):
     asyncio.run(L.phase1_discovery(store, grant, cfg, st, rec))
     store.close()
     assert st["spend"]["birdeye_requests"] == len(rec.calls)
-    assert st["spend"]["birdeye_requests"] <= plan["totals"]["birdeye_requests"]
-    assert st["spend"]["birdeye_units"] <= plan["totals"]["birdeye_units"]
+    assert plan["totals"]["birdeye_requests"] >= st["spend"]["birdeye_requests"]
+    assert plan["totals"]["birdeye_units"] >= st["spend"]["birdeye_units"]
 
 
 def test_birdeye_token_list_plan_equals_runtime(tmp_path, scratch_home):
@@ -199,8 +199,8 @@ def test_birdeye_token_list_plan_equals_runtime(tmp_path, scratch_home):
     plan = L.plan_request_counts(cfg, st)
     asyncio.run(L.phase1_discovery(store, grant, cfg, st, rec))
     store.close()
-    assert st["spend"]["birdeye_requests"] <= plan["totals"]["birdeye_requests"]
-    assert st["spend"]["birdeye_units"] <= plan["totals"]["birdeye_units"]
+    assert plan["totals"]["birdeye_requests"] >= st["spend"]["birdeye_requests"]
+    assert plan["totals"]["birdeye_units"] >= st["spend"]["birdeye_units"]
 
 
 # Helius: real _dispatch_helius on the live branch with a counting fake transport and a scratch ledger.

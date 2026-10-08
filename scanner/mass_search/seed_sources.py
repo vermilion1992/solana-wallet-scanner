@@ -1280,7 +1280,7 @@ def load_known_wallets_from_outputs(paths):
         if path.is_file():
             candidates.append(path)
         elif path.is_dir():
-            for name in ("STATE.json", "state.json", "wallets.json"):
+            for name in ("RUN_STATE.json", "RESULTS.json", "STATE.json", "state.json", "wallets.json"):
                 candidate = path / name
                 if candidate.is_file():
                     candidates.append(candidate)

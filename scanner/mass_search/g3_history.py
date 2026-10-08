@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
 import uuid
 from copy import deepcopy
 from datetime import datetime
@@ -198,8 +199,42 @@ def page_cache_key(authorization_id, address, page_index, *, version=2):
     return f"{prefix}{authorization_id}:{address}:page:{page_index}"
 
 
+def chunk_cache_key(authorization_id, address, page_index, chunk_index, *, version=2):
+    return f"{page_cache_key(authorization_id, address, page_index, version=version)}:chunk:{chunk_index}"
+
+
 def wallet_log_key(authorization_id, address):
     return f"g3-history:{authorization_id}:{address}:log"
+
+
+def sqlite_payload_byte_limit(store):
+    """SQLITE_LIMIT_LENGTH for one records.payload cell. Default 1e9."""
+    default = 1_000_000_000
+    db = getattr(store, "db", None)
+    getter = getattr(db, "getlimit", None) if db is not None else None
+    if getter is None:
+        return default
+    try:
+        return max(1024, int(getter(sqlite3.SQLITE_LIMIT_LENGTH)))
+    except (TypeError, ValueError, sqlite3.Error):
+        return default
+
+
+def _encode_cache_payload(payload):
+    return json.dumps(payload, ensure_ascii=False, allow_nan=False, separators=(",", ":")).encode("utf-8")
+
+
+def _assemble_chunked_page(store, authorization_id, address, page_index, manifest):
+    assembled = []
+    chunks = int(manifest.get("chunks") or 0)
+    for index in range(chunks):
+        part = store.get(CACHE_KIND, chunk_cache_key(authorization_id, address, page_index, index, version=2))
+        if not part:
+            return None
+        assembled.extend(part.get("records") or [])
+    page = dict(manifest)
+    page["records"] = assembled
+    return page
 
 
 def load_cached_page(store, authorization_id, address, page_index):
@@ -207,6 +242,8 @@ def load_cached_page(store, authorization_id, address, page_index):
         return None
     current = store.get(CACHE_KIND, page_cache_key(authorization_id, address, page_index, version=2))
     if current:
+        if current.get("chunked"):
+            return _assemble_chunked_page(store, authorization_id, address, page_index, current)
         return current
     legacy = store.get(CACHE_KIND, page_cache_key(authorization_id, address, page_index, version=1))
     if not legacy:
@@ -227,11 +264,49 @@ def load_cached_page(store, authorization_id, address, page_index):
 
 
 def persist_page(store, authorization_id, address, page_index, payload):
+    """Store one logical page. Chunks under SQLITE_LIMIT_LENGTH so one wallet cannot DataError the run."""
     if store is None:
         return payload
     if payload.get("kind") == PAGE_KIND_V1 or payload.get("legacy_cache"):
         return payload
-    store.put(CACHE_KIND, page_cache_key(authorization_id, address, page_index, version=2), payload)
+    key = page_cache_key(authorization_id, address, page_index, version=2)
+    encoded = _encode_cache_payload(payload)
+    max_bytes = max(1024, int(sqlite_payload_byte_limit(store) * 0.75))
+    if len(encoded) <= max_bytes:
+        store.put(CACHE_KIND, key, payload)
+        return payload
+    records = list(payload.get("records") or [])
+    meta = {name: value for name, value in payload.items() if name != "records"}
+    chunks = []
+    current = []
+    for record in records:
+        trial = current + [record]
+        trial_size = len(_encode_cache_payload({**meta, "records": trial, "chunked": True}))
+        if trial_size > max_bytes:
+            if not current:
+                raise sqlite3.DataError("single history record exceeds sqlite payload limit")
+            chunks.append(current)
+            current = [record]
+            if len(_encode_cache_payload({**meta, "records": current, "chunked": True})) > max_bytes:
+                raise sqlite3.DataError("single history record exceeds sqlite payload limit")
+        else:
+            current = trial
+    if current or not chunks:
+        chunks.append(current)
+    manifest = {
+        **meta,
+        "records": [],
+        "chunked": True,
+        "chunks": len(chunks),
+        "record_count": len(records),
+    }
+    store.put(CACHE_KIND, key, manifest)
+    for index, chunk in enumerate(chunks):
+        store.put(
+            CACHE_KIND,
+            chunk_cache_key(authorization_id, address, page_index, index, version=2),
+            {**meta, "records": chunk, "chunk_index": index, "chunks": len(chunks)},
+        )
     return payload
 
 

@@ -178,6 +178,7 @@ def _decoded_kinds(decoded, signature):
 
 
 def _consideration(raw, address, keys, event=None):
+    """Quote consideration for coverage. Fee/rent residual SOL is not a quote asset."""
     if event:
         usdc = event.get("amount_usdc") or event.get("consideration_usdc")
         sol = event.get("amount_sol") or event.get("consideration_sol")
@@ -190,6 +191,8 @@ def _consideration(raw, address, keys, event=None):
     if usdc:
         return "USDC", usdc / Decimal(1_000_000)
     sol = abs(deltas.get("SOL", Decimal("0")))
+    if sol <= SOL_SWAP_FLOOR:
+        return None, Decimal("0")
     return "SOL", sol
 
 
@@ -291,8 +294,9 @@ def partition_records(records, decoded, address, *, window_start, window_end, ac
             in_window_swaps += 1
             event = (decoded_by_sig.get(signature) or [None])[0]
             asset, amount = _consideration(raw, address, keys, event)
-            bucket = "decoded" if klass != "unsupported_swap" else "unsupported"
-            consideration[bucket][asset] += amount
+            if asset and amount:
+                bucket = "decoded" if klass != "unsupported_swap" else "unsupported"
+                consideration[bucket][asset] += amount
         counts[klass] += 1
         rows.append({
             "signature": signature,
