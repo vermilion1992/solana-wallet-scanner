@@ -1172,7 +1172,9 @@ def assess_history_completeness(records, leftover_token, *, address, cap_truncat
     """
     stamp, pre = oldest_native_prebalance(records, address)
     created_in_range = pre == 0
-    leftover = bool(leftover_token)
+    # Helius can still return a pagination token after the wallet's first tx.
+    # Once first-funding is proven, no earlier history remains.
+    leftover = bool(leftover_token) and not created_in_range
     unknown = mints_sold_without_acquisition(records, address)
     base = {
         "wallet_created_in_range": created_in_range,
@@ -5588,15 +5590,18 @@ async def phase3_history(store, grant, config, state, recorder):
                 cursor["window_covered"] = bool(covered)
                 captured = load_phase3_captured_records(config, address) + list(records)
                 apply_window_reach(cursor, captured, bounds)
-                cursor["leftover_pagination_token"] = bool(token)
-                cursor["history_complete"] = bool(created["history_complete"]) and not hit_page_cap
-                if hit_page_cap and token:
+                cursor["leftover_pagination_token"] = bool(token) and not created["wallet_created_in_range"]
+                if created["wallet_created_in_range"] and created["history_complete"]:
+                    cursor["history_complete"] = True
+                    cursor["history_complete_reason"] = created["history_complete_reason"]
+                elif hit_page_cap and token:
                     cursor["history_complete"] = False
                     cursor["history_complete_reason"] = "per_wallet_cap"
                 elif token and not created["wallet_created_in_range"]:
                     cursor["history_complete"] = False
                     cursor["history_complete_reason"] = "pagination_token_remaining_earlier_history"
                 else:
+                    cursor["history_complete"] = bool(created["history_complete"])
                     cursor["history_complete_reason"] = created["history_complete_reason"]
                 cursor["wallet_created_in_range"] = created["wallet_created_in_range"]
                 cursor["oldest_block_time"] = created["oldest_block_time"]

@@ -177,7 +177,39 @@ def _positively_non_economic(raw, address, keys, mints, swap_like, decoded_kinds
     return True
 
 
-def lineage_mints(*, decoded_events=None, episodes=None, ledger=None, report_start=None, report_end=None):
+def _in_window_heuristic_sell_mints(records, address, start, end, decoded=None):
+    """Non-quote mints the wallet sold in-window, decoded or only swap-like.
+
+    An undecoded window sell still creates lineage so a superset window cannot
+    drop the pre-window buys of that mint from R.
+    """
+    found = set()
+    if not records or not address:
+        return found
+    for record in records:
+        raw = unwrap_gta_record(record)
+        timestamp = _block_time(record, raw)
+        if not _in_report(timestamp, start, end):
+            continue
+        keys = _account_keys(raw) if isinstance(raw, dict) else []
+        signature = _signature(record, raw)
+        kinds = _decoded_kinds(decoded or {}, signature)
+        mints = wallet_touched_mints(raw, address)
+        if mints is None:
+            continue
+        if not _swap_like(raw, address, keys, kinds) and not any(kind in ("sell", "flatten") for kind in kinds):
+            continue
+        maps = _owner_token_maps(raw, address)
+        if maps is None:
+            continue
+        pre, post = maps
+        for mint in mints - QUOTE_MINTS:
+            if post.get(mint, Decimal("0")) < pre.get(mint, Decimal("0")):
+                found.add(mint)
+    return found
+
+
+def lineage_mints(*, decoded_events=None, episodes=None, ledger=None, report_start=None, report_end=None, records=None, address=None, decoded=None):
     """Non-quote mints whose window sells/flattens/counted episodes matter."""
     start = _unix(report_start)
     end = _unix(report_end)
@@ -211,6 +243,7 @@ def lineage_mints(*, decoded_events=None, episodes=None, ledger=None, report_sta
         count = info if isinstance(info, int) else (info or {}).get("completed_episodes") or 0
         if count:
             lineage.add(mint)
+    lineage |= _in_window_heuristic_sell_mints(records, address, start, end, decoded)
     return frozenset(lineage)
 
 
@@ -340,9 +373,34 @@ def coverage_over_relevant(records, decoded, address, membership):
         else:
             unsupported_n += 1
             bucket = "unsupported"
+        reasons = member.get("reasons") or []
+        # Count every R member (DC-2). Rent / fee SOL on a non-swap touch
+        # must not open a zero-decoded SOL bucket that wipes a measured
+        # USDC/USDT share on a superset window.
+        lineage_only = (
+            not decoded_trade
+            and not member.get("swap_like")
+            and "unreadable_in_window" not in reasons
+            and "in_window_swap_like" not in reasons
+            and "unreadable_unknown_mints" not in reasons
+            and "unknown_timestamp" not in reasons
+            and "unknown_report_bounds" not in reasons
+        )
+        if lineage_only:
+            continue
+        add_sol = (
+            decoded_trade
+            or member.get("swap_like")
+            or "unreadable_unknown_mints" in reasons
+            or "unknown_timestamp" in reasons
+            or "unknown_report_bounds" in reasons
+        )
         for asset, amount in legs.items():
-            if asset and amount:
-                consideration[bucket][asset] += amount
+            if not asset or not amount:
+                continue
+            if asset == "SOL" and not add_sol:
+                continue
+            consideration[bucket][asset] += amount
     shares = _shares_from_totals(decoded_n, unsupported_n, consideration)
     shares["consideration"] = {
         "decoded": {asset: _display_decimal(value) for asset, value in consideration["decoded"].items() if value},
@@ -359,6 +417,9 @@ def build_result_relevant(records, decoded, address, *, report_start, report_end
         ledger=ledger,
         report_start=report_start,
         report_end=report_end,
+        records=records,
+        address=address,
+        decoded=decoded,
     )
     membership = relevant_membership(
         records, decoded, address,

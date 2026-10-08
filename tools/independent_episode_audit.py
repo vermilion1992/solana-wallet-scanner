@@ -2880,7 +2880,7 @@ def _auditor_swap_like(raw, address, reconstructed):
     return _auditor_has_non_infra_outer(raw, keys) and _auditor_opposite_deltas(raw, address, keys)
 
 
-def _auditor_lineage_mints(trades, episodes, report_start, report_end):
+def _auditor_lineage_mints(trades, episodes, report_start, report_end, records=None, address=None):
     lineage = set()
     for trade in trades or []:
         mint = trade.get("mint")
@@ -2895,6 +2895,27 @@ def _auditor_lineage_mints(trades, episodes, report_start, report_end):
         mint = item.get("mint")
         if mint and mint not in AUDITOR_QUOTE_MINTS:
             lineage.add(mint)
+    if records and address:
+        for record in records:
+            raw = _unwrap(record)
+            timestamp = _auditor_block_time(record, raw)
+            if timestamp is None or not (report_start <= timestamp < report_end):
+                continue
+            mints = _auditor_touched_mints(raw, address)
+            if mints is None:
+                continue
+            reconstructed = []
+            signature = _auditor_record_signature(record, raw)
+            for trade in trades or []:
+                if trade.get("signature") == signature:
+                    reconstructed.append(trade)
+            if not _auditor_swap_like(raw, address, reconstructed):
+                continue
+            token_deltas, pre, post = _owned_token_deltas(raw, address) if isinstance(raw, dict) else ({}, {}, {})
+            del token_deltas
+            for mint in mints - AUDITOR_QUOTE_MINTS:
+                if post.get(mint, Decimal("0")) < pre.get(mint, Decimal("0")):
+                    lineage.add(mint)
     return frozenset(lineage)
 
 
@@ -2907,7 +2928,7 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
         signature = trade.get("signature")
         if signature:
             by_sig.setdefault(signature, []).append(trade)
-    lineage = _auditor_lineage_mints(trades, episodes, start, end)
+    lineage = _auditor_lineage_mints(trades, episodes, start, end, records=records, address=address)
     signatures = []
     decoded_n = 0
     unsupported_n = 0
@@ -2924,20 +2945,22 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
         failed = isinstance(meta, dict) and meta.get("err") is not None
         in_report = timestamp is not None and start <= timestamp < end
         before_end = timestamp is not None and timestamp < end
-        # Independent include rule (not the app reason ladder):
-        # failed txs are idle; reconstructed always; swap-like only in-window
-        # (out-of-window non-lineage swaps stay out); lineage / unknown mints
-        # / in-window unexplained native still enter.
+        lineage_touch = bool(
+            before_end and mints is not None and (mints - AUDITOR_QUOTE_MINTS) & lineage
+        )
+        # Independent include rule matches documented R: failed txs are idle;
+        # reconstructed / swap-like only in-window (out-of-window non-lineage
+        # swaps stay out); lineage / unknown mints / in-window unexplained
+        # native still enter. Reconstructed-always was pulling old unrelated
+        # fills into R and disagreeing with the app.
         include = False
         if failed:
             include = False
-        elif reconstructed:
-            include = True
-        elif in_report and swap_like:
+        elif in_report and (reconstructed or swap_like):
             include = True
         elif timestamp is None:
             include = True
-        elif before_end and mints is not None and (mints - AUDITOR_QUOTE_MINTS) & lineage:
+        elif lineage_touch:
             include = True
         elif mints is None:
             include = True
@@ -2972,6 +2995,14 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
         else:
             # DC-2: every included row is counted, including lineage-only.
             unsupported_n += 1
+            lineage_only = (
+                lineage_touch
+                and not in_report
+                and not swap_like
+                and mints is not None
+            )
+            if lineage_only:
+                continue
             token_deltas, _pre, _post = _owned_token_deltas(raw, address) if isinstance(raw, dict) else ({}, {}, {})
             usdc = abs(token_deltas.get(USDC, Decimal("0")))
             usdt = abs(token_deltas.get(USDT, Decimal("0")))
@@ -2982,7 +3013,8 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
                 unsupported_value["USDC"] += usdc / Decimal("1000000")
             if usdt >= Decimal("1000000"):
                 unsupported_value["USDT"] += usdt / Decimal("1000000")
-            if sol > Decimal("0.003"):
+            add_sol = swap_like or mints is None or timestamp is None
+            if add_sol and sol > Decimal("0.003"):
                 unsupported_value["SOL"] += sol
     denom = decoded_n + unsupported_n
     empty = not signatures or denom == 0

@@ -55,11 +55,28 @@ def _empty_coverage_counts():
     return {name: 0 for name in COVERAGE_STATUSES}
 
 
+def auditor_confirmed_unresolved(report, profile):
+    """Prefer the independent auditor's unmatched-sale count when it ran.
+
+    App FIFO can under-count reconstructed sells the decoder missed. The
+    blocker reports the auditor-confirmed figure so the text matches the
+    audit blob.
+    """
+    audit = None
+    if isinstance(report, dict):
+        audit = report.get("independent_audit")
+    if not isinstance(audit, dict) and isinstance(profile, dict):
+        audit = profile.get("independent_audit")
+    if isinstance(audit, dict) and audit.get("unresolved_basis_sales") not in (None, ""):
+        return int(audit["unresolved_basis_sales"])
+    return int((profile or {}).get("unresolved_basis_sales") or 0)
+
+
 def blocking_reason(report, profile, *, coverage_status, level):
     """Explicit why this wallet is not a stronger/provisional lead."""
     completed = int(profile.get("completed_known_cost_positions") or 0)
     open_lots = int(profile.get("open_buys_in_sample") or 0)
-    unresolved = int(profile.get("unresolved_basis_sales") or 0)
+    unresolved = auditor_confirmed_unresolved(report, profile)
     reasons = []
     level_reason = (level or {}).get("reason") or (level or {}).get("blocker") or ""
     from scanner.mass_search.qualification_gates import GT_ECONOMIC_TRADES_RULE

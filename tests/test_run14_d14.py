@@ -1,4 +1,4 @@
-"""Run-14 D14-3..13. Offline only. Proof gates stay fail-closed."""
+"""Run-14 D14-3..17. Offline only. Proof gates stay fail-closed."""
 from __future__ import annotations
 
 import asyncio
@@ -14,6 +14,7 @@ from scanner.investigation import (
     D14_TOP3_DEFERRED_PROGRAMS,
     JUPITER,
     OKX_DEX_ROUTER,
+    USDC,
     WHIRLPOOL,
     decode_supported_swaps,
     net_balance_reviewed_swap,
@@ -32,6 +33,7 @@ from scanner.mass_search.live_e2e import (
     _nansen_timeout_was_billed,
     _phase1_nansen,
     _phase1_nansen_token_pnl,
+    assess_history_completeness,
     bind_run_spend,
     empty_phase_spend,
     empty_spend,
@@ -46,7 +48,14 @@ from scanner.mass_search.live_e2e_ledger import (
     put_receipt,
     request_identity,
 )
-from scanner.mass_search.qualification_gates import GT_ECONOMIC_TRADES_RULE
+from scanner.mass_search.bundle_detect import (
+    PYTH_STAKING,
+    detect_bundle_or_distribution,
+)
+from scanner.mass_search.labels import blocking_reason
+from scanner.mass_search.qualification_gates import GT_ECONOMIC_TRADES_RULE, mandatory_coverage_gate
+from scanner.mass_search.result_relevant_coverage import build_result_relevant
+import tools.independent_episode_audit as auditor
 from scanner.mass_search.readable_first import (
     DROP,
     KEEP,
@@ -530,3 +539,415 @@ def test_d14_13_neighbor_unknown_program_and_ambiguous_okx_stay_unreadable():
     okx_ambiguous["transaction"]["message"]["accountKeys"][1]["pubkey"] = OKX_DEX_ROUTER
     okx_ambiguous["transaction"]["message"]["instructions"][0]["programId"] = OKX_DEX_ROUTER
     assert net_balance_reviewed_swap(okx_ambiguous, wallet) is None
+
+
+# --- D14-14 ----------------------------------------------------------------
+
+SYSTEM = "11111111111111111111111111111111"
+TOKEN_PROG = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+D14_WALLET = "2BZwUZkaCLrXcjMYGpM7QV2Q5pFZntA3EdJYU291Dbix"
+D14_NEW = "8yJa38SWd4PUvfFVRHfhu7hBRvgRLi1EjfzhSNNAJnX6"
+D14_PYTH = "HZ1JovNiVvGrGfW4pZC1Xdnt98UqL5wJo1kS1kS1kS12"
+D14_ATA = "2BZwUZkaAta11111111111111111111111111111111"
+D14_CUSTODY = "StakeCustody111111111111111111111111111111"
+D14_COSIGN = "ExistingCoSigner11111111111111111111111111"
+
+
+def _pyth_stake_create_account():
+    rent = 29_009_280
+    return {
+        "signature": "5qag8uwPg6z3h8U3GbW6WdwDJbKGFCMpqR3dcz4Zb9g5",
+        "transaction": {
+            "signatures": ["5qag8uwPg6z3h8U3GbW6WdwDJbKGFCMpqR3dcz4Zb9g5"],
+            "message": {
+                "header": {"numRequiredSignatures": 2},
+                "accountKeys": [D14_WALLET, D14_NEW, D14_ATA, D14_CUSTODY, SYSTEM, PYTH_STAKING, TOKEN_PROG],
+                "instructions": [
+                    {
+                        "programId": SYSTEM,
+                        "parsed": {
+                            "type": "createAccount",
+                            "info": {
+                                "source": D14_WALLET,
+                                "newAccount": D14_NEW,
+                                "lamports": rent,
+                                "space": 4040,
+                                "owner": PYTH_STAKING,
+                            },
+                        },
+                    },
+                    {"programId": PYTH_STAKING, "accounts": [D14_WALLET, D14_NEW, D14_CUSTODY], "data": "deposit"},
+                    {
+                        "programId": TOKEN_PROG,
+                        "parsed": {
+                            "type": "transfer",
+                            "info": {
+                                "authority": D14_WALLET,
+                                "source": D14_ATA,
+                                "destination": D14_CUSTODY,
+                                "mint": D14_PYTH,
+                                "amount": "2175000000",
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        "meta": {
+            "err": None,
+            "fee": 10_000,
+            "preBalances": [1_000_000_000, 0, 2_039_280, 2_039_280, 1, 1, 1],
+            "postBalances": [1_000_000_000 - rent - 10_000, rent, 2_039_280, 2_039_280, 1, 1, 1],
+            "preTokenBalances": [
+                {"accountIndex": 2, "mint": D14_PYTH, "owner": D14_WALLET, "uiTokenAmount": {"amount": "2175000000"}},
+            ],
+            "postTokenBalances": [
+                {"accountIndex": 2, "mint": D14_PYTH, "owner": D14_WALLET, "uiTokenAmount": {"amount": "0"}},
+                {"accountIndex": 3, "mint": D14_PYTH, "owner": D14_CUSTODY, "uiTokenAmount": {"amount": "2175000000"}},
+            ],
+        },
+        "blockTime": 1705449950,
+    }
+
+
+def test_d14_14_pyth_create_account_rent_is_not_cosigner_proceeds():
+    detected = detect_bundle_or_distribution([_pyth_stake_create_account()], D14_WALLET)
+    assert "sell_proceeds_to_cosigner" not in (detected.get("reasons") or [])
+    assert not detected.get("sell_proceeds_to_cosigner")
+
+
+def test_d14_14_neighbor_existing_cosigner_sale_still_flags():
+    sale = {
+        "signature": "real-cosigner-sale",
+        "transaction": {
+            "signatures": ["real-cosigner-sale"],
+            "message": {
+                "header": {"numRequiredSignatures": 2},
+                "accountKeys": [D14_WALLET, D14_COSIGN, D14_ATA, "UsdcAta111111111111111111111111111111111", JUPITER, TOKEN_PROG],
+                "instructions": [
+                    {"programId": JUPITER, "accounts": [D14_WALLET, D14_ATA], "data": "route"},
+                ],
+            },
+        },
+        "meta": {
+            "err": None,
+            "fee": 5000,
+            "preBalances": [2_000_000_000, 1_000_000_000, 2_039_280, 2_039_280, 1, 1],
+            "postBalances": [1_500_000_000, 1_500_000_000, 2_039_280, 2_039_280, 1, 1],
+            "preTokenBalances": [
+                {"accountIndex": 2, "mint": D14_PYTH, "owner": D14_WALLET, "uiTokenAmount": {"amount": "1000000000"}},
+            ],
+            "postTokenBalances": [
+                {"accountIndex": 2, "mint": D14_PYTH, "owner": D14_WALLET, "uiTokenAmount": {"amount": "0"}},
+            ],
+        },
+        "blockTime": DAY,
+    }
+    detected = detect_bundle_or_distribution([sale], D14_WALLET)
+    assert "sell_proceeds_to_cosigner" in detected["reasons"]
+    assert detected["sell_proceeds_to_cosigner"][0]["co_signer"] == D14_COSIGN
+
+
+# --- D14-15 ----------------------------------------------------------------
+
+D14_MINT = "RrelMintD1415aaaaaaaaaaaaaaaaaaaaaaaaaaa"
+D14_TOK_ATA = "RrelTokAtaD1415aaaaaaaaaaaaaaaaaaaaaaaaa"
+D14_USDC_ATA = "RrelUsdcAtaD1415aaaaaaaaaaaaaaaaaaaaaaaa"
+START_90 = int(datetime(2026, 7, 11, tzinfo=timezone.utc).timestamp())
+END_REP = int(datetime(2026, 10, 8, tzinfo=timezone.utc).timestamp())
+IN_90 = START_90 + 86400
+IN_180_ONLY = int(datetime(2026, 5, 1, tzinfo=timezone.utc).timestamp())
+START_180 = int(datetime(2026, 4, 11, tzinfo=timezone.utc).timestamp())
+
+
+def _d14_swap(signature, *, token_pre, token_post, usdc_pre, usdc_post, block_time, mint=D14_MINT):
+    return {
+        "signature": signature,
+        "blockTime": block_time,
+        "transaction": {
+            "signatures": [signature],
+            "message": {
+                "accountKeys": [D14_WALLET, D14_TOK_ATA, D14_USDC_ATA, JUPITER, TOKEN_PROG],
+                "instructions": [{"programId": JUPITER, "accounts": [D14_WALLET, D14_TOK_ATA], "data": "route"}],
+            },
+        },
+        "meta": {
+            "err": None,
+            "fee": 5000,
+            "preBalances": [2_000_000_000, 2_039_280, 2_039_280, 1, 1],
+            "postBalances": [1_999_995_000, 2_039_280, 2_039_280, 1, 1],
+            "preTokenBalances": [
+                {"accountIndex": 1, "mint": mint, "owner": D14_WALLET, "uiTokenAmount": {"amount": token_pre}},
+                {"accountIndex": 2, "mint": USDC, "owner": D14_WALLET, "uiTokenAmount": {"amount": usdc_pre}},
+            ],
+            "postTokenBalances": [
+                {"accountIndex": 1, "mint": mint, "owner": D14_WALLET, "uiTokenAmount": {"amount": token_post}},
+                {"accountIndex": 2, "mint": USDC, "owner": D14_WALLET, "uiTokenAmount": {"amount": usdc_post}},
+            ],
+        },
+    }
+
+
+def _d14_lineage_rent(signature, block_time):
+    """Non-swap lineage touch that pays 0.029 SOL rent into a new account."""
+    rent = 29_009_280
+    new = "LineageRentAcct11111111111111111111111111"
+    return {
+        "signature": signature,
+        "blockTime": block_time,
+        "transaction": {
+            "signatures": [signature],
+            "message": {
+                "header": {"numRequiredSignatures": 2},
+                "accountKeys": [D14_WALLET, new, D14_TOK_ATA, SYSTEM, PYTH_STAKING, TOKEN_PROG],
+                "instructions": [
+                    {
+                        "programId": SYSTEM,
+                        "parsed": {
+                            "type": "createAccount",
+                            "info": {
+                                "source": D14_WALLET,
+                                "newAccount": new,
+                                "lamports": rent,
+                                "space": 4040,
+                                "owner": PYTH_STAKING,
+                            },
+                        },
+                    },
+                    {"programId": PYTH_STAKING, "accounts": [D14_WALLET, new], "data": "stake"},
+                ],
+            },
+        },
+        "meta": {
+            "err": None,
+            "fee": 10_000,
+            "preBalances": [1_000_000_000, 0, 2_039_280, 1, 1, 1],
+            "postBalances": [1_000_000_000 - rent - 10_000, rent, 2_039_280, 1, 1, 1],
+            "preTokenBalances": [
+                {"accountIndex": 2, "mint": D14_MINT, "owner": D14_WALLET, "uiTokenAmount": {"amount": "1000000"}},
+            ],
+            "postTokenBalances": [
+                {"accountIndex": 2, "mint": D14_MINT, "owner": D14_WALLET, "uiTokenAmount": {"amount": "1000000"}},
+            ],
+        },
+    }
+
+
+def test_d14_15_superset_window_lineage_rent_does_not_zero_value():
+    sells = []
+    events = []
+    for i in range(15):
+        sig = f"usdc-sell-{i}"
+        sells.append(_d14_swap(
+            sig, token_pre="1000000", token_post="0",
+            usdc_pre="0", usdc_post="100000000", block_time=IN_90 + i,
+        ))
+        events.append({
+            "kind": "sell", "signature": sig, "mint": D14_MINT,
+            "timestamp": IN_90 + i, "amount_usdc": "100", "consideration_usdc": "100",
+            "settlement_asset": "USDC",
+        })
+    unread = _d14_swap(
+        "usdc-unread", token_pre="1000000", token_post="0",
+        usdc_pre="0", usdc_post="100000000", block_time=IN_90 + 20,
+    )
+    rent = _d14_lineage_rent("lineage-rent-180", IN_180_ONLY)
+    ledger = [{"mint": D14_MINT, "close_signature": "usdc-sell-0"}]
+    win90 = build_result_relevant(
+        sells + [unread], {"events": events}, D14_WALLET,
+        report_start=START_90, report_end=END_REP, ledger=ledger,
+    )
+    win180 = build_result_relevant(
+        sells + [unread, rent], {"events": events}, D14_WALLET,
+        report_start=START_180, report_end=END_REP, ledger=ledger,
+    )
+    assert Decimal(str(win90["value_share"])) == Decimal("0.9375")
+    assert Decimal(str(win180["value_share"])) == Decimal("0.9375")
+    assert win180["unsupported_n"] >= win90["unsupported_n"]
+
+
+def test_d14_15_neighbor_unreadable_sol_swap_still_lowers_value():
+    sell = _d14_swap(
+        "usdc-clean", token_pre="1000000", token_post="0",
+        usdc_pre="0", usdc_post="100000000", block_time=IN_90,
+    )
+    events = [{
+        "kind": "sell", "signature": "usdc-clean", "mint": D14_MINT,
+        "timestamp": IN_90, "amount_usdc": "100", "consideration_usdc": "100",
+        "settlement_asset": "USDC",
+    }]
+    sol_unread = {
+        "signature": "sol-unread",
+        "blockTime": IN_180_ONLY,
+        "transaction": {
+            "signatures": ["sol-unread"],
+            "message": {
+                "accountKeys": [D14_WALLET, D14_TOK_ATA, JUPITER, TOKEN_PROG],
+                "instructions": [{"programId": JUPITER, "accounts": [D14_WALLET, D14_TOK_ATA], "data": "route"}],
+            },
+        },
+        "meta": {
+            "err": None,
+            "fee": 5000,
+            "preBalances": [2_000_000_000, 2_039_280, 1, 1],
+            "postBalances": [1_000_000_000, 2_039_280, 1, 1],
+            "preTokenBalances": [
+                {"accountIndex": 1, "mint": D14_MINT, "owner": D14_WALLET, "uiTokenAmount": {"amount": "0"}},
+            ],
+            "postTokenBalances": [
+                {"accountIndex": 1, "mint": D14_MINT, "owner": D14_WALLET, "uiTokenAmount": {"amount": "5000000"}},
+            ],
+        },
+    }
+    base = build_result_relevant(
+        [sell], {"events": events}, D14_WALLET,
+        report_start=START_90, report_end=END_REP, ledger=[{"mint": D14_MINT}],
+    )
+    wider = build_result_relevant(
+        [sell, sol_unread], {"events": events}, D14_WALLET,
+        report_start=START_180, report_end=END_REP, ledger=[{"mint": D14_MINT}],
+    )
+    assert Decimal(str(base["value_share"])) == Decimal("1")
+    assert Decimal(str(wider["value_share"])) < Decimal("1")
+
+
+# --- D14-16 ----------------------------------------------------------------
+
+def test_d14_16_first_tx_clears_leftover_pagination_token():
+    created = {
+        "signature": "first-tx",
+        "blockTime": 1_700_000_000,
+        "transaction": {
+            "signatures": ["first-tx"],
+            "message": {"accountKeys": [D14_WALLET], "instructions": []},
+        },
+        "meta": {
+            "err": None,
+            "fee": 5000,
+            "preBalances": [0],
+            "postBalances": [1_000_000_000],
+            "preTokenBalances": [],
+            "postTokenBalances": [],
+        },
+    }
+    assessed = assess_history_completeness([created], leftover_token="still-a-token", address=D14_WALLET)
+    assert assessed["history_complete"] is True
+    assert assessed["wallet_created_in_range"] is True
+    assert assessed["leftover_pagination_token"] is False
+
+
+def test_d14_16_neighbor_unproven_first_tx_keeps_leftover():
+    later = {
+        "signature": "later-tx",
+        "blockTime": 1_700_000_000,
+        "transaction": {
+            "signatures": ["later-tx"],
+            "message": {"accountKeys": [D14_WALLET], "instructions": []},
+        },
+        "meta": {
+            "err": None,
+            "fee": 5000,
+            "preBalances": [50_000_000],
+            "postBalances": [40_000_000],
+            "preTokenBalances": [],
+            "postTokenBalances": [],
+        },
+    }
+    assessed = assess_history_completeness([later], leftover_token="earlier", address=D14_WALLET)
+    assert assessed["wallet_created_in_range"] is False
+    assert assessed["leftover_pagination_token"] is True
+    assert assessed["history_complete"] is False
+
+
+# --- D14-17 ----------------------------------------------------------------
+
+def test_d14_17_blocker_reports_auditor_unresolved_count():
+    report = {
+        "independent_audit": {
+            "unresolved_basis_sales": 80,
+            "result_relevant": {"signatures": ["a"], "gate_passed": False},
+        },
+        "record_breakdown": {
+            "result_relevant": {"version": "result-relevant-v1", "signatures": ["a"], "size": 1, "empty": False, "denominator": 1},
+        },
+    }
+    profile = {
+        "completed_known_cost_positions": 3,
+        "open_buys_in_sample": 40,
+        "unresolved_basis_sales": 63,
+    }
+    reason = blocking_reason(report, profile, coverage_status="coverage_blocked", level={"level": "conditional_captured_lot_result"})
+    assert "80 unresolved-basis sales" in reason
+    assert "63 unresolved" not in reason
+
+
+def test_d14_17_neighbor_without_auditor_keeps_app_count():
+    report = {}
+    profile = {
+        "completed_known_cost_positions": 3,
+        "open_buys_in_sample": 0,
+        "unresolved_basis_sales": 63,
+    }
+    reason = blocking_reason(report, profile, coverage_status="coverage_blocked", level={"level": "conditional_captured_lot_result"})
+    assert "63 unresolved-basis sales" in reason
+
+
+def test_d14_17_membership_agrees_and_old_reconstructed_unrelated_stays_out():
+    window_sell = _d14_swap(
+        "win-sell", token_pre="1000000", token_post="0",
+        usdc_pre="0", usdc_post="100000000", block_time=IN_90,
+    )
+    old_unrelated = _d14_swap(
+        "old-unrelated", token_pre="5000000", token_post="0",
+        usdc_pre="0", usdc_post="50000000", block_time=IN_180_ONLY,
+        mint="OtherMintD1417aaaaaaaaaaaaaaaaaaaaaaaaaa",
+    )
+    old_lineage = _d14_swap(
+        "old-lineage-buy", token_pre="0", token_post="1000000",
+        usdc_pre="100000000", usdc_post="0", block_time=IN_180_ONLY,
+    )
+    events = [{
+        "kind": "sell", "signature": "win-sell", "mint": D14_MINT,
+        "timestamp": IN_90, "amount_usdc": "100", "consideration_usdc": "100",
+        "settlement_asset": "USDC",
+    }]
+    records = [window_sell, old_unrelated, old_lineage]
+    app = build_result_relevant(
+        records, {"events": events}, D14_WALLET,
+        report_start=START_90, report_end=END_REP, ledger=[{"mint": D14_MINT}],
+    )
+    trades = [
+        {
+            "kind": "sell", "signature": "win-sell", "mint": D14_MINT,
+            "timestamp": IN_90, "quantity_raw": "1000000",
+            "consideration_usdc": "100", "settlement_asset": "USDC",
+            "observed_pre_quantity_raw": "1000000", "observed_post_quantity_raw": "0",
+        },
+        {
+            "kind": "sell", "signature": "old-unrelated",
+            "mint": "OtherMintD1417aaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "timestamp": IN_180_ONLY, "quantity_raw": "5000000",
+            "consideration_usdc": "50", "settlement_asset": "USDC",
+            "observed_pre_quantity_raw": "5000000", "observed_post_quantity_raw": "0",
+        },
+        {
+            "kind": "buy", "signature": "old-lineage-buy", "mint": D14_MINT,
+            "timestamp": IN_180_ONLY, "quantity_raw": "1000000",
+            "consideration_usdc": "100", "settlement_asset": "USDC",
+            "observed_pre_quantity_raw": "0", "observed_post_quantity_raw": "1000000",
+        },
+    ]
+    aud = auditor.result_relevant_coverage(
+        D14_WALLET, records, trades, [{"mint": D14_MINT}],
+        report_start=START_90, report_end=END_REP,
+    )
+    assert "old-unrelated" not in app["signatures"]
+    assert "old-unrelated" not in aud["signatures"]
+    assert "old-lineage-buy" in app["signatures"]
+    assert "old-lineage-buy" in aud["signatures"]
+    assert set(app["signatures"]) == set(aud["signatures"])
+    gate = mandatory_coverage_gate({
+        "record_breakdown": {"result_relevant": app},
+        "independent_audit": {"result_relevant": aud, "unresolved_basis_sales": 80},
+    })
+    assert "disagree on result-relevant membership" not in (gate.get("reason") or "")

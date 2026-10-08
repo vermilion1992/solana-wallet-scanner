@@ -52,6 +52,12 @@ DUST_RAW = Decimal("1000000")
 MATERIAL_SOL_LAMPORTS = Decimal("10000000")
 RENT_LAMPORTS = Decimal("3000000")
 CONTROLLED_SHARE = Decimal("0.80")
+SYSTEM_PROGRAM = "11111111111111111111111111111111"
+# Pyth staking (and similar) take deposits. A token debit into one of these
+# is not a sale. The general detector also treats any non-reviewed program
+# deposit the same way when no quote reaches a pre-existing party.
+PYTH_STAKING = "pytS9TjG1qyAZypk7n8rw8gfW9sUaqqYyMhJQ4E7JCQ"
+STAKING_PROGRAMS = frozenset({PYTH_STAKING})
 
 
 def _unwrap(record):
@@ -173,8 +179,116 @@ def _is_close_only(raw, keys, address, mint):
     return False
 
 
+def _create_account_map(raw, keys):
+    """newAccount -> owner program for System createAccount / createAccountWithSeed."""
+    found = {}
+    for instruction in _iter_instructions(raw):
+        if not isinstance(instruction, dict):
+            continue
+        try:
+            program = _program(instruction, keys) if keys else instruction.get("programId")
+        except (ValueError, TypeError, KeyError, IndexError):
+            program = instruction.get("programId")
+        parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+        if program != SYSTEM_PROGRAM or not parsed:
+            continue
+        if parsed.get("type") not in ("createAccount", "createAccountWithSeed"):
+            continue
+        info = parsed.get("info") or {}
+        dest = info.get("newAccount") or info.get("newAccountPubkey")
+        if dest:
+            found[dest] = info.get("owner")
+    return found
+
+
+def _is_new_or_program_owned_account(raw, keys, other):
+    """True for a brand-new key or a CreateAccount dest (often program-owned).
+
+    A new account co-signs only because it must sign its own creation. Rent
+    paid into it, or into a program-owned account created in this tx, is not
+    sale proceeds.
+    """
+    if not other or not keys:
+        return False
+    created = _create_account_map(raw, keys)
+    if other in created:
+        return True
+    try:
+        index = keys.index(other)
+    except ValueError:
+        return False
+    meta = raw.get("meta") or {}
+    pre = meta.get("preBalances") or []
+    if index < len(pre) and pre[index] == 0:
+        return True
+    return False
+
+
+def _wallet_gained_quote(raw, keys, address, deltas):
+    for mint, qty in (deltas or {}).items():
+        if qty > 0 and mint in STABLES | {WSOL}:
+            return True
+    native, _ = _native_delta(raw, keys, address) if keys else (Decimal("0"), False)
+    return native >= MATERIAL_SOL_LAMPORTS
+
+
+def _non_new_quote_recipients(raw, keys, address):
+    """Pre-existing counterparties that received quote or material SOL."""
+    found = []
+    if not keys:
+        return found
+    for key in keys:
+        if key == address or key in INFRA:
+            continue
+        if _is_new_or_program_owned_account(raw, keys, key):
+            continue
+        other_delta, _ = _native_delta(raw, keys, key)
+        if other_delta >= MATERIAL_SOL_LAMPORTS:
+            found.append(key)
+            continue
+        other_tokens = _owned_token_deltas(raw, key)
+        if any(qty > 0 and mint in STABLES | {WSOL} for mint, qty in other_tokens.items()):
+            found.append(key)
+    return found
+
+
+def _invokes_non_reviewed_program(raw, keys):
+    message = (raw.get("transaction") or {}).get("message") or {}
+    for instruction in message.get("instructions") or []:
+        if not isinstance(instruction, dict):
+            continue
+        try:
+            program = _program(instruction, keys) if keys else instruction.get("programId")
+        except (ValueError, TypeError, KeyError, IndexError):
+            program = instruction.get("programId")
+        if program in STAKING_PROGRAMS:
+            return True
+        if program and program not in INFRA and program not in REVIEWED_OUTER_VENUES and program not in (PUMP, PUMP_SWAP):
+            return True
+    return False
+
+
+def _is_non_swap_program_deposit(raw, keys, address, deltas):
+    """Token debit into a staking / program account is not a sale.
+
+    A non-new party receiving quote or SOL beyond fees/tips keeps this a sale
+    so real cosigner proceeds still flag.
+    """
+    if keys and _has_reviewed_swap(raw, keys):
+        return False
+    if not any(qty < 0 and mint != WSOL for mint, qty in (deltas or {}).items()):
+        return False
+    if _wallet_gained_quote(raw, keys, address, deltas):
+        return False
+    if _non_new_quote_recipients(raw, keys, address):
+        return False
+    return bool(keys) and _invokes_non_reviewed_program(raw, keys)
+
+
 def _sale_mints(raw, keys, address, deltas):
     """Mints sold through any venue, decoded or not. ATA close is not a sale."""
+    if _is_non_swap_program_deposit(raw, keys, address, deltas):
+        return set()
     sold = set()
     for mint, qty in (deltas or {}).items():
         if qty >= 0 or mint in (WSOL,):
@@ -514,7 +628,11 @@ def detect_bundle_or_distribution(records, address):
         message = (raw.get("transaction") or {}).get("message") or {}
         signature = ((raw.get("transaction") or {}).get("signatures") or [None])[0] or record.get("signature")
         reviewed_swap = bool(keys) and _has_reviewed_swap(raw, keys)
-        wallet_sold = any(qty < 0 and mint != WSOL for mint, qty in deltas.items())
+        program_deposit = _is_non_swap_program_deposit(raw, keys, address, deltas)
+        wallet_sold = (
+            any(qty < 0 and mint != WSOL for mint, qty in deltas.items())
+            and not program_deposit
+        )
         if len(signers) > 1 and address in signers and (reviewed_swap or has_swap):
             others = [item for item in signers if item != address]
             partners = []
@@ -534,7 +652,11 @@ def detect_bundle_or_distribution(records, address):
                 reasons.append("multi_signer_bundle_buy")
             for other in others:
                 other_delta, _ = _native_delta(raw, keys, other)
-                if wallet_sold and other_delta >= MATERIAL_SOL_LAMPORTS:
+                if (
+                    wallet_sold
+                    and other_delta >= MATERIAL_SOL_LAMPORTS
+                    and not _is_new_or_program_owned_account(raw, keys, other)
+                ):
                     proceeds_to_cosigner.append({
                         "signature": signature,
                         "co_signer": other,
@@ -554,15 +676,19 @@ def detect_bundle_or_distribution(records, address):
                 if isinstance(lamports, int) and lamports >= 10_000_000 and source:
                     shared_funders[source] = shared_funders.get(source, 0) + 1
                     counterparts.add(source)
-                if info.get("source") != address and info.get("destination") in counterparts and native < 0:
-                    proceeds_to_cosigner.append({
-                        "signature": signature,
-                        "co_signer": info.get("destination"),
-                    })
-                    reasons.append("sell_proceeds_to_cosigner")
+                dest = info.get("destination")
+                if info.get("source") != address and dest in counterparts and native < 0:
+                    if dest and not _is_new_or_program_owned_account(raw, keys, dest):
+                        proceeds_to_cosigner.append({
+                            "signature": signature,
+                            "co_signer": dest,
+                        })
+                        reasons.append("sell_proceeds_to_cosigner")
         if keys and len(signers) > 1 and address in signers and not reviewed_swap and native < 0:
             for other in signers:
                 if other == address:
+                    continue
+                if _is_new_or_program_owned_account(raw, keys, other):
                     continue
                 other_delta, _ = _native_delta(raw, keys, other)
                 if other_delta >= MATERIAL_SOL_LAMPORTS and (other in counterparts or other in shared_funders):
