@@ -22,6 +22,7 @@ from scanner.mass_search.settlement import isolate_known_cost_events, worksheets
 from scanner.mass_search.verified_costs import classify_native_withdrawal, is_verified_tip_account
 from scanner.mass_search.analytics import build_wallet_analytics
 from scanner.mass_search.workflow import coverage_eligibility, research_screen_run
+from tests.result_relevant_fixtures import attach_result_relevant
 
 ROOT = Path(__file__).resolve().parents[1]
 COVERAGE_DIR = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage"
@@ -110,6 +111,7 @@ def test_item5_default_screen_has_no_pnl_and_count_only_wording():
     ]
     profile = {
         "completed_known_cost_positions": 3,
+        "sample_positions": 3,
         "completed_episode_ledger": ledger,
         "completed_episode_net": "3",
         "completed_episode_net_unit": "SOL",
@@ -121,9 +123,11 @@ def test_item5_default_screen_has_no_pnl_and_count_only_wording():
         "market_vs_rewards": {},
         "sensitivity_evidence_state": "not_established",
     }
-    report = {"address": "count-only", "research_profile": profile, "completed_episode_ledger": ledger, "record_breakdown": {
+    # Count-only wording is the point of this test. Missing R would rewrite
+    # the reason to blocked_unknown_denominator and hide that wording.
+    report = {"address": "count-only", "research_profile": profile, "completed_episode_ledger": ledger, "record_breakdown": attach_result_relevant({
         "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}},
-    }, "worksheet": {"unresolved_basis_sales": 0}}
+    }), "worksheet": {"unresolved_basis_sales": 0}}
     screen = research_screen_run(
         [{"address": "count-only", "capture_available": True}],
         {"count-only": report},
@@ -230,7 +234,12 @@ def test_item11_label_tables_cannot_disagree():
         "corpus_kind": "GENUINE_REPLAY",
         "independent_audit": {"status": "independently_audited", "independently_audited": True},
         "worksheet": {"total_profit_sol": "174.65797861", "settlement_asset": "SOL", "unresolved_basis_sales": 0},
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        # An9s coverage_status is provisional_eligible only when R is present.
+        # Without R the label collapses to blocked_unknown_denominator and
+        # this table-disagreement check cannot see the two distinct axes.
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}},
+        }),
     }
     profile = build_research_profile(report, filters=default_filters())
     profile["completed_known_cost_positions"] = 1
@@ -300,9 +309,13 @@ def test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead():
             {"net": "0.080753918", "mint": "M3", "unit": "SOL", "close_signature": "sig-c"},
         ],
         "worksheet": {"total_profit_sol": "0.242261753", "settlement_asset": "SOL", "unresolved_basis_sales": 0},
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        "record_breakdown": attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}},
+        }),
         "independent_audit": {"status": "independently_audited", "independently_audited": True},
     }
+    # Sign-flip pending_reassessment is only visible once R exists. Missing R
+    # is a stronger block and would hide this sensitivity assertion.
     profile = build_research_profile(report, filters=default_filters())
     assert profile["qualification_level"]["level"] != "provisional_research_lead"
     assert profile["qualification_level"]["sensitivity_sign_flip"] is True
@@ -312,20 +325,28 @@ def test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead():
 
 
 def test_item12_coverage_policy_99_95_blocked_and_dependency():
+    # Status bands are defined on R, not whole-span. Attach R with the same
+    # unsupported shares so 99 / 95 / blocked / dependency stay testable.
+    # Missing R is blocked_unknown_denominator and is covered elsewhere.
+    def _rr(by_count, by_sol):
+        return attach_result_relevant({
+            "unsupported_swap_share_in_window": {"by_count": by_count, "by_consideration": {"SOL": by_sol}},
+        })
+
     assert coverage_eligibility({
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        "record_breakdown": _rr("0", "0"),
         "worksheet": {"unresolved_basis_sales": 0},
     })["status"] == "provisional_eligible"
     assert coverage_eligibility({
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0.04", "by_consideration": {"SOL": "0.04"}}},
+        "record_breakdown": _rr("0.04", "0.04"),
         "worksheet": {"unresolved_basis_sales": 0},
     })["status"] == "watchlist_incomplete_evidence"
     assert coverage_eligibility({
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0.06", "by_consideration": {"SOL": "0.06"}}},
+        "record_breakdown": _rr("0.06", "0.06"),
         "worksheet": {"unresolved_basis_sales": 0},
     })["status"] == "coverage_blocked"
     assert coverage_eligibility({
-        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        "record_breakdown": _rr("0", "0"),
         "worksheet": {"unresolved_basis_sales": 2},
     })["status"] == "coverage_eligibility_pending_reassessment"
 
@@ -506,7 +527,7 @@ def test_gtfo_2af7_same_slot_order_closes_missing_episode():
         event = reconstruct_record(record, GTFO)
         if event and event.get("mint") == mint:
             trades.append(event)
-    episodes, _unresolved, _known = _fifo(trades)
+    episodes, _unresolved, _known, _omitted = _fifo(trades)
     assert len(episodes) == 1
     assert episodes[0]["close_signature"] == GTFO_2AF7_CLOSE
     assert episodes[0]["venue"] == "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
@@ -537,7 +558,7 @@ def test_labelled_wallets_are_independently_audited_in_committed_json():
     expected = {
         A6PS: (8, 8),
         GTFO: (16, 16),
-        W58: (2, 2),
+        W58: (3, 3),
         "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU": (6, 6),
         "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": (1, 1),
     }
@@ -669,8 +690,8 @@ def test_auditor_runs_without_scanner_directory_and_nets_match(tmp_path):
         isolated = module.audit_address(address, pages)
         row = expected[address]
         assert isolated["clean_episodes"] == row["auditor_clean_episodes"]
-        iso_nets = [Decimal(item["net_profit_sol"]) for item in isolated["episodes"]]
-        committed_nets = [Decimal(item["net_profit_sol"]) for item in row["auditor_only_episodes"]]
+        iso_nets = [module.episode_profit_amount(item) for item in isolated["episodes"]]
+        committed_nets = [module.episode_profit_amount(item) for item in row["auditor_only_episodes"]]
         assert iso_nets == committed_nets
 
 
@@ -792,17 +813,17 @@ def test_58pw_independently_audited_sits_next_to_episode_net():
     payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
     row = next(item for item in payload["wallets"] if item["address"] == W58)
     assert row["independently_audited"] is True
-    assert Decimal(str(row["independently_audited_episode_net"])) == Decimal("5614.586672")
+    assert Decimal(str(row["independently_audited_episode_net"])) == Decimal("4109.038305")
     assert row["independently_audited_episode_net_unit"] == "USDC"
     assert row["worksheet_total_independently_audited"] is False
     assert Decimal(str(row["worksheet_total"])) == Decimal("50386.378661746")
     table = json.loads((COVERAGE_DIR / "WALLET_TABLE.json").read_text(encoding="utf-8"))
     wallet = next(item for item in table["wallets"] if item["address"] == W58)
     assert wallet["independently_audited"] is True
-    assert Decimal(str(wallet["independently_audited_episode_net"])) == Decimal("5614.586672")
+    assert Decimal(str(wallet["independently_audited_episode_net"])) == Decimal("4109.038305")
     assert wallet["worksheet_total_independently_audited"] is False
     assert wallet["net_display"] != "50386.378661746 USDC"
-    assert "5614.586672" in str(wallet["net_display"])
+    assert "4109.038305" in str(wallet["net_display"])
     assert "completed-episode net" in str(wallet["net_display"])
     assert (
         "auditor confirms within 2 USDC base units" in str(wallet["net_display"])
@@ -995,8 +1016,15 @@ def test_auditor_rejects_opening_inventory_close_4dyknedb():
     )
     isolated = audit_address(BVZT, pages)
     closes = [item["close_signature"] for item in isolated["episodes"]]
-    assert BVZT_OPENING_CLOSE not in closes
-    assert isolated["clean_episodes"] == 4
+    # Independent OKX SwapTob reconstructs the earlier 7VertkgF buys, so
+    # 4dyknEdb is a clean close of known-cost inventory, not opening stock.
+    # Independent DFlow swap reconstructs 4X6ssNRT (DEW9 USDC buy), which
+    # closes 3QKBQnyvdSvi as an eighth clean episode.
+    # Independent JUP6 net-balance recovers the CTPoy USDC buys that pinned
+    # RouteV2 layout missed (gas-station System transfers). 2uLD88YA then
+    # closes as a ninth known-cost episode.
+    assert BVZT_OPENING_CLOSE in closes
+    assert isolated["clean_episodes"] == 9
     payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
     by_address = {row["address"]: row for row in payload["wallets"]}
     bvzt = by_address[BVZT]
@@ -1019,7 +1047,7 @@ def test_auditor_rejects_opening_inventory_close_4dyknedb():
     expected = {
         A6PS: (8, 8),
         GTFO: (16, 16),
-        W58: (2, 2),
+        W58: (3, 3),
         "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU": (6, 6),
         "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": (1, 1),
     }

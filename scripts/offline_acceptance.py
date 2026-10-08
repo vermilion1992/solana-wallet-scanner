@@ -18,9 +18,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 EVIDENCE = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06"
 OUT = EVIDENCE / "offline-acceptance"
 DRAFT = ROOT / "config/live_authorization.ranked100-depth-biased-next-capture-draft.json"
+LIVE_E2E_DRAFT = ROOT / "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json"
+LIVE_E2E_DRAFT_NEXT = ROOT / "config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json"
+LIVE_E2E_DRAFT_11 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json"
+LIVE_E2E_DRAFT_12 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json"
+LIVE_E2E_DRAFT_13 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-13-mitch-draft.json"
+LIVE_E2E_DRAFT_14 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-14-mitch-draft.json"
+LIVE_E2E_DRAFT_16 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-16-mitch-draft.json"
 MANDATORY = [
     "tests/test_chatgpt_review_2026_10_07.py",
     "tests/test_chatgpt_review_2026_10_07_rereview.py",
@@ -30,8 +39,42 @@ MANDATORY = [
     "tests/test_adversarial_0842_named_counterexamples.py",
     "tests/test_mass_search_mitch_requirements.py",
     "tests/test_grok_bot_2fe60bd_repros.py",
+    "tests/test_live_e2e_filters_and_runner.py",
+    "tests/test_live_e2e_spend_safety.py",
+    "tests/test_live_e2e_live_result_fixes.py",
+    "tests/test_live_e2e_bbc5bef_residuals.py",
+    "tests/test_live_e2e_06cea26_residuals.py",
+    "tests/test_live_e2e_f635a45_residuals.py",
+    "tests/test_live_e2e_4bbb364_residuals.py",
+    "tests/test_live_e2e_df3278c_residuals.py",
+    "tests/test_live_e2e_venue_decode.py",
+    "tests/test_live_e2e_affc623_s9.py",
+    "tests/test_live_e2e_d1_d9.py",
+    "tests/test_bot_rate_lead_gate.py",
+    "tests/test_live_e2e_seed_sources.py",
+    "tests/test_live_e2e_run8b.py",
+    "tests/test_live_e2e_verify84.py",
+    "tests/test_live_e2e_run9.py",
+    "tests/test_live_e2e_verify027.py",
+    "tests/test_live_e2e_verify584.py",
+    "tests/test_d9_3_maxday_undercount.py",
+    "tests/test_live_e2e_run10.py",
+    "tests/test_net_balance_venues.py",
+    "tests/test_run11_nansen_discovery.py",
+    "tests/test_jup6_hop_and_fifo_window.py",
+    "tests/test_router_review_pack.py",
+    "tests/test_d377_verify_fixes.py",
+    "tests/test_result_relevant_coverage.py",
+    "tests/test_cyrcnvs3_d11.py",
+    "tests/test_readable_first.py",
+    "tests/test_throughput_funnel.py",
+    "tests/test_d11_1_4.py",
+    "tests/test_dc_c85388e_verify.py",
+    "tests/test_run12_yield_d12.py",
+    "tests/test_dc9_route_price.py",
+    "tests/test_run13_early_watch_prescore.py",
 ]
-FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL")
+FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL", "NANSEN_API_KEY")
 
 
 def _run(command, log_path, env):
@@ -65,6 +108,55 @@ def main():
         return 2
     if draft.get("PRODUCT_READY") is not False:
         result_path.write_text(json.dumps({"ok": False, "error": "product_ready"}, indent=2), encoding="utf-8")
+        return 2
+    live_e2e = json.loads(LIVE_E2E_DRAFT.read_text(encoding="utf-8"))
+    if live_e2e.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if live_e2e.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_product_ready"}, indent=2), encoding="utf-8")
+        return 2
+    live_e2e_next = json.loads(LIVE_E2E_DRAFT_NEXT.read_text(encoding="utf-8"))
+    if live_e2e_next.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_next_draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if live_e2e_next.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_next_product_ready"}, indent=2), encoding="utf-8")
+        return 2
+    live_e2e_11 = json.loads(LIVE_E2E_DRAFT_11.read_text(encoding="utf-8"))
+    if live_e2e_11.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_11_draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if live_e2e_11.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_11_product_ready"}, indent=2), encoding="utf-8")
+        return 2
+    live_e2e_12 = json.loads(LIVE_E2E_DRAFT_12.read_text(encoding="utf-8"))
+    if live_e2e_12.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_12_draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if live_e2e_12.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_12_product_ready"}, indent=2), encoding="utf-8")
+        return 2
+    live_e2e_13 = json.loads(LIVE_E2E_DRAFT_13.read_text(encoding="utf-8"))
+    if live_e2e_13.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_13_draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if live_e2e_13.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_13_product_ready"}, indent=2), encoding="utf-8")
+        return 2
+    live_e2e_14 = json.loads(LIVE_E2E_DRAFT_14.read_text(encoding="utf-8"))
+    if live_e2e_14.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_14_draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if live_e2e_14.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_14_product_ready"}, indent=2), encoding="utf-8")
+        return 2
+    live_e2e_16 = json.loads(LIVE_E2E_DRAFT_16.read_text(encoding="utf-8"))
+    if live_e2e_16.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_16_draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if live_e2e_16.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_16_product_ready"}, indent=2), encoding="utf-8")
         return 2
 
     steps = []

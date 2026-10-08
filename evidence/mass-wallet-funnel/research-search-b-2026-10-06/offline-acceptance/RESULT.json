@@ -8,7 +8,8 @@
     "HELIUS_API_KEY",
     "BIRDEYE_API_KEY",
     "HELIUS_API_KEYS",
-    "HELIUS_RPC_URL"
+    "HELIUS_RPC_URL",
+    "NANSEN_API_KEY"
   ],
   "steps": [
     {
@@ -28,10 +29,33 @@
         "tests/test_chatgpt_review_2026_10_07_0842.py",
         "tests/test_adversarial_0842_named_counterexamples.py",
         "tests/test_mass_search_mitch_requirements.py",
-        "tests/test_grok_bot_2fe60bd_repros.py"
+        "tests/test_grok_bot_2fe60bd_repros.py",
+        "tests/test_live_e2e_filters_and_runner.py",
+        "tests/test_live_e2e_spend_safety.py",
+        "tests/test_live_e2e_live_result_fixes.py",
+        "tests/test_live_e2e_bbc5bef_residuals.py",
+        "tests/test_live_e2e_06cea26_residuals.py",
+        "tests/test_live_e2e_f635a45_residuals.py",
+        "tests/test_live_e2e_4bbb364_residuals.py",
+        "tests/test_live_e2e_df3278c_residuals.py",
+        "tests/test_live_e2e_venue_decode.py",
+        "tests/test_live_e2e_affc623_s9.py",
+        "tests/test_live_e2e_d1_d9.py",
+        "tests/test_bot_rate_lead_gate.py",
+        "tests/test_live_e2e_seed_sources.py",
+        "tests/test_live_e2e_run8b.py",
+        "tests/test_live_e2e_verify84.py",
+        "tests/test_live_e2e_run9.py",
+        "tests/test_live_e2e_verify027.py",
+        "tests/test_live_e2e_verify584.py",
+        "tests/test_d9_3_maxday_undercount.py",
+        "tests/test_live_e2e_run10.py",
+        "tests/test_net_balance_venues.py",
+        "tests/test_run11_nansen_discovery.py",
+        "tests/test_jup6_hop_and_fifo_window.py"
       ],
       "exit": 0,
-      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/PYTEST_20261006T235907Z.log",
+      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/PYTEST_20261008T070634Z.log",
       "mandatory": true
     },
     {
@@ -39,24 +63,24 @@
       "command": [
         "node",
         "--experimental-strip-types",
-        "/workspace/frontend/scripts/assert-rereview-0842.mts",
-        "/workspace/evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/mounted-cases.json"
+        "/tmp/pr8-rebase/frontend/scripts/assert-rereview-0842.mts",
+        "/tmp/pr8-rebase/evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/mounted-cases.json"
       ],
       "exit": 0,
-      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/NODE_20261006T235907Z.log",
+      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/NODE_20261008T070634Z.log",
       "mandatory": true
     },
     {
       "name": "safety_mutants",
       "command": [
         "/workspace/.venv/bin/python",
-        "/workspace/scripts/verify_safety_mutants.py"
+        "/tmp/pr8-rebase/scripts/verify_safety_mutants.py"
       ],
       "exit": 0,
-      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/MUTANTS_20261006T235907Z.log",
+      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/MUTANTS_20261008T070634Z.log",
       "mandatory": true
     }
   ],
-  "pytest_log_excerpt": "........................................................................ [ 64%]\n.......................................                                  [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/fastapi/testclient.py:1\n  /workspace/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n111 passed, 1 warning in 4.11s\n",
-  "created_at": "20261006T235907Z"
+  "pytest_log_excerpt": "......................... [ 65%]\n........................................................................ [ 81%]\n......................................................s................. [ 97%]\n...........                                                              [100%]\n=============================== warnings summary ===============================\n../../workspace/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1\n  /workspace/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n442 passed, 1 skipped, 1 warning in 39.82s\n",
+  "created_at": "20261008T070634Z"
 }

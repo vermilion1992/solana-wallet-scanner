@@ -281,9 +281,12 @@ def install_mass_search_routes(app, store):
 
     @app.put("/api/mass-search/research-filters")
     async def put_research_filters(payload: dict | None = None):
-        from .research_profile import save_filters
+        from .research_profile import FilterValidationError, save_filters
         body = payload or {}
-        return save_filters(store, body)
+        try:
+            return save_filters(store, body)
+        except FilterValidationError as exc:
+            raise HTTPException(422, str(exc)) from exc
 
     @app.post("/api/mass-search/research-compare")
     async def research_compare(payload: dict | None = None):

@@ -1,0 +1,40 @@
+{
+  "success": true,
+  "data": {
+    "token_address": "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+    "flow": "buy",
+    "page_summary": {
+      "total_wallets": 4,
+      "buy_more": 1,
+      "hold": 0,
+      "sell_partial": 1,
+      "sell_all": 2
+    },
+    "buyers": [
+      {
+        "wallet_address": "DuojVrALrNwwck6bqrLXPuiBnYVnc1ekfcjyeWDeTAdi",
+        "position_status": "sell_all",
+        "first_buy_volume_usd": 24.65,
+        "tags": ["bundler", "sniper"]
+      },
+      {
+        "wallet_address": "Gygj9QQby4j2jryqyqBHvLP7ctv2SaANgh4sCb69BUpA",
+        "position_status": "buy_more",
+        "first_buy_volume_usd": 57.38,
+        "tags": ["smart_trader"]
+      },
+      {
+        "wallet_address": "jXtCVtdQhrn7GAHTPKxRHM94dbnmZwpBdGbswa3EeGZ",
+        "position_status": "sell_partial",
+        "first_buy_volume_usd": 4100.5,
+        "tags": ["smart_trader"]
+      },
+      {
+        "wallet_address": "DKxKrP4y8nQvH3sL9tW2aBcDeFgHiJkLmN1pQrStuVwX",
+        "position_status": "sell_all",
+        "first_buy_volume_usd": 880.0,
+        "tags": []
+      }
+    ]
+  }
+}

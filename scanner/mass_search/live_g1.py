@@ -220,9 +220,13 @@ def independent_usdc_fifo_worksheet(events):
         for event in indexed:
             units = Decimal(str(event["units"]))
             if event["kind"] == "buy":
-                paid = Decimal(str(event["consideration_usdc"]))
+                from scanner.mass_search.settlement import quote_consideration
+                paid = quote_consideration(event)
+                if paid is None:
+                    raise ValueError("USDC/USDT buy is missing quote consideration")
                 lots.append({"remaining_units": units, "remaining_cost": paid})
             elif event["kind"] == "sell":
+                from scanner.mass_search.settlement import quote_consideration
                 remaining = units
                 basis = Decimal("0")
                 while remaining > 0:
@@ -237,7 +241,9 @@ def independent_usdc_fifo_worksheet(events):
                     remaining -= take
                     if lot["remaining_units"] == 0:
                         lots.pop(0)
-                proceeds = Decimal(str(event["consideration_usdc"]))
+                proceeds = quote_consideration(event)
+                if proceeds is None:
+                    raise ValueError("USDC/USDT sale is missing quote proceeds")
                 profit = _usdc_amount(Decimal(str(proceeds - basis)).quantize(Decimal("0.000000001")))
                 sales.append({
                     "signature": event.get("signature"),

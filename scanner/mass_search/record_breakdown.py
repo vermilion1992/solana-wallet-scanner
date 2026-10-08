@@ -9,6 +9,7 @@ from scanner.investigation import (
     ASSOCIATED_ID,
     COMPUTE_ID,
     JUPITER,
+    LIGHTHOUSE,
     MEMO_IDS,
     PUMP,
     PUMP_SWAP,
@@ -19,6 +20,7 @@ from scanner.investigation import (
     WHIRLPOOL,
     WSOL,
     USDC,
+    USDT,
     _keys,
 )
 from scanner.mass_search.canonical_records import unwrap_gta_record
@@ -30,8 +32,10 @@ INFRA_PROGRAMS = {
     ASSOCIATED_ID,
     *TOKEN_IDS,
     *MEMO_IDS,
+    LIGHTHOUSE,
 }
 SOL_SWAP_FLOOR = Decimal("0.003")
+STABLE_CONSIDERATION_DUST = Decimal("1000000")  # 1 USDC/USDT; dust must not hide SOL
 LAMPORTS = Decimal(1_000_000_000)
 WINDOW_CLASSES = (
     "outside_window",
@@ -175,20 +179,49 @@ def _decoded_kinds(decoded, signature):
     return kinds
 
 
-def _consideration(raw, address, keys, event=None):
+def _consideration_legs(raw, address, keys, event=None):
+    """Material quote legs. Stable dust below 1 unit is ignored so a USDT/USDC
+    bucket cannot hide a larger SOL (or other) unsupported leg.
+    """
+    legs = {}
     if event:
         usdc = event.get("amount_usdc") or event.get("consideration_usdc")
+        usdt = event.get("amount_usdt") or event.get("consideration_usdt")
         sol = event.get("amount_sol") or event.get("consideration_sol")
         if usdc not in (None, ""):
-            return "USDC", Decimal(str(usdc))
+            amount = Decimal(str(usdc))
+            if amount > 0:
+                legs["USDC"] = amount
+        if usdt not in (None, ""):
+            amount = Decimal(str(usdt))
+            if amount > 0:
+                legs["USDT"] = amount
         if sol not in (None, ""):
-            return "SOL", Decimal(str(sol))
+            amount = Decimal(str(sol))
+            if amount > SOL_SWAP_FLOOR:
+                legs["SOL"] = amount
+        if legs:
+            return legs
     deltas = _owned_asset_deltas(raw, address, keys)
     usdc = abs(deltas.get(USDC, Decimal("0")))
-    if usdc:
-        return "USDC", usdc / Decimal(1_000_000)
+    if usdc >= STABLE_CONSIDERATION_DUST:
+        legs["USDC"] = usdc / Decimal(1_000_000)
+    usdt = abs(deltas.get(USDT, Decimal("0")))
+    if usdt >= STABLE_CONSIDERATION_DUST:
+        legs["USDT"] = usdt / Decimal(1_000_000)
     sol = abs(deltas.get("SOL", Decimal("0")))
-    return "SOL", sol
+    if sol > SOL_SWAP_FLOOR:
+        legs["SOL"] = sol
+    return legs
+
+
+def _consideration(raw, address, keys, event=None):
+    """Largest material quote leg. Prefer _consideration_legs for coverage."""
+    legs = _consideration_legs(raw, address, keys, event)
+    if not legs:
+        return None, Decimal("0")
+    asset = max(legs, key=lambda name: legs[name])
+    return asset, legs[asset]
 
 
 def _span_hours(timestamps):
@@ -228,8 +261,10 @@ def partition_records(records, decoded, address, *, window_start, window_end, ac
     unsupported = []
     decoded_trade = 0
     decoded_conversion = 0
-    consideration = {"decoded": {"SOL": Decimal("0"), "USDC": Decimal("0")},
-                     "unsupported": {"SOL": Decimal("0"), "USDC": Decimal("0")}}
+    consideration = {
+        "decoded": {"SOL": Decimal("0"), "USDC": Decimal("0"), "USDT": Decimal("0")},
+        "unsupported": {"SOL": Decimal("0"), "USDC": Decimal("0"), "USDT": Decimal("0")},
+    }
     in_window_times = []
     venue_counts = Counter()
     for record in records or []:
@@ -288,9 +323,11 @@ def partition_records(records, decoded, address, *, window_start, window_end, ac
         if klass in ("decoded_trade", "decoded_conversion", "unsupported_swap"):
             in_window_swaps += 1
             event = (decoded_by_sig.get(signature) or [None])[0]
-            asset, amount = _consideration(raw, address, keys, event)
+            legs = _consideration_legs(raw, address, keys, event)
             bucket = "decoded" if klass != "unsupported_swap" else "unsupported"
-            consideration[bucket][asset] += amount
+            for asset, amount in legs.items():
+                if asset and amount:
+                    consideration[bucket][asset] += amount
         counts[klass] += 1
         rows.append({
             "signature": signature,
@@ -304,7 +341,7 @@ def partition_records(records, decoded, address, *, window_start, window_end, ac
     by_consideration = {}
     if in_window_swaps:
         by_count = _display_decimal(Decimal(counts["unsupported_swap"]) / Decimal(in_window_swaps))
-    for asset in ("SOL", "USDC"):
+    for asset in ("SOL", "USDC", "USDT"):
         total = consideration["decoded"][asset] + consideration["unsupported"][asset]
         if total:
             by_consideration[asset] = _display_decimal(consideration["unsupported"][asset] / total)

@@ -8,16 +8,60 @@ from scanner.investigation import WSOL
 from scanner.mass_search.metrics import format_decimal
 
 USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+USDT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
 USDC_DECIMALS = 6
 SETTLEMENT_SOL = WSOL
 SETTLEMENT_USDC = USDC
+SETTLEMENT_USDT = USDT
+QUOTE_MINTS = frozenset({USDC, USDT})
+QUOTE_ASSET = {USDC: "USDC", USDT: "USDT"}
+# Reviewed quote stables are USDC and USDT only. SOL↔USDC/USDT is a
+# conversion. SOL↔PYUSD/USD1/USDS (or any other USD-named mint) is an
+# ordinary token trade of that mint. Token↔an unreviewed stable is
+# unresolved (two non-SOL assets). No FX into SOL.
+REVIEWED_STABLECOIN_RULE = (
+    "Reviewed quote stables: USDC and USDT only. SOL↔reviewed stable is a "
+    "conversion, not a token position. Token↔reviewed stable is a buy/sell "
+    "settled in that stable. PYUSD, USD1, USDS and any other USD-named mint "
+    "are not reviewed quotes: SOL↔them is an ordinary token trade; "
+    "token↔them is unresolved. Unknown quote is unresolved, never 0. "
+    "Never convert one quote into another without a sourced price."
+)
 
 
 def settlement_of(event):
     value = event.get("settlement_mint")
-    if value == USDC or event.get("consideration_usdc") not in (None, ""):
+    asset = event.get("settlement_asset")
+    if value == USDT or asset == "USDT" or event.get("consideration_usdt") not in (None, "") or event.get("amount_usdt") not in (None, ""):
+        return USDT
+    if value == USDC or asset == "USDC" or event.get("consideration_usdc") not in (None, "") or event.get("amount_usdc") not in (None, ""):
         return USDC
-    return WSOL
+    if event.get("unknown_quote"):
+        return None
+    if event.get("consideration_sol") not in (None, "") or event.get("amount_sol") not in (None, ""):
+        return WSOL
+    return None
+
+
+def quote_consideration(event):
+    """Priced quote amount, or None. Never invent 0 for a missing quote."""
+    settlement = settlement_of(event)
+    if settlement == USDT:
+        value = event.get("consideration_usdt")
+        if value in (None, ""):
+            value = event.get("amount_usdt")
+        return None if value in (None, "") else Decimal(str(value))
+    if settlement == USDC:
+        value = event.get("consideration_usdc")
+        if value in (None, ""):
+            value = event.get("amount_usdc")
+        return None if value in (None, "") else Decimal(str(value))
+    if settlement == WSOL:
+        value = event.get("consideration_sol")
+        if value in (None, ""):
+            value = event.get("amount_sol")
+        return None if value in (None, "") else Decimal(str(value))
+    return None
 
 
 def _order_key(row):
@@ -26,7 +70,16 @@ def _order_key(row):
 
 
 def _ordered_rows(rows):
-    dated = [row for row in rows if not row.get("timestamp_missing") and row.get("seconds_from_start") is not None]
+    dated = []
+    for row in rows:
+        if row.get("timestamp_missing"):
+            continue
+        seconds = row.get("seconds_from_start")
+        if seconds is None:
+            seconds = row.get("timestamp") or row.get("block_time")
+        if seconds is None:
+            continue
+        dated.append({**row, "seconds_from_start": seconds})
     return sorted(dated, key=lambda row: (row["seconds_from_start"], _order_key(row), row.get("signature") or ""))
 
 
@@ -61,7 +114,10 @@ def _scale_trade(event, *, units, original_units, remainder_of=None):
     """
     scaled = dict(event)
     scaled["units"] = canonical(units)
-    for key in ("consideration_usdc", "consideration_sol", "amount_usdc", "amount_sol", "wallet_fee_sol"):
+    for key in (
+        "consideration_usdc", "consideration_usdt", "consideration_sol",
+        "amount_usdc", "amount_usdt", "amount_sol", "wallet_fee_sol",
+    ):
         if event.get(key) in (None, ""):
             continue
         if remainder_of is not None and remainder_of.get(key) not in (None, ""):
@@ -110,10 +166,29 @@ def isolate_known_cost_events(rows):
             opening_unknown += units
             continue
         if event["kind"] == "buy":
-            lots.append({"units": units, "settlement": settlement_of(event)})
+            lots.append({
+                "units": units,
+                "settlement": settlement_of(event),
+                "undecoded": bool(event.get("undecoded_buy")),
+            })
+            if event.get("undecoded_buy"):
+                continue
             known.append(event)
             continue
+        if event["kind"] == "undecoded_buy":
+            lots.append({"units": units, "settlement": None, "undecoded": True})
+            continue
         if event["kind"] != "sell":
+            continue
+        if quote_consideration(event) is None:
+            unresolved.append({
+                **event,
+                "unresolved_basis": True,
+                "unknown_quote": True,
+                "split_part": "unresolved",
+                "whole_sale_pnl_resolved": False,
+                "reason": "Unknown quote proceeds; never recorded as 0",
+            })
             continue
         remaining = units
         opening_take = Decimal("0")
@@ -124,10 +199,13 @@ def isolate_known_cost_events(rows):
         sale_settlement = settlement_of(event)
         same_take = Decimal("0")
         cross_take = Decimal("0")
+        undecoded_take = Decimal("0")
         while remaining > 0 and lots:
             lot = lots[0]
             take = lot["units"] if lot["units"] <= remaining else remaining
-            if lot["settlement"] != sale_settlement:
+            if lot.get("undecoded"):
+                undecoded_take += take
+            elif lot["settlement"] != sale_settlement:
                 cross_take += take
             else:
                 same_take += take
@@ -136,7 +214,13 @@ def isolate_known_cost_events(rows):
             if lot["units"] == 0:
                 lots.pop(0)
         leftover_take = remaining
-        dirty = opening_take > 0 or cross_take > 0 or leftover_take > 0
+        if undecoded_take > 0:
+            # An earlier undecoded buy taints this sale. Never emit a partial
+            # matched-fragment figure; the whole sale is unknown-basis.
+            leftover_take += same_take + cross_take + undecoded_take
+            same_take = Decimal("0")
+            cross_take = Decimal("0")
+        dirty = opening_take > 0 or cross_take > 0 or leftover_take > 0 or undecoded_take > 0
         allocations = [
             (same_take, "known", {
                 "result_scope": "conditional_on_captured_inventory",
@@ -245,7 +329,9 @@ def usdc_fifo_worksheet(events):
         for event in indexed:
             units = Decimal(str(event["units"]))
             if event["kind"] == "buy":
-                consideration = Decimal(str(event["consideration_usdc"]))
+                consideration = quote_consideration(event)
+                if consideration is None:
+                    raise ValueError("USDC/USDT buy is missing quote consideration")
                 lots.append({"remaining_units": units, "remaining_cost": consideration})
             elif event["kind"] == "sell":
                 remaining = units
@@ -262,7 +348,9 @@ def usdc_fifo_worksheet(events):
                     remaining -= take
                     if lot["remaining_units"] == 0:
                         lots.pop(0)
-                proceeds = Decimal(str(event["consideration_usdc"]))
+                proceeds = quote_consideration(event)
+                if proceeds is None:
+                    raise ValueError("USDC/USDT sale is missing quote proceeds")
                 profit = _usdc_canonical(proceeds - basis)
                 sales.append({
                     "signature": event.get("signature"),
@@ -374,15 +462,33 @@ def _single_asset_worksheet(events, *, production):
     if not usable:
         return None
     known, unresolved = isolate_known_cost_by_mint(usable)
-    asset = "USDC" if {settlement_of(row) for row in usable} == {USDC} else "SOL"
-    if asset == "USDC":
+    settlements = {settlement_of(row) for row in usable}
+    if None in settlements:
+        settlements.discard(None)
+    if settlements == {USDC}:
+        asset = "USDC"
+    elif settlements == {USDT}:
+        asset = "USDT"
+    elif settlements == {WSOL}:
+        asset = "SOL"
+    else:
+        asset = "SOL"
+    if asset in ("USDC", "USDT"):
         if not known or not any(row["kind"] == "sell" for row in known):
             payload = empty_usdc_worksheet(unresolved=len(unresolved), known=len(known))
             if not production:
                 payload["oracle"] = "independent-usdc-fifo-v1"
             payload["open_lots"] = _open_lot_count(known)
+            if asset == "USDT":
+                payload["settlement_asset"] = "USDT"
+                payload["settlement_mint"] = USDT
             return payload
         worksheet = usdc_fifo_worksheet(known) if production else independent_usdc_fifo_worksheet(known)
+        if asset == "USDT" and worksheet:
+            worksheet["settlement_asset"] = "USDT"
+            worksheet["settlement_mint"] = USDT
+            if worksheet.get("total_profit_usdc") not in (None, ""):
+                worksheet["total_profit_usdt"] = worksheet["total_profit_usdc"]
         return _annotate_isolated_worksheet(worksheet, known, unresolved)
     if not known or not any(row["kind"] == "sell" for row in known):
         payload = empty_sol_worksheet(unresolved=len(unresolved), known=len(known))
@@ -406,10 +512,14 @@ def worksheets_by_quote_asset(events, *, production=True):
     by_mint = {}
     for row in usable:
         by_mint.setdefault(row.get("mint"), []).append(row)
-    grouped = {USDC: [], WSOL: []}
+    grouped = {USDC: [], USDT: [], WSOL: []}
     cross_currency = []
+    unknown_quote = []
     for mint, rows in by_mint.items():
         settlements = {settlement_of(row) for row in rows}
+        if None in settlements:
+            unknown_quote.extend(rows)
+            continue
         if len(settlements) > 1:
             cross_currency.extend(rows)
             continue
@@ -417,8 +527,27 @@ def worksheets_by_quote_asset(events, *, production=True):
     by_asset = {}
     if grouped[USDC]:
         by_asset["USDC"] = _single_asset_worksheet(grouped[USDC], production=production)
+    if grouped[USDT]:
+        worksheet = _single_asset_worksheet(grouped[USDT], production=production)
+        if worksheet:
+            worksheet["settlement_asset"] = "USDT"
+            worksheet["settlement_mint"] = USDT
+            if worksheet.get("total_profit_usdc") not in (None, ""):
+                worksheet["total_profit_usdt"] = worksheet["total_profit_usdc"]
+        by_asset["USDT"] = worksheet
     if grouped[WSOL]:
         by_asset["SOL"] = _single_asset_worksheet(grouped[WSOL], production=production)
+    if unknown_quote:
+        sells = sum(1 for row in unknown_quote if row.get("kind") == "sell")
+        extra = {
+            **empty_sol_worksheet(unresolved=sells, known=0),
+            "unknown_quote_sales": sells,
+            "unknown_quote_policy": "unresolved_never_zero",
+        }
+        if "SOL" in by_asset and by_asset["SOL"]:
+            by_asset["SOL"]["unresolved_basis_sales"] = int(by_asset["SOL"].get("unresolved_basis_sales") or 0) + sells
+        elif sells:
+            by_asset["SOL"] = extra
     cross_sells = sum(1 for row in cross_currency if row.get("kind") == "sell")
     note = (
         "Cross-currency inventory is per token; unconverted P&L is unresolved, never zero."
@@ -451,19 +580,28 @@ def worksheets_by_quote_asset(events, *, production=True):
 def _mixed_wrapper(by_asset, *, oracle):
     sol = by_asset.get("SOL") or {}
     usdc = by_asset.get("USDC") or {}
+    usdt = by_asset.get("USDT") or {}
+    sale_rows = (
+        list(sol.get("sale_rows") or [])
+        + list(usdc.get("sale_rows") or [])
+        + list(usdt.get("sale_rows") or [])
+    )
     return {
         "by_quote_asset": by_asset,
         "not_fx": True,
         "settlement_asset": "mixed",
         "total_profit_sol": sol.get("total_profit_sol"),
         "total_profit_usdc": usdc.get("total_profit_usdc"),
+        "total_profit_usdt": usdt.get("total_profit_usdt") or usdt.get("total_profit_usdc"),
         "total_gross_profit_sol": sol.get("total_gross_profit_sol"),
         "total_fees_and_tips_sol": sol.get("total_fees_and_tips_sol"),
         "sale_fifo_basis_sol": list(sol.get("sale_fifo_basis_sol") or []),
         "sale_net_profit_sol": list(sol.get("sale_net_profit_sol") or []),
         "sale_fifo_basis_usdc": list(usdc.get("sale_fifo_basis_usdc") or []),
         "sale_net_profit_usdc": list(usdc.get("sale_net_profit_usdc") or []),
-        "sale_rows": list(sol.get("sale_rows") or []) + list(usdc.get("sale_rows") or []),
+        "sale_fifo_basis_usdt": list(usdt.get("sale_fifo_basis_usdc") or []),
+        "sale_net_profit_usdt": list(usdt.get("sale_net_profit_usdc") or []),
+        "sale_rows": sale_rows,
         "unresolved_basis_sales": sum(int((item or {}).get("unresolved_basis_sales") or 0) for item in by_asset.values()),
         "known_cost_trades": sum(int((item or {}).get("known_cost_trades") or 0) for item in by_asset.values()),
         "known_cost_sales": sum(int((item or {}).get("known_cost_sales") or 0) for item in by_asset.values()),
@@ -523,6 +661,7 @@ def map_decoder_trade(row, *, address, seconds, timestamp_missing, role, window_
         "instruction": row.get("instruction"),
         "venue": row.get("venue") or row.get("source"),
         "classification": row.get("classification") or "market",
+        "undecoded_buy": bool(row.get("undecoded_buy") or row.get("kind") == "undecoded_buy"),
         "order": row.get("order") if isinstance(row.get("order"), int) else row.get("transaction_index"),
         "timestamp": row.get("timestamp") or row.get("block_time"),
         "observed_pre_quantity_raw": row.get("observed_pre_quantity_raw"),
@@ -530,11 +669,35 @@ def map_decoder_trade(row, *, address, seconds, timestamp_missing, role, window_
         "network_fee_sol": str(row["network_fee_sol"]) if row.get("network_fee_sol") not in (None, "") else None,
         "tips_sol": str(row["tips_sol"]) if row.get("tips_sol") not in (None, "") else None,
     }
-    if settlement == USDC:
-        mapped["consideration_usdc"] = str(row.get("amount_usdc") or "0")
-        mapped["amount_usdc"] = str(row.get("amount_usdc") or "0")
+    mapped["settlement_asset"] = row.get("settlement_asset") or QUOTE_ASSET.get(settlement)
+    if settlement == USDT or row.get("settlement_asset") == "USDT" or row.get("amount_usdt") not in (None, ""):
+        amount = row.get("amount_usdt")
+        if amount in (None, ""):
+            mapped["unknown_quote"] = True
+            mapped["consideration_usdt"] = None
+        else:
+            mapped["consideration_usdt"] = str(amount)
+            mapped["amount_usdt"] = str(amount)
+        mapped["settlement_mint"] = USDT
+        mapped["settlement_asset"] = "USDT"
+    elif settlement == USDC or row.get("settlement_asset") == "USDC" or row.get("amount_usdc") not in (None, ""):
+        amount = row.get("amount_usdc")
+        if amount in (None, ""):
+            mapped["unknown_quote"] = True
+            mapped["consideration_usdc"] = None
+        else:
+            mapped["consideration_usdc"] = str(amount)
+            mapped["amount_usdc"] = str(amount)
+        mapped["settlement_mint"] = USDC
+        mapped["settlement_asset"] = "USDC"
     else:
-        mapped["consideration_sol"] = str(row.get("amount_sol") or "0")
+        amount = row.get("amount_sol")
+        if amount in (None, ""):
+            mapped["unknown_quote"] = True
+            mapped["consideration_sol"] = None
+        else:
+            mapped["consideration_sol"] = str(amount)
+        mapped["settlement_asset"] = "SOL"
     if "paid_by_wallet" in row:
         mapped["paid_by_wallet"] = row["paid_by_wallet"]
     return mapped
@@ -543,6 +706,8 @@ def map_decoder_trade(row, *, address, seconds, timestamp_missing, role, window_
 def format_settlement_amount(worksheet):
     if not worksheet:
         return None, None
+    if worksheet.get("settlement_asset") == "USDT" or worksheet.get("total_profit_usdt") not in (None, ""):
+        return worksheet.get("total_profit_usdt") or worksheet.get("total_profit_usdc"), "USDT"
     if worksheet.get("settlement_asset") == "USDC" or worksheet.get("total_profit_usdc") not in (None, ""):
         return worksheet.get("total_profit_usdc"), "USDC"
     if worksheet.get("total_profit_sol") not in (None, ""):

@@ -1,0 +1,38 @@
+{
+  "jupiter_v6": {
+    "address": "6qVcd9kp5XURL5Bj5Qf1CCwKwoX3fQZopXxZb96WquHm",
+    "signature": "2pB26PQRMJtWwr5YFi4ES4mqZDwTnNMLUt1n4ZYPjv6Shj83BUzxgTpDVq3y1KBuN6PbQVdkw1RxiNdymgG2mB3T",
+    "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+    "kind": null,
+    "mint": null,
+    "source_path": "tests/fixtures/live-e2e-f635a45/qvc-sigh-jupiter.json",
+    "file": "jupiter_v6.json"
+  },
+  "orca_whirlpool": {
+    "address": "9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE",
+    "signature": "5ZV9EXQ2YGXDLMuujEueKkVYmTsDJugCzzdqsNXeYXqAf1bZWuCqxjceVdUX4rsCHKnEcfFXDuxuKLMHy9haAzoX",
+    "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+    "kind": "sell",
+    "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+    "source_path": "tests/fixtures/live-raw/4bbb364-a/9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE/page0.bin",
+    "file": "orca_whirlpool.json"
+  },
+  "raydium_clmm": {
+    "address": "9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE",
+    "signature": "3JLYRQNqstAi83bNRGwiJaGzoDErxr3HxL5KjJ3d3S8to4po6A2dYunpMvQncC3DDdJKtvzSwbyBTMxRtnvJaT2D",
+    "program": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+    "kind": "buy",
+    "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+    "source_path": "tests/fixtures/live-raw/4bbb364-a/9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE/page0.bin",
+    "file": "raydium_clmm.json"
+  },
+  "raydium_amm_v4": {
+    "address": "9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE",
+    "signature": "3fYKgGeK7ysP5o7pw4q8bCm86q6VfnKhT6vua5PrPnugwK7dYEB2xNCXNQq24m516oDLPrzQFca92Tjb24XKg5vz",
+    "program": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+    "kind": "buy",
+    "mint": "nDZknLvfFRp5rgUHdzTrQsmSY5NKzoavqdLjSHVpump",
+    "source_path": "tests/fixtures/live-raw/4bbb364-a/9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE/page0.bin",
+    "file": "raydium_amm_v4.json"
+  }
+}

@@ -6,8 +6,10 @@ G1 and ranked-100 grants must not be reused. Setup-pilot must not be reset.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
+import sqlite3
 import uuid
 from copy import deepcopy
 from datetime import datetime
@@ -198,8 +200,61 @@ def page_cache_key(authorization_id, address, page_index, *, version=2):
     return f"{prefix}{authorization_id}:{address}:page:{page_index}"
 
 
+def chunk_cache_key(authorization_id, address, page_index, chunk_index, *, version=2, generation=None):
+    key = f"{page_cache_key(authorization_id, address, page_index, version=version)}:chunk:{chunk_index}"
+    if generation:
+        return f"{key}:g:{generation}"
+    return key
+
+
 def wallet_log_key(authorization_id, address):
     return f"g3-history:{authorization_id}:{address}:log"
+
+
+def sqlite_payload_byte_limit(store):
+    """SQLITE_LIMIT_LENGTH for one records.payload cell. Default 1e9."""
+    default = 1_000_000_000
+    db = getattr(store, "db", None)
+    getter = getattr(db, "getlimit", None) if db is not None else None
+    if getter is None:
+        return default
+    try:
+        return max(1024, int(getter(sqlite3.SQLITE_LIMIT_LENGTH)))
+    except (TypeError, ValueError, sqlite3.Error):
+        return default
+
+
+def _encode_cache_payload(payload):
+    return json.dumps(payload, ensure_ascii=False, allow_nan=False, separators=(",", ":")).encode("utf-8")
+
+
+def _assemble_chunked_page(store, authorization_id, address, page_index, manifest):
+    assembled = []
+    chunks = int(manifest.get("chunks") or 0)
+    generation = manifest.get("generation")
+    expected = manifest.get("record_count")
+    digest = manifest.get("digest")
+    for index in range(chunks):
+        part = store.get(
+            CACHE_KIND,
+            chunk_cache_key(
+                authorization_id, address, page_index, index, version=2, generation=generation,
+            ),
+        )
+        if not part:
+            return None
+        if generation and part.get("generation") != generation:
+            return None
+        assembled.extend(part.get("records") or [])
+    if expected is not None and len(assembled) != int(expected):
+        return None
+    if digest:
+        check = hashlib.sha256(_encode_cache_payload({"records": assembled})).hexdigest()
+        if check != digest:
+            return None
+    page = dict(manifest)
+    page["records"] = assembled
+    return page
 
 
 def load_cached_page(store, authorization_id, address, page_index):
@@ -207,6 +262,8 @@ def load_cached_page(store, authorization_id, address, page_index):
         return None
     current = store.get(CACHE_KIND, page_cache_key(authorization_id, address, page_index, version=2))
     if current:
+        if current.get("chunked"):
+            return _assemble_chunked_page(store, authorization_id, address, page_index, current)
         return current
     legacy = store.get(CACHE_KIND, page_cache_key(authorization_id, address, page_index, version=1))
     if not legacy:
@@ -226,12 +283,90 @@ def load_cached_page(store, authorization_id, address, page_index):
     return marked
 
 
+def _chunked_payload_size(meta, record_sizes):
+    """Byte size of one chunk payload. Each record is measured once; commas are +1 each."""
+    empty = {**meta, "records": [], "chunked": True}
+    base = len(_encode_cache_payload(empty))
+    if not record_sizes:
+        return base
+    return base - 2 + sum(record_sizes) + (len(record_sizes) - 1)
+
+
+def split_records_to_sqlite_chunks(records, meta, max_bytes):
+    """Linear chunking: size each record once and keep a running total plus meta overhead."""
+    sizes = [len(_encode_cache_payload(record)) for record in records]
+    chunks = []
+    current = []
+    current_sizes = []
+    for record, size in zip(records, sizes):
+        trial_sizes = current_sizes + [size]
+        if _chunked_payload_size(meta, trial_sizes) > max_bytes:
+            if not current:
+                raise sqlite3.DataError("single history record exceeds sqlite payload limit")
+            chunks.append(current)
+            current = [record]
+            current_sizes = [size]
+            if _chunked_payload_size(meta, current_sizes) > max_bytes:
+                raise sqlite3.DataError("single history record exceeds sqlite payload limit")
+        else:
+            current.append(record)
+            current_sizes = trial_sizes
+    if current or not chunks:
+        chunks.append(current)
+    return chunks
+
+
 def persist_page(store, authorization_id, address, page_index, payload):
+    """Store one logical page. Chunks under SQLITE_LIMIT_LENGTH so one wallet cannot DataError the run.
+
+    Record sizes are measured once. Chunking is linear in the number of records.
+    The full growing payload is never re-encoded on every append.
+    """
     if store is None:
         return payload
     if payload.get("kind") == PAGE_KIND_V1 or payload.get("legacy_cache"):
         return payload
-    store.put(CACHE_KIND, page_cache_key(authorization_id, address, page_index, version=2), payload)
+    key = page_cache_key(authorization_id, address, page_index, version=2)
+    max_bytes = max(1024, int(sqlite_payload_byte_limit(store) * 0.75))
+    records = list(payload.get("records") or [])
+    meta = {name: value for name, value in payload.items() if name != "records"}
+    record_sizes = [len(_encode_cache_payload(record)) for record in records]
+    empty_full = {**meta, "records": []}
+    full_est = len(_encode_cache_payload(empty_full))
+    if record_sizes:
+        full_est = full_est - 2 + sum(record_sizes) + (len(record_sizes) - 1)
+    # Slack so an underestimate cannot sneak a too-big single row through.
+    if full_est + 256 <= max_bytes:
+        store.put(CACHE_KIND, key, payload)
+        return payload
+    chunks = split_records_to_sqlite_chunks(records, meta, max_bytes)
+    generation = uuid.uuid4().hex
+    digest = hashlib.sha256(_encode_cache_payload({"records": records})).hexdigest()
+    for index, chunk in enumerate(chunks):
+        store.put(
+            CACHE_KIND,
+            chunk_cache_key(
+                authorization_id, address, page_index, index, version=2, generation=generation,
+            ),
+            {
+                **meta,
+                "records": chunk,
+                "chunk_index": index,
+                "chunks": len(chunks),
+                "generation": generation,
+                "record_count": len(records),
+            },
+        )
+    manifest = {
+        **meta,
+        "records": [],
+        "chunked": True,
+        "chunks": len(chunks),
+        "record_count": len(records),
+        "generation": generation,
+        "digest": digest,
+    }
+    store.put(CACHE_KIND, key, manifest)
     return payload
 
 
@@ -305,8 +440,61 @@ def further_page_allowed(first_page, episodes, *, recorded_reason, classificatio
     return True, recorded_reason
 
 
+def inject_undecoded_buy_taints(decoded, records, address):
+    """Insert undecoded earlier buys so later sales cannot skip them in FIFO."""
+    decoded = decoded or {}
+    events = list(decoded.get("events") or [])
+    known = {
+        event.get("signature")
+        for event in events
+        if event.get("kind") in ("buy", "sell") and event.get("signature")
+    }
+    for record in records or []:
+        raw = record
+        if isinstance(record, dict) and isinstance(record.get("raw"), dict):
+            raw = record["raw"]
+        if isinstance(raw, dict) and isinstance(raw.get("result"), dict) and "transaction" not in raw:
+            raw = raw["result"]
+        if not isinstance(raw, dict) or (raw.get("meta") or {}).get("err") is not None:
+            continue
+        signature = record.get("signature") if isinstance(record, dict) else None
+        if not signature:
+            sigs = ((raw.get("transaction") or {}).get("signatures") or [])
+            signature = sigs[0] if sigs else None
+        if signature in known:
+            continue
+        meta = raw.get("meta") or {}
+        pre, post = {}, {}
+        for field, dest in (("preTokenBalances", pre), ("postTokenBalances", post)):
+            for balance in meta.get(field) or []:
+                if not isinstance(balance, dict) or balance.get("owner") != address:
+                    continue
+                mint = balance.get("mint")
+                amount = (balance.get("uiTokenAmount") or {}).get("amount")
+                if mint and amount not in (None, ""):
+                    dest[mint] = dest.get(mint, 0) + int(str(amount))
+        timestamp = raw.get("blockTime")
+        slot = raw.get("slot")
+        for mint in set(pre) | set(post):
+            delta = post.get(mint, 0) - pre.get(mint, 0)
+            if delta <= 0:
+                continue
+            events.append({
+                "kind": "undecoded_buy",
+                "undecoded_buy": True,
+                "mint": mint,
+                "quantity_raw": str(delta),
+                "signature": signature,
+                "timestamp": timestamp,
+                "slot": slot,
+                "reason": "Earlier buy is undecoded; later sales are unknown-basis",
+            })
+    decoded["events"] = events
+    return decoded
+
+
 def decoder_events_by_mint(decoded, *, address, window_start, window_end=None, acquisition_start=None):
-    events = [row for row in (decoded.get("events") or []) if row.get("kind") in ("buy", "sell")]
+    events = [row for row in (decoded.get("events") or []) if row.get("kind") in ("buy", "sell", "undecoded_buy")]
     start = datetime.fromisoformat(window_start.replace("Z", "+00:00"))
     start_unix = start.timestamp()
     acq_unix = None
@@ -510,19 +698,14 @@ def declared_subset_worksheet(by_mint):
     from .settlement import independent_settlement_worksheet
 
     used = []
-    usdc_rows = []
-    sol_rows = []
+    rows = []
     for mint in sorted(by_mint):
-        rows = _ordered_inventory_rows(by_mint[mint])
-        if not rows:
+        part = _ordered_inventory_rows(by_mint[mint])
+        if not part:
             continue
-        if settlement_of(rows[0]) == USDC:
-            usdc_rows.extend(rows)
-            used.append(mint)
-        else:
-            sol_rows.extend(rows)
-            used.append(mint)
-    worksheet = independent_settlement_worksheet(usdc_rows + sol_rows)
+        rows.extend(part)
+        used.append(mint)
+    worksheet = independent_settlement_worksheet(rows)
     if not worksheet:
         return None
     worksheet["declared_mints"] = used

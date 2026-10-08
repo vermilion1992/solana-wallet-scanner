@@ -34,6 +34,7 @@ from scanner.mass_search.research_profile import (
 )
 from scanner.mass_search.verified_costs import classify_cost_role, classify_native_withdrawal
 from scanner.mass_search.workflow import coverage_eligibility
+from tests.result_relevant_fixtures import attach_result_relevant
 
 
 def _synthetic(payload, reason):
@@ -41,7 +42,10 @@ def _synthetic(payload, reason):
 
 
 def _clean_coverage():
-    return {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}}
+    # Whole-span 100% is not a known denominator without R.
+    return attach_result_relevant(
+        {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+    )
 
 
 def test_stale_audit_does_not_attach():
@@ -93,6 +97,9 @@ def test_stale_audit_does_not_attach():
 
 
 def test_99_5_count_80_value_does_not_qualify():
+    # R carries the same 99.5% count / 80% value the old whole-span claim used.
+    # Missing R would also fail-close; attaching it keeps the value-share
+    # rejection visible instead of collapsing to unknown denominator.
     report = _synthetic({
         "address": "SynthCoverage995080111111111111111111111",
         "events": [],
@@ -100,12 +107,12 @@ def test_99_5_count_80_value_does_not_qualify():
         "completed_episode_net": "20",
         "completed_episode_net_unit": "SOL",
         "completed_episode_ledger": [{"net": "4", "mint": f"M{i}", "unit": "SOL", "close_signature": f"cov-close-{i}"} for i in range(5)],
-        "record_breakdown": {
+        "record_breakdown": attach_result_relevant({
             "unsupported_swap_share_in_window": {
                 "by_count": "0.005",
                 "by_consideration": {"SOL": "0.20"},
             }
-        },
+        }),
         "worksheet": {"total_profit_sol": "20", "settlement_asset": "SOL", "unresolved_basis_sales": 0},
         "independent_audit": {"status": "independently_audited", "independently_audited": True},
         "corpus_kind": "SYNTHETIC",
@@ -183,7 +190,7 @@ def test_positive_worksheet_negative_episodes_does_not_qualify():
         "corpus_kind": "SYNTHETIC",
     }, "positive worksheet with negative completed episodes")
     profile = build_research_profile(report, filters=default_filters())
-    assert Decimal(str(profile["scoped_pnl"])) == Decimal("88.25")
+    assert Decimal(str(profile["scoped_pnl"])) == Decimal("-12.5")
     assert Decimal(str(profile["completed_episode_net"])) == Decimal("-12.5")
     assert profile["worksheet_episode_bridge"]["worksheet_is_not_qualifying"] is True
     judged = qualification_level(report, profile)
@@ -454,23 +461,19 @@ def test_unrelated_transfer_guard_still_rejects_non_rfq_outer_owned_transfer():
     _assert_rfq_exception_rejected(clone)
 
 
-def test_swaptob_remains_unsupported_after_bounded_investigation():
-    from scanner.investigation import OKX_SWAPTOB, SWAPTOB_UNSUPPORTED_REASON, decode_supported_swaps
+def test_swaptob_decodes_from_official_layout_on_live_fixture():
+    from scanner.investigation import OKX_SWAPTOB, decode_supported_swaps
     from scanner.mass_search.canonical_records import canonical_decode_records
-    from scanner.mass_search.capture_catalog import catalog_by_address, load_capture_records
-    from tools.independent_episode_audit import _unwrap
 
     assert OKX_SWAPTOB.hex() == "aa2955b184501f35"
-    assert "95+" in SWAPTOB_UNSUPPORTED_REASON or "95" in SWAPTOB_UNSUPPORTED_REASON
-    records, _ = load_capture_records(catalog_by_address()[BVZT])
-    record = next(
-        item for item in records
-        if (item.get("signature") or ((_unwrap(item).get("transaction") or {}).get("signatures") or [None])[0]) == SWAPTOB
-    )
-    decoded = decode_supported_swaps(canonical_decode_records([record]), BVZT)
-    reasons = [row.get("reason") for row in decoded.get("unresolved") or []]
-    assert any("No reviewed outer spot swap" in (reason or "") for reason in reasons)
-    assert not [row for row in decoded["events"] if row.get("kind") in ("buy", "sell")]
+    payload = json.loads(Path("tests/fixtures/live-e2e-phase3/okx-swaptob.json").read_text())
+    decoded = decode_supported_swaps(canonical_decode_records([payload["record"]]), payload["address"])
+    trades = [row for row in decoded["events"] if row.get("kind") in ("buy", "sell")]
+    assert trades
+    assert trades[0]["venue"] == "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
+    assert trades[0]["instruction"] == "SwapTob"
+    assert trades[0]["quantity_raw"]
+    assert trades[0].get("amount_usdc") or trades[0].get("amount_sol")
 
 
 def test_next_capture_box_driver_emits_supported_gta_request():
