@@ -170,9 +170,9 @@ def test_new_draft_grant_is_disabled_and_hashed():
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_13] == digest
     assert HARD_CEILINGS["birdeye_units"] == 1400
-    assert HARD_CEILINGS["helius_units"] == 40000
-    assert HARD_CEILINGS["nansen_units"] == 400
-    assert HARD_CEILINGS["nansen_requests"] == 200
+    assert HARD_CEILINGS["helius_units"] == 80000
+    assert HARD_CEILINGS["nansen_units"] == 600
+    assert HARD_CEILINGS["nansen_requests"] == 300
     assert HARD_CEILINGS["leaderboard_requests"] == 0
 
 

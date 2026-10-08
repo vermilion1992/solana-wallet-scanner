@@ -96,9 +96,9 @@ NANSEN_DEX_TRADES_MAX_PER_DAY = Decimal(MAX_ECONOMIC_TRADES_PER_UTC_DAY)
 NANSEN_DEX_TRADES_MIN_HISTORY_DAYS = None
 HISTORY_AGE_RULE_DEFAULT = HISTORY_AGE_RULE
 NANSEN_TIMEFRAMES_FUNNEL = (30, 90, 180)
-RULE_A_MAX_AVG_TRADES_PER_DAY = Decimal("2.5")
-RULE_A_MIN_TOKENS = 3
-RULE_A_MAX_TOKENS = 10
+RULE_A_MAX_AVG_TRADES_PER_DAY = Decimal("5")
+RULE_A_MIN_TOKENS = 2
+RULE_A_MAX_TOKENS = 30
 RULE_A_MIN_REALIZED_PNL = Decimal("0")
 NANSEN_TIMEFRAME_ENUM = (1, 7, 30, 90, 180)
 NANSEN_TIMEFRAMES = (90, 180)
@@ -1214,20 +1214,24 @@ def tgm_pre_rank_key(metrics):
 
 # Seasoned liquid tokens that readable wallets actually trade (run-12 keep tokens
 # plus the established set). Quotes are excluded. Configurable count, hundreds.
-DISCOVERY_LIQUID_MINTS = (
-    "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",  # JUP
-    "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",  # RAY
-    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",  # BONK
-    "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm",  # WIF
-    "7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr",  # POPCAT
-    "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",  # FARTCOIN
-    "2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv",  # PENGU
-    "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN",  # TRUMP
-    "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScDhz",  # MEW
-    "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",  # JTO
-    "85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ",  # W
-    "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3",  # PYTH
-)
+# Jupiter verified token list (token.jup.ag) + Solana official mint pages,
+# checked 2026-10-08. MEW is cat-in-a-dogs-world, not a truncated lookalike.
+PINNED_MINT_SOURCES = {
+    "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN": ("JUP", "https://token.jup.ag"),
+    "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R": ("RAY", "https://token.jup.ag"),
+    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263": ("BONK", "https://token.jup.ag"),
+    "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm": ("WIF", "https://token.jup.ag"),
+    "7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr": ("POPCAT", "https://token.jup.ag"),
+    "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump": ("FARTCOIN", "https://token.jup.ag"),
+    "2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv": ("PENGU", "https://token.jup.ag"),
+    "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN": ("TRUMP", "https://token.jup.ag"),
+    "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScDhz": ("MEW", "https://token.jup.ag"),
+    "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL": ("JTO", "https://token.jup.ag"),
+    "85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ": ("W", "https://token.jup.ag"),
+    "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3": ("PYTH", "https://token.jup.ag"),
+}
+MEW_MINT = "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScDhz"
+DISCOVERY_LIQUID_MINTS = tuple(PINNED_MINT_SOURCES)
 
 
 def select_discovery_tokens(*, configured=None, observed=None, limit=200):
@@ -1375,9 +1379,10 @@ def nansen_high_frequency_drop(
 ):
     """Drop-only vendor pre-filter. Missing fields never pass a wallet.
 
-    Rule A (defaults): avg trades/day ≤ 2.5, 3 ≤ n_tokens ≤ 10, realized
-    PnL > 0. Short-hold ≤ 300s still drops when present. Absence of a field
-    is not a pass; it is simply no drop for that rule.
+    Rule A (defaults): avg trades/day ≤ 5, 2 ≤ n_tokens ≤ 30, realized
+    PnL > 0. Discovery filter only — not a proof gate. Short-hold ≤ 300s
+    still drops when present. Absence of a field is not a pass; it is
+    simply no drop for that rule.
     """
     metrics = dict(vendor_metrics or {})
     profiler = metrics.get("profiler_pnl_summary")
@@ -1466,6 +1471,47 @@ def nansen_high_frequency_drop(
         "dropped": bool(reasons),
         "drop_reasons": reasons,
         "evidence": evidence,
+        "can_only_drop": True,
+        "seed_is_not": "evidence",
+    }
+
+
+NANSEN_INFRA_LABEL_TOKENS = frozenset({
+    "lp", "liquidity provider", "liquidity_provider", "liquidityprovider",
+    "lending", "lend", "borrow", "market maker", "market_maker", "marketmaker",
+    "mm", "limit order", "limit_order", "limitorder", "orderbook",
+})
+
+
+def nansen_infra_label_drop(meta):
+    """Pre-drop LP / lending / market-maker wallets from Nansen row labels."""
+    labels = []
+    if isinstance(meta, dict):
+        raw = meta.get("labels") or meta.get("nansen_labels") or []
+        vendor = meta.get("vendor_metrics") or {}
+        raw = list(raw) + list(vendor.get("labels") or [])
+        for item in raw:
+            if isinstance(item, str):
+                labels.append(item)
+            elif isinstance(item, dict):
+                labels.append(str(item.get("label") or item.get("name") or item.get("type") or ""))
+    hits = []
+    for label in labels:
+        folded = "".join(ch for ch in label.lower() if ch.isalnum() or ch in " _")
+        compact = folded.replace(" ", "_")
+        if folded.strip() in NANSEN_INFRA_LABEL_TOKENS or compact in NANSEN_INFRA_LABEL_TOKENS:
+            hits.append(label)
+            continue
+        for token in NANSEN_INFRA_LABEL_TOKENS:
+            if token.replace("_", " ") in folded or token.replace(" ", "_") in compact:
+                hits.append(label)
+                break
+    if not hits:
+        return None
+    return {
+        "dropped": True,
+        "drop_reasons": [f"nansen_infra_label:{label}" for label in hits],
+        "evidence": {"labels": hits},
         "can_only_drop": True,
         "seed_is_not": "evidence",
     }

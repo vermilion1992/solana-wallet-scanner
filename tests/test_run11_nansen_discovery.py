@@ -56,7 +56,7 @@ def test_rule_a_drops_and_keeps():
     )
     assert keep["dropped"] is False
     drop_rate = nansen_high_frequency_drop(
-        {"n_trades": 450, "n_tokens": 5, "realized_pnl_usd": 12},
+        {"n_trades": 541, "n_tokens": 5, "realized_pnl_usd": 12},
         timeframe=90,
     )
     assert drop_rate["dropped"] is True
@@ -196,4 +196,4 @@ def test_vendor_drop_uses_rule_a_thresholds():
     })
     assert keep is None
     kwargs = nansen_rule_a_kwargs({})
-    assert Decimal(str(kwargs["max_avg_trades_per_day"])) == Decimal("2.5")
+    assert Decimal(str(kwargs["max_avg_trades_per_day"])) == Decimal("5")

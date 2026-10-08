@@ -59,6 +59,21 @@ GATES_UNCHANGED = (
     "zero_unresolved_basis_sales",
     "bot_gt_15_economic_trades_full_history",
 )
+EARLY_WATCH_MIN_EPISODES = 1
+# Lending / limit-order / dedicated MM programs. Spot-swap venues (Jupiter,
+# Pump, Raydium, Orca) are not on this list even when they also host LPs.
+INFRA_PRESCREEN_PROGRAMS = frozenset({
+    "KLend2g3cP87szom1FxFdkHw6cCLVYqPAFHL7Lw5EJx",  # Kamino lend
+    "So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo",  # Solend
+    "MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnkobGM7s",  # Marginfi
+    "PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjHFBjDz",  # Phoenix
+    "srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX",  # OpenBook
+    "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",  # Serum
+})
+LP_LOG_HINTS = (
+    "AddLiquidity", "RemoveLiquidity", "OpenPosition", "ClosePosition",
+    "IncreaseLiquidity", "DecreaseLiquidity", "Deposit", "Withdraw",
+)
 
 
 def _dec(value):
@@ -243,6 +258,99 @@ def estimate_sample_round_trips(records, address, *, decoded=None):
     }
 
 
+def _sample_programs(records):
+    programs = set()
+    logs = []
+    for record in records or []:
+        raw = unwrap_gta_record(record) if isinstance(record, dict) else None
+        if not isinstance(raw, dict):
+            continue
+        try:
+            keys = _account_keys(raw)
+        except Exception:
+            keys = []
+        for key in keys or []:
+            if key:
+                programs.add(key)
+        meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+        for line in meta.get("logMessages") or []:
+            if isinstance(line, str):
+                logs.append(line)
+    return programs, " ".join(logs)
+
+
+def estimate_full_gate_prescore(records, address, *, decoded=None, signature_rows=None, nansen_row=None):
+    """Cheap full-gate estimate from already-paid data. Never passes a wallet.
+
+    Estimates every early_watch gate from the Nansen row, signatures pre-screen,
+    and ~100-tx sample. Deep-pull only when the estimate could still pass
+    early_watch (1+ completed round trips and no hard fail).
+    """
+    from scanner.mass_search.qualification_gates import raw_economic_trade_rate
+
+    trips = estimate_sample_round_trips(records, address, decoded=decoded)
+    shares = sample_readable_shares(records, address, decoded=decoded)
+    rate = raw_economic_trade_rate(records, address)
+    sig_max = None
+    if signature_rows:
+        screen = helius_signatures_prescreen(signature_rows)
+        sig_max = screen.get("max_per_day") or screen.get("max_economic_trades_in_one_day")
+    try:
+        sig_max_i = int(sig_max) if sig_max not in (None, "") else 0
+    except (TypeError, ValueError):
+        sig_max_i = 0
+    max_day = max(int(rate.get("max") or 0), sig_max_i)
+    programs, logs = _sample_programs(records)
+    infra = sorted(programs & INFRA_PRESCREEN_PROGRAMS)
+    lp_hint = any(hint in logs for hint in LP_LOG_HINTS)
+    readable_count = _dec(shares.get("count_share"))
+    readable_value = _dec(shares.get("value_share"))
+    sells = int(trips.get("sell_mints") or 0)
+    transfer_in = int(trips.get("transfer_in_sells") or 0)
+    known_sell_share = None
+    if sells:
+        known_sell_share = Decimal(sells - transfer_in) / Decimal(sells)
+    rounds = int(trips.get("expected_completed_episodes") or 0)
+    reasons = []
+    if max_day > MAX_ECONOMIC_TRADES_PER_UTC_DAY:
+        reasons.append(GT_ECONOMIC_TRADES_RULE)
+    if rounds < EARLY_WATCH_MIN_EPISODES:
+        reasons.append(trips.get("skip_deep_pull_reason") or "sample_no_round_trips")
+    if readable_count is not None and readable_count < READABLE_SHARE_THRESHOLD:
+        reasons.append("sample_readable_count_below_threshold")
+    if readable_value is not None and readable_value < READABLE_SHARE_THRESHOLD:
+        reasons.append("sample_readable_value_below_threshold")
+    if known_sell_share is not None and known_sell_share < Decimal("0.5"):
+        reasons.append("sample_transfer_in_sells")
+    if infra or lp_hint:
+        reasons.append("sample_lp_lending_or_mm_program")
+    vendor_pnl = _pnl(nansen_row or {})
+    if vendor_pnl is not None and vendor_pnl <= 0:
+        reasons.append("nansen_realized_pnl_not_positive")
+    # Probability is a ranking key only. 0 reasons → still not a pass.
+    fail_weight = Decimal(len(reasons))
+    pass_probability = (Decimal("1") / (Decimal("1") + fail_weight)).quantize(Decimal("0.0001"))
+    skip = bool(reasons)
+    return {
+        "version": "full-gate-prescore-v1",
+        "can_only_skip_or_defer": True,
+        "never_passes": True,
+        "max_economic_trades_in_one_day": max_day,
+        "expected_completed_episodes": rounds,
+        "readable_count_share": None if readable_count is None else str(readable_count),
+        "readable_value_share": None if readable_value is None else str(readable_value),
+        "known_basis_sell_share": None if known_sell_share is None else str(known_sell_share),
+        "transfer_in_sells": transfer_in,
+        "infra_programs": infra,
+        "lp_or_mm_hint": lp_hint,
+        "estimated_pass_probability": str(pass_probability),
+        "skip_deep_pull": skip,
+        "skip_deep_pull_reason": ";".join(reasons) if reasons else None,
+        "reasons": reasons,
+        "PRODUCT_READY": False,
+    }
+
+
 def _events_by_signature(records, address, decoded=None):
     if decoded is None:
         decoded = decode_supported_swaps(canonical_decode_records(records or []), address)
@@ -385,11 +493,25 @@ def _expected_episodes(row):
     return amount if amount is not None else Decimal("0")
 
 
+def _pass_probability(row):
+    amount = _dec((row or {}).get("estimated_pass_probability"))
+    if amount is None:
+        blob = (row or {}).get("prescore") or {}
+        amount = _dec(blob.get("estimated_pass_probability"))
+    if amount is not None:
+        return amount
+    episodes = _expected_episodes(row)
+    if episodes > 0:
+        return (episodes / (episodes + Decimal("1"))).quantize(Decimal("0.0001"))
+    return Decimal("0")
+
+
 def rank_by_nansen_pnl(rows):
+    """Rank by estimated early_watch pass probability, then realized PnL."""
     return sorted(
         list(rows or []),
         key=lambda row: (
-            -_expected_episodes(row),
+            -_pass_probability(row),
             -_pnl(row),
             str((row or {}).get("address") or ""),
         ),
@@ -505,13 +627,31 @@ def attach_sample(row, records, address, *, decoded=None, threshold=None):
         "threshold": str(threshold or READABLE_SHARE_THRESHOLD),
     }
     trips = estimate_sample_round_trips(records, address, decoded=decoded)
+    prescore = estimate_full_gate_prescore(
+        records, address, decoded=decoded, nansen_row=payload,
+    )
     payload["expected_completed_episodes"] = trips["expected_completed_episodes"]
-    payload["skip_deep_pull"] = bool(trips["skip_deep_pull"] and decision["decision"] == KEEP)
-    payload["skip_deep_pull_reason"] = trips.get("skip_deep_pull_reason")
+    payload["prescore"] = {k: v for k, v in prescore.items() if k != "reasons"}
+    payload["estimated_pass_probability"] = prescore["estimated_pass_probability"]
+    payload["prescore_reason"] = prescore.get("skip_deep_pull_reason")
+    skip = bool(
+        (trips["skip_deep_pull"] or prescore["skip_deep_pull"])
+        and decision["decision"] == KEEP
+    )
+    payload["skip_deep_pull"] = skip
+    payload["skip_deep_pull_reason"] = (
+        prescore.get("skip_deep_pull_reason") or trips.get("skip_deep_pull_reason")
+    )
     payload["readable_first"]["expected_completed_episodes"] = trips["expected_completed_episodes"]
     payload["readable_first"]["transfer_in_sells"] = trips["transfer_in_sells"]
+    payload["readable_first"]["prescore"] = payload["prescore"]
     payload["funnel_decision"] = decision["decision"]
     payload["funnel_reason"] = decision.get("reason")
+    if skip:
+        payload["dropped"] = True
+        payload["drop_reason"] = payload["skip_deep_pull_reason"] or "prescore_cannot_pass_early_watch"
+        payload["funnel_decision"] = DROP
+        payload["funnel_reason"] = payload["drop_reason"]
     if decision["decision"] == DEFER_UNREADABLE:
         payload["dropped"] = False
         payload["deferred"] = True
@@ -702,7 +842,31 @@ def funnel_report(walked, *, extra=None):
         "can_only_drop_or_defer": True,
         "PRODUCT_READY": False,
     }
+    early = []
+    for row in list((walked or {}).get("kept") or []) + list((walked or {}).get("dropped") or []):
+        if not isinstance(row, dict):
+            continue
+        level = row.get("qualification_level")
+        name = level.get("level") if isinstance(level, dict) else level
+        if name == "early_watch":
+            early.append({
+                "address": row.get("address"),
+                "label": (level.get("label") if isinstance(level, dict) else None) or row.get("early_watch_label"),
+                "prescore": row.get("prescore") or row.get("prescore_reason"),
+                "never_proven": True,
+                "PRODUCT_READY": False,
+            })
+    if extra and extra.get("early_watch"):
+        seen = {item.get("address") for item in early if item.get("address")}
+        for row in extra.get("early_watch") or []:
+            address = row.get("address") if isinstance(row, dict) else row
+            if address and address not in seen:
+                early.append(row if isinstance(row, dict) else {"address": address})
+                seen.add(address)
+    payload["early_watch"] = early
     if extra:
+        extra = dict(extra)
+        extra.pop("early_watch", None)
         payload.update(extra)
     return payload
 
@@ -712,13 +876,23 @@ def format_funnel_markdown(report):
         f"# Readable-first funnel ({(report or {}).get('version')})",
         "",
         f"Kept: {len((report or {}).get('kept') or [])}",
+        f"Early watch: {len((report or {}).get('early_watch') or [])}",
         f"Deferred unreadable: {len((report or {}).get('deferred_unreadable') or [])}",
         f"Dropped: {len((report or {}).get('dropped') or [])}",
         f"Unscreened: {len((report or {}).get('unscreened') or [])}",
         "",
-        "## Drop / defer reasons",
+        "## Early watch – not proven",
         "",
     ]
+    for row in (report or {}).get("early_watch") or []:
+        address = row.get("address") if isinstance(row, dict) else row
+        label = row.get("label") if isinstance(row, dict) else None
+        lines.append(f"- {address}: {label or 'Early watch – not proven'}")
+    lines.extend([
+        "",
+        "## Drop / defer reasons",
+        "",
+    ])
     for group, label in (
         ("dropped", "dropped"),
         ("deferred_unreadable", "deferred_unreadable"),
@@ -809,7 +983,58 @@ def merge_funnel_reports(prior, incoming):
     merged["dominant_unreadable_programs"] = programs.most_common()
     merged["examined"] = int(prior.get("examined") or 0) + int(incoming.get("examined") or 0)
     merged["accumulated"] = True
+    by_address = {}
+    for row in list(prior.get("early_watch") or []) + list(incoming.get("early_watch") or []):
+        if isinstance(row, dict) and row.get("address"):
+            by_address[row["address"]] = row
+        elif isinstance(row, str):
+            by_address.setdefault(row, {"address": row})
+    merged["early_watch"] = list(by_address.values())
     return merged
+
+
+def merge_funnel_walks(prior, incoming):
+    """Accumulate walk_ranked payloads so a resumed batch cannot erase kept wallets."""
+    if not isinstance(prior, dict):
+        return incoming
+    incoming = incoming or {}
+    merged_report = merge_funnel_reports(
+        funnel_report(prior),
+        funnel_report(incoming),
+    )
+    by_address = {}
+    for row in list(prior.get("kept") or []) + list(prior.get("dropped") or []) + list(prior.get("deferred_unreadable") or []) + list(prior.get("unscreened") or []):
+        if isinstance(row, dict) and row.get("address"):
+            by_address[row["address"]] = row
+    for row in list(incoming.get("kept") or []) + list(incoming.get("dropped") or []) + list(incoming.get("deferred_unreadable") or []) + list(incoming.get("unscreened") or []):
+        if isinstance(row, dict) and row.get("address"):
+            by_address[row["address"]] = row
+    kept, deferred, dropped, unscreened = [], [], [], []
+    for address in merged_report.get("kept") or []:
+        kept.append(by_address.get(address) or {"address": address, "funnel_status": KEEP})
+    for row in merged_report.get("deferred_unreadable") or []:
+        address = row.get("address") if isinstance(row, dict) else None
+        deferred.append(by_address.get(address) or row)
+    for row in merged_report.get("dropped") or []:
+        address = row.get("address") if isinstance(row, dict) else None
+        dropped.append(by_address.get(address) or row)
+    for row in merged_report.get("unscreened") or []:
+        address = row.get("address") if isinstance(row, dict) else None
+        unscreened.append(by_address.get(address) or row)
+    return {
+        "version": incoming.get("version") or prior.get("version") or FUNNEL_VERSION,
+        "n": incoming.get("n") or prior.get("n"),
+        "cap": incoming.get("cap") if incoming.get("cap") is not None else prior.get("cap"),
+        "kept": kept,
+        "deferred_unreadable": deferred,
+        "dropped": dropped,
+        "unscreened": unscreened,
+        "examined": int(prior.get("examined") or 0) + int(incoming.get("examined") or 0),
+        "can_only_drop_or_defer": True,
+        "gates_unchanged": list(GATES_UNCHANGED),
+        "accumulated": True,
+        "PRODUCT_READY": False,
+    }
 
 
 def write_funnel_report(output_dir, walked, *, extra=None):

@@ -201,6 +201,7 @@ from scanner.mass_search.seed_sources import (
     cheap_prescreen_decision,
     cheap_prescreen_enabled,
     nansen_high_frequency_drop,
+    nansen_infra_label_drop,
     dex_trades_per_utc_day,
     nansen_dex_trades_body,
     nansen_dex_trades_drop,
@@ -264,6 +265,7 @@ AUTHORIZATION_ID_12 = "live-e2e-proof-2026-10-12-mitch"
 AUTHORIZATION_ID_13 = "live-e2e-proof-2026-10-13-mitch"
 AUTHORIZATION_ID_14 = "live-e2e-proof-2026-10-14-mitch"
 AUTHORIZATION_ID_15 = "live-e2e-proof-2026-10-15-mitch"
+AUTHORIZATION_ID_16 = "live-e2e-proof-2026-10-16-mitch"
 DRAFT_REL = "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json"
 DRAFT_REL_NEXT = "config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json"
 DRAFT_REL_11 = "config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json"
@@ -271,8 +273,9 @@ DRAFT_REL_12 = "config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.
 DRAFT_REL_13 = "config/live_authorization.live-e2e-proof-2026-10-13-mitch-draft.json"
 DRAFT_REL_14 = "config/live_authorization.live-e2e-proof-2026-10-14-mitch-draft.json"
 DRAFT_REL_15 = "config/live_authorization.live-e2e-proof-2026-10-15-mitch-draft.json"
+DRAFT_REL_16 = "config/live_authorization.live-e2e-proof-2026-10-16-mitch-draft.json"
 DRAFT_PATH = ROOT / DRAFT_REL
-# --live accepts the 2026-10-12 through 2026-10-15 drafts.
+# --live accepts the 2026-10-12 through 2026-10-16 drafts.
 # 07, 09 and 11 are retired. Dry-run may still load a retired draft.
 # Each authorization_id has its own ledger subdirectory under the pinned home.
 LIVE_KNOWN_DRAFTS = {
@@ -280,6 +283,7 @@ LIVE_KNOWN_DRAFTS = {
     AUTHORIZATION_ID_13: DRAFT_REL_13,
     AUTHORIZATION_ID_14: DRAFT_REL_14,
     AUTHORIZATION_ID_15: DRAFT_REL_15,
+    AUTHORIZATION_ID_16: DRAFT_REL_16,
 }
 RETIRED_LIVE_DRAFTS = {
     AUTHORIZATION_ID: DRAFT_REL,
@@ -297,14 +301,15 @@ PINNED_DRAFT_HASHES = {
     AUTHORIZATION_ID_13: "e9629ca44a48671bb9a61c1b3c2ec19a42aa5338b1fc53e00c55498fe3254a2e",
     AUTHORIZATION_ID_14: "4d3c5ad01fea6c99ee51f0c8e59519206f31edb7d1de1717aa8e1805fc56c50d",
     AUTHORIZATION_ID_15: "f8167778625e87c9c8af5014b1760606013d10ce5c18c606fbbed5afbf49e4b6",
+    AUTHORIZATION_ID_16: "307fcc2bfeef304418716f43ceeeff3769cacfc79b24ed8e917d6193e40589a3",
 }
 HARD_CEILINGS = {
     "birdeye_requests": 40,
     "birdeye_units": 1400,
-    "helius_requests": 4000,
-    "helius_units": 40000,
-    "nansen_requests": 200,
-    "nansen_units": 400,
+    "helius_requests": 10000,
+    "helius_units": 80000,
+    "nansen_requests": 300,
+    "nansen_units": 600,
     "leaderboard_requests": 0,
     "leaderboard_units": 0,
 }
@@ -1653,6 +1658,7 @@ def phase3_wallets(config, state=None):
         if isinstance(row, dict)
         and row.get("address")
         and not row.get("dropped")
+        and not row.get("skip_deep_pull")
         and row.get("address") not in blocked
     ]
     kept_rows.sort(key=lambda row: (
@@ -2091,7 +2097,18 @@ def require_durable_store(path):
     return store
 
 
+def bind_run_spend(config, state):
+    """Keep per-run spend on the same dict the cap check reads."""
+    run_spend = state.setdefault("run_spend", empty_spend())
+    if config is not None:
+        config["run_spend"] = run_spend
+    return run_spend
+
+
 def _empty_state(config):
+    run_spend = empty_spend()
+    if config is not None:
+        config["run_spend"] = run_spend
     return {
         "kind": "live-e2e-run-state-v1",
         "authorization_id": config.get("authorization_id"),
@@ -2103,6 +2120,7 @@ def _empty_state(config):
         "phase3": {},
         "receipts": {},
         "spend": empty_spend(),
+        "run_spend": run_spend,
         "phase_spend": empty_phase_spend(),
         "PRODUCT_READY": False,
     }
@@ -2117,6 +2135,7 @@ def load_or_create_state(output_dir, config, *, resume):
         if not resume and state.get("status") not in (None, "started"):
             raise LiveE2EError("existing run state present; pass --resume to continue")
         if resume:
+            bind_run_spend(config, state)
             return state
         raise LiveE2EError("existing run state present; pass --resume to continue")
     return _empty_state(config)
@@ -2190,8 +2209,11 @@ def remaining_caps(config, spend, *, run_spend=None):
     return {key: min(lifetime_left[key], run_left[key]) for key in keys}
 
 
-def hard_stop_if_needed(config, spend, *, provider, units, phase=None, phase_spend=None):
-    left = remaining_caps(config, spend)
+def hard_stop_if_needed(config, spend, *, provider, units, phase=None, phase_spend=None, run_spend=None):
+    left = remaining_caps(
+        config, spend,
+        run_spend=run_spend if run_spend is not None else (config.get("run_spend") or {}),
+    )
     if provider == "birdeye":
         if left["birdeye_requests"] < 1 or left["birdeye_units"] < units:
             raise SourceError("CAP_EXCEEDED", "Birdeye cap reached; hard stop")
@@ -2220,11 +2242,13 @@ def hard_stop_if_needed(config, spend, *, provider, units, phase=None, phase_spe
 
 def _account_spend(state, *, provider, units, phase):
     state.setdefault("spend", empty_spend())
+    state.setdefault("run_spend", empty_spend())
     state.setdefault("phase_spend", empty_phase_spend())
-    state["spend"].setdefault(f"{provider}_requests", 0)
-    state["spend"].setdefault(f"{provider}_units", 0)
-    state["spend"][f"{provider}_requests"] += 1
-    state["spend"][f"{provider}_units"] += units
+    for bucket in (state["spend"], state["run_spend"]):
+        bucket.setdefault(f"{provider}_requests", 0)
+        bucket.setdefault(f"{provider}_units", 0)
+        bucket[f"{provider}_requests"] += 1
+        bucket[f"{provider}_units"] += units
     bucket = state["phase_spend"].setdefault(str(phase), empty_spend())
     bucket.setdefault(f"{provider}_requests", 0)
     bucket.setdefault(f"{provider}_units", 0)
@@ -3794,8 +3818,16 @@ async def _phase1_nansen_token_pnl(store, grant, config, state, recorder, identi
         raw_parts.append(response.get("raw_bytes") or b"{}")
         used += 1
         billing = response.get("billing")
+        rows = nansen_leaderboard_rows(response.get("body"))
+        if not rows:
+            state.setdefault("empty_token_leaderboards", []).append({
+                "token": token,
+                "reason": "tgm_pnl_leaderboard_empty",
+                "seed_is_not": "evidence",
+            })
+            continue
         batch = select_tgm_wallets(
-            nansen_leaderboard_rows(response.get("body")),
+            rows,
             token=token,
             seen=seen,
             billing=billing,
@@ -3985,6 +4017,8 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
         for row in selected:
             meta = extras.get(row["address"]) or {}
             hit = nansen_vendor_drop_decision(meta, config)
+            if not hit:
+                hit = nansen_infra_label_drop(meta)
             if hit:
                 prefilter_log.append({"address": row["address"], **hit})
             else:
@@ -4772,13 +4806,21 @@ def _phase2_finish(config, state, rows):
         -float(row.get("coverability_rank_key") or 0),
         row["address"],
     ))
-    kept = [row["address"] for row in ranked if not row.get("dropped") and not row.get("deferred")]
+    kept = [
+        row["address"]
+        for row in ranked
+        if not row.get("dropped") and not row.get("deferred") and not row.get("skip_deep_pull")
+    ]
     if config.get("readable_first") or config.get("batch"):
         n = readable_first_target_n(config)
         cap = readable_first_walk_cap(config)
         walked = walk_ranked(ranked, n=n, cap=cap)
+        prior_walk = state.get("funnel_walk") if isinstance(state.get("funnel_walk"), dict) else None
+        if prior_walk:
+            from scanner.mass_search.readable_first import merge_funnel_walks
+            walked = merge_funnel_walks(prior_walk, walked)
         extra = {
-            "phase2_kept": kept,
+            "phase2_kept": [row.get("address") for row in walked.get("kept") or [] if row.get("address")],
             "readable_first_n": n,
             "readable_first_cap": cap,
             "throughput_version": THROUGHPUT_VERSION,
@@ -5749,6 +5791,18 @@ def human_summary(results):
         if blockers:
             labels = ", ".join(f"{item.get('label')} ({item.get('program_id')})" for item in blockers)
             lines.append(f"  program blockers: {labels}")
+    lines.extend(["", "## Early watch – not proven", ""])
+    early = results.get("early_watch") or []
+    if not early:
+        lines.append("- none")
+    for row in early:
+        lines.append(f"- {row.get('address')}: {row.get('label') or 'Early watch – not proven'}")
+    lines.extend(["", "## Proven", ""])
+    proven = results.get("proven") or []
+    if not proven:
+        lines.append("- none")
+    for row in proven:
+        lines.append(f"- {row.get('address')}: {row.get('level')}")
     lines.append("")
     return "\n".join(lines) + "\n"
 
@@ -6195,6 +6249,7 @@ async def run_live_e2e(raw):
         if not config.get("dry_run"):
             store.put("configuration", "live_authorization", config["grant"])
         state = load_or_create_state(output_dir, config, resume=config["resume"])
+        bind_run_spend(config, state)
         state["authorization_id"] = config["authorization_id"]
         if state.get("bounds"):
             persisted = state["bounds"]
@@ -6451,7 +6506,30 @@ async def run_live_e2e(raw):
         results["cost_per_audit_worthy"] = cost_per_audit_worthy(state.get("source_spend") or {}, audit_worthy)
         results["seed_is_not"] = "evidence"
         results["count_kinds"] = list(COUNT_KINDS)
+        from scanner.mass_search.research_profile import early_watch_label as _ew_label
+        early_watch_rows = []
+        proven_rows = []
+        for row in results["wallets"]:
+            level = row.get("lead_level") or ((row.get("qualification_level") or {}).get("level") if isinstance(row.get("qualification_level"), dict) else row.get("qualification_level"))
+            if level == "early_watch":
+                completed = int(row.get("completed_known_cost_positions") or row.get("completed_trades") or 0)
+                early_watch_rows.append({
+                    "address": row.get("address"),
+                    "label": _ew_label(completed or 1),
+                    "completed": completed,
+                    "never_proven": True,
+                    "PRODUCT_READY": False,
+                })
+            elif level in ("provisional_research_lead", "stronger_research_shortlist"):
+                proven_rows.append({"address": row.get("address"), "level": level})
+        results["early_watch"] = early_watch_rows
+        results["proven"] = proven_rows
         if config.get("batch") or config.get("readable_first"):
+            write_funnel_report(
+                output_dir,
+                state.get("funnel_walk") or {"kept": [], "dropped": [], "deferred_unreadable": [], "unscreened": []},
+                extra={"early_watch": early_watch_rows, "proven": proven_rows},
+            )
             phase_spend = state.get("phase_spend") or {}
             spend_by_stage = {
                 "discovery": _stage_spend_blob(phase_spend.get("1"), "nansen"),
@@ -6582,22 +6660,22 @@ def build_arg_parser():
     parser.add_argument(
         "--nansen-max-avg-trades-per-day",
         dest="nansen_max_avg_trades_per_day",
-        default="2.5",
-        help="Rule A: drop when n_trades/timeframe_days exceeds this (default 2.5).",
+        default="5",
+        help="Rule A: drop when n_trades/timeframe_days exceeds this (default 5). Discovery filter, not a proof gate.",
     )
     parser.add_argument(
         "--nansen-min-tokens",
         dest="nansen_min_tokens",
         type=int,
-        default=3,
-        help="Rule A: drop when n_tokens is below this (default 3). Missing field is no drop.",
+        default=2,
+        help="Rule A: drop when n_tokens is below this (default 2). Missing field is no drop.",
     )
     parser.add_argument(
         "--nansen-max-tokens",
         dest="nansen_max_tokens",
         type=int,
-        default=10,
-        help="Rule A: drop when n_tokens is above this (default 10). Missing field is no drop.",
+        default=30,
+        help="Rule A: drop when n_tokens is above this (default 30). Missing field is no drop.",
     )
     parser.add_argument(
         "--nansen-min-realized-pnl",

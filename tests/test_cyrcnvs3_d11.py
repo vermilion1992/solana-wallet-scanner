@@ -171,9 +171,9 @@ def test_auth15_draft_hash_and_ceilings():
     assert "getSignaturesForAddress" in helius["allowed_operations"]
     assert birdeye["max_requests"] == 0
     assert birdeye["max_units"] == 0
-    assert HARD_CEILINGS["nansen_requests"] == 200
-    assert HARD_CEILINGS["nansen_units"] == 400
-    assert HARD_CEILINGS["helius_units"] == 40000
+    assert HARD_CEILINGS["nansen_requests"] == 300
+    assert HARD_CEILINGS["nansen_units"] == 600
+    assert HARD_CEILINGS["helius_units"] == 80000
     assert HARD_CEILINGS["birdeye_units"] == 1400
 
 

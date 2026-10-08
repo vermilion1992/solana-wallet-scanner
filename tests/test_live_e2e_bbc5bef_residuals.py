@@ -86,7 +86,7 @@ def test_pinned_hash_and_hard_ceilings_block_local_inflated_draft(tmp_path, fake
     grant = _arm_grant(tmp_path, helius_req=20_000, helius_units=1_000_000)
     with pytest.raises(LiveE2EError, match="hard ceiling|exceeds committed draft"):
         validate_config(_live_kwargs(tmp_path, grant, tmp_path / "out2", WALLETS[:1]))
-    assert HARD_CEILINGS["helius_requests"] == 4000
+    assert HARD_CEILINGS["helius_requests"] == 10000
     assert HARD_CEILINGS["birdeye_units"] == 1400
     working = hashlib.sha256((ROOT / DRAFT_REL_NEXT).read_bytes()).hexdigest()
     assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_NEXT] == working

@@ -153,6 +153,12 @@ def _safe_float(value):
     return float(parsed)
 
 
+def _qualification_level_name(value):
+    if isinstance(value, dict):
+        return value.get("level") or ""
+    return value or ""
+
+
 def apply_local_filters(rows, filters, *, user_shortlist=None):
     """Cheap provider-proxy screen. Unset thresholds do not hide rows."""
     proxy = (filters or {}).get("provider_proxy") or {}
@@ -162,6 +168,7 @@ def apply_local_filters(rows, filters, *, user_shortlist=None):
     only_shortlist = bool(proxy.get("only_shortlist") or (filters or {}).get("only_shortlist"))
     only_captured = bool(proxy.get("only_captured") or (filters or {}).get("only_captured"))
     only_user = bool(proxy.get("only_user_shortlist"))
+    only_early_watch = bool(proxy.get("only_early_watch") or (filters or {}).get("only_early_watch"))
     selected = []
     for row in rows:
         if only_shortlist and not row.get("shortlisted"):
@@ -170,6 +177,10 @@ def apply_local_filters(rows, filters, *, user_shortlist=None):
             continue
         if only_user and row.get("address") not in (user_shortlist or set()):
             continue
+        if only_early_watch:
+            level = _qualification_level_name(row.get("qualification_level"))
+            if level and level != "early_watch":
+                continue
         if min_trades is not None:
             trades = _safe_int(row.get("trade_count") or 0)
             if trades is None or trades < min_trades:
@@ -191,6 +202,7 @@ def _filter_effects(universe_rows, visible_rows, filters):
         ("only_shortlist", "Provider shortlist only", "flag"),
         ("only_user_shortlist", "Your shortlist only", "flag"),
         ("only_captured", "Cached history only", "flag"),
+        ("only_early_watch", "Early watch only – not proven", "flag"),
     ):
         value = proxy.get(key)
         missing = value in (None, "", False)
@@ -618,6 +630,10 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
             classification=(report or {}).get("classification"),
             worksheet=(report or {}).get("worksheet"),
         )
+        level = (profile or {}).get("qualification_level")
+        if bool(((filters or {}).get("provider_proxy") or {}).get("only_early_watch") or (filters or {}).get("only_early_watch")):
+            if _qualification_level_name(level) != "early_watch":
+                continue
         rows.append({
             **row,
             "report_id": (report or {}).get("id"),
@@ -628,7 +644,7 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
             "research_profile": profile,
             "analytics": (report or {}).get("analytics"),
             "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
-            "qualification_level": (profile or {}).get("qualification_level"),
+            "qualification_level": level,
             "coverage_status": (profile or {}).get("coverage_status"),
             "coverage_status_display": (profile or {}).get("coverage_status_display") or (profile or {}).get("coverage_status"),
             "blocking_reason": (profile or {}).get("blocking_reason"),
@@ -691,12 +707,28 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
             "history_required": False,
             "can_open_report": True,
         })
+    early_watch_rows = [
+        {
+            "address": row.get("address"),
+            "label": (
+                (row.get("qualification_level") or {}).get("label")
+                if isinstance(row.get("qualification_level"), dict)
+                else None
+            ) or (row.get("blocking_reason") if _qualification_level_name(row.get("qualification_level")) == "early_watch" else None),
+            "qualification_level": "early_watch",
+            "never_proven": True,
+            "PRODUCT_READY": False,
+        }
+        for row in rows
+        if _qualification_level_name(row.get("qualification_level")) == "early_watch"
+    ]
     return {
         "kind": "ranked-workflow-view-v1",
         "filters": filters,
         "filter_effects": _filter_effects(universe["rows"], rows, filters),
         "ranked_count": universe["ranked_count"],
         "visible_count": len(rows),
+        "early_watch": early_watch_rows,
         "capture_sha256": universe["capture_sha256"],
         "snapshot_id": universe.get("snapshot_id"),
         "snapshot_raw_sha256": universe.get("snapshot_raw_sha256"),

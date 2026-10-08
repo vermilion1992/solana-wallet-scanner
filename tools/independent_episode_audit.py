@@ -2495,13 +2495,35 @@ def _has_swap_signal(body, pubkeys, meta, changed):
     return any(qty < 0 for qty in changed.values())
 
 
-def raw_economic_keys_for_tx(record, address):
-    """v3: one signed swap-program tx with a wallet-owned token change.
+_AUDITOR_QUOTE_ASSETS = frozenset({
+    "SOL",
+    "So11111111111111111111111111111111111111112",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+})
+_AUDITOR_TOKEN_DUST = 1
 
-    Orthogonal to the app's rent-aware SOL floor. Unknown venues count when
-    logs/instruction names show Swap/Buy/Sell/Route, or a reviewed swap
-    program is present with a material wallet-owned token balance change.
-    One key per signature.
+
+def _auditor_native_sol_delta(body, pubkeys, address):
+    """Independent wallet SOL delta from pre/post balances. Not imported."""
+    meta = body.get("meta") if isinstance(body.get("meta"), dict) else {}
+    pre = meta.get("preBalances") or ()
+    post = meta.get("postBalances") or ()
+    if address not in (pubkeys or []):
+        return 0
+    idx = list(pubkeys).index(address)
+    try:
+        return int(post[idx]) - int(pre[idx])
+    except (TypeError, ValueError, IndexError):
+        return 0
+
+
+def raw_economic_keys_for_tx(record, address):
+    """Independent (signature, kind, mint) count for one signed swap tx.
+
+    Token-to-token is two keys (sold mint + bought mint). Route legs are not
+    extra trades. Quote-to-quote is one key. Derived here from owned balance
+    deltas — this module does not import scanner/.
     """
     if not isinstance(record, dict) or not address:
         return 0
@@ -2512,11 +2534,30 @@ def raw_economic_keys_for_tx(record, address):
     if not _auditor_wallet_signed(body, pubkeys, address):
         return 0
     changed = _wallet_owned_token_changed(meta, address)
-    if not changed:
+    sol_delta = _auditor_native_sol_delta(body, pubkeys, address)
+    material = {}
+    for mint, qty in (changed or {}).items():
+        if mint in _AUDITOR_QUOTE_ASSETS or abs(qty) > _AUDITOR_TOKEN_DUST:
+            material[mint] = qty
+    if sol_delta:
+        material["SOL"] = material.get("SOL", 0) + sol_delta
+    if not material:
         return 0
-    if not _has_swap_signal(body, pubkeys, meta, changed):
+    if not _has_swap_signal(body, pubkeys, meta, changed or material):
         return 0
-    return 1
+    token_downs = [mint for mint, qty in material.items() if qty < 0 and mint not in _AUDITOR_QUOTE_ASSETS]
+    token_ups = [mint for mint, qty in material.items() if qty > 0 and mint not in _AUDITOR_QUOTE_ASSETS]
+    quote_downs = [mint for mint, qty in material.items() if qty < 0 and mint in _AUDITOR_QUOTE_ASSETS]
+    quote_ups = [mint for mint, qty in material.items() if qty > 0 and mint in _AUDITOR_QUOTE_ASSETS]
+    if token_downs and token_ups:
+        return len(token_downs) + len(token_ups)
+    if token_downs and (quote_downs or quote_ups):
+        return len(token_downs)
+    if token_ups and quote_downs:
+        return len(token_ups)
+    if quote_ups and quote_downs:
+        return 1
+    return 0
 
 
 def _tx_signature(record):

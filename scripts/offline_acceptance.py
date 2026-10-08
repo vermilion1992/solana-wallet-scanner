@@ -29,6 +29,7 @@ LIVE_E2E_DRAFT_11 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-11-
 LIVE_E2E_DRAFT_12 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json"
 LIVE_E2E_DRAFT_13 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-13-mitch-draft.json"
 LIVE_E2E_DRAFT_14 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-14-mitch-draft.json"
+LIVE_E2E_DRAFT_16 = ROOT / "config/live_authorization.live-e2e-proof-2026-10-16-mitch-draft.json"
 MANDATORY = [
     "tests/test_chatgpt_review_2026_10_07.py",
     "tests/test_chatgpt_review_2026_10_07_rereview.py",
@@ -71,6 +72,7 @@ MANDATORY = [
     "tests/test_dc_c85388e_verify.py",
     "tests/test_run12_yield_d12.py",
     "tests/test_dc9_route_price.py",
+    "tests/test_run13_early_watch_prescore.py",
 ]
 FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL", "NANSEN_API_KEY")
 

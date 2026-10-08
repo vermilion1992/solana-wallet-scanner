@@ -1694,12 +1694,22 @@ def episode_net_from_ledger(episodes, fallback_unit=None):
 
 
 def qualifying_profit(profile, report=None):
-    """Completed-episode ledger net only. Saved profile summaries never qualify."""
+    """Completed-episode ledger net only. Saved profile summaries never qualify.
+
+    When the app has already folded in-window omitted losers into the headline,
+    that headline is the qualifying number. Unclosed losses count; they do not
+    mint completed episodes.
+    """
     ledger = completed_episode_ledger(report, profile)
     validated = validate_episode_ledger(ledger)
     if not validated["ok"] or validated.get("empty"):
         return None, None, {}
     amount = _decimal(validated["net"])
+    if (profile or {}).get("headline_includes_losing_episodes"):
+        headline = _decimal((profile or {}).get("completed_episode_net"))
+        unit = (profile or {}).get("completed_episode_net_unit") or validated["unit"]
+        if headline is not None:
+            return headline, unit, {unit: headline}
     return amount, validated["unit"], validated["vector"]
 
 

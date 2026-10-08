@@ -19,6 +19,7 @@ from scanner.mass_search.research_profile import (
 QUALIFICATION_LEVELS = (
     "insufficient_evidence",
     "conditional_captured_lot_result",
+    "early_watch",
     "provisional_research_lead",
     "stronger_research_shortlist",
 )
@@ -97,6 +98,9 @@ def blocking_reason(report, profile, *, coverage_status, level):
     elif coverage_status == "coverage_eligibility_pending_reassessment":
         if not any("unresolved-basis" in item or "sensitivity" in item for item in reasons):
             reasons.append("coverage_eligibility_pending_reassessment")
+    if _level_name(level) == "early_watch":
+        from scanner.mass_search.research_profile import early_watch_label
+        return early_watch_label(completed)
     if _level_name(level) in ("provisional_research_lead", "stronger_research_shortlist"):
         return None
     if not reasons:

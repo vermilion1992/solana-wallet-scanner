@@ -111,6 +111,7 @@ PROVIDER_PROXY_KEYS = (
     "only_shortlist",
     "only_user_shortlist",
     "only_captured",
+    "only_early_watch",
 )
 THRESHOLD_UNITS = {
     "min_completed_known_cost": "positions",
@@ -170,6 +171,7 @@ def _default_provider_proxy():
         "only_shortlist": False,
         "only_user_shortlist": False,
         "only_captured": False,
+        "only_early_watch": False,
     }
 
 
@@ -479,7 +481,7 @@ def _clean_proxy(incoming, *, strict=False):
                 proxy[key] = validate_provider_proxy_value(key, value)
             except FilterValidationError:
                 proxy[key] = None
-    for key in ("only_shortlist", "only_user_shortlist", "only_captured"):
+    for key in ("only_shortlist", "only_user_shortlist", "only_captured", "only_early_watch"):
         proxy[key] = _clean_bool(source.get(key), name=key, strict=strict)
     return proxy
 
@@ -514,6 +516,7 @@ _PASSTHROUGH_FILTER_KEYS = {
     "only_shortlist",
     "only_captured",
     "only_user_shortlist",
+    "only_early_watch",
     "min_provider_trade_count",
     "min_provider_score",
 }
@@ -576,6 +579,7 @@ def load_filters(store=None):
     payload["saved"] = True
     payload["only_shortlist"] = payload["provider_proxy"]["only_shortlist"]
     payload["only_captured"] = payload["provider_proxy"]["only_captured"]
+    payload["only_early_watch"] = payload["provider_proxy"]["only_early_watch"]
     return payload
 
 
@@ -590,6 +594,7 @@ def save_filters(store, thresholds):
     payload["window_days"] = validate_window_days(incoming.get("window_days"))
     payload["only_shortlist"] = payload["provider_proxy"]["only_shortlist"]
     payload["only_captured"] = payload["provider_proxy"]["only_captured"]
+    payload["only_early_watch"] = payload["provider_proxy"]["only_early_watch"]
     store.put(FILTERS_KIND, FILTERS_KEY, payload)
     return payload
 
@@ -923,6 +928,28 @@ def _iso_to_unix(text):
     return int(datetime.fromisoformat(str(text).replace("Z", "+00:00")).timestamp())
 
 
+def apply_headline_losing_pnl(profile, report, headline_net, headline_unit):
+    """Write in-window losing PnL onto every surface that ranks or filters."""
+    if profile is None or headline_net in (None, "") or not headline_unit:
+        return profile
+    profile["completed_episode_net"] = headline_net
+    profile["completed_episode_net_unit"] = headline_unit
+    if isinstance(profile.get("completed_episode_net_vector"), dict):
+        vector = dict(profile["completed_episode_net_vector"])
+        vector[headline_unit] = headline_net
+        profile["completed_episode_net_vector"] = vector
+    if profile.get("scoped_pnl") not in (None, "") or headline_net not in (None, ""):
+        profile["scoped_pnl"] = headline_net
+        profile["scoped_pnl_unit"] = headline_unit
+        by_asset = dict(profile.get("scoped_pnl_by_quote_asset") or {})
+        by_asset[headline_unit] = headline_net
+        profile["scoped_pnl_by_quote_asset"] = by_asset
+    if isinstance(report, dict):
+        report["completed_episode_net"] = headline_net
+        report["completed_episode_net_unit"] = headline_unit
+    return profile
+
+
 def _headline_including_dropped_losers(clean_net, clean_unit, dropped):
     """Add in-window same-unit dropped-loser PnL so headlines are not overstated.
 
@@ -937,6 +964,12 @@ def _headline_including_dropped_losers(clean_net, clean_unit, dropped):
         if not isinstance(row, dict):
             continue
         unit = row.get("settlement_asset") or "SOL"
+        if unit in (USDC, "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"):
+            unit = "USDC"
+        elif unit in (USDT, "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"):
+            unit = "USDT"
+        elif unit in ("SOL", "So11111111111111111111111111111111111111112", "WSOL"):
+            unit = "SOL"
         if unit != clean_unit:
             continue
         try:
@@ -955,6 +988,141 @@ def _headline_including_dropped_losers(clean_net, clean_unit, dropped):
     if text and "." in text:
         text = text.rstrip("0").rstrip(".")
     return text, clean_unit, included
+
+
+def early_watch_label(completed):
+    return f"Early watch – not proven ({int(completed)} of 3 completed rounds)"
+
+
+def app_omitted_losing_episodes(mapped, report, ledger=None):
+    """App-side in-window losers the completed ledger omitted.
+
+    Independently walks mapped buy/sell lots. Clean completed flattens already
+    on the ledger are left alone. Losing flattens missing from the ledger and
+    unclosed losing inventory are included in headline P&L only — they never
+    raise the completed-episode count.
+    """
+    from collections import defaultdict
+
+    start = _iso_to_unix(((report or {}).get("window") or {}).get("start") or ((report or {}).get("window") or {}).get("start_inclusive"))
+    end = _iso_to_unix(((report or {}).get("window") or {}).get("end") or ((report or {}).get("window") or {}).get("end_exclusive"))
+    ledger_ids = {
+        (str(item.get("mint") or ""), str(item.get("close_signature") or item.get("close") or ""))
+        for item in (ledger or [])
+        if item.get("mint")
+    }
+
+    def _in_window(stamp):
+        if start is None or end is None or stamp is None:
+            return True
+        try:
+            return start <= int(stamp) < end
+        except (TypeError, ValueError):
+            return True
+
+    by_mint = defaultdict(list)
+    for row in mapped or []:
+        if not isinstance(row, dict) or row.get("kind") not in ("buy", "sell"):
+            continue
+        mint = row.get("mint")
+        if mint:
+            by_mint[mint].append(row)
+    omitted = []
+    for mint, rows in by_mint.items():
+        rows = sorted(rows, key=lambda row: (
+            row.get("order") if isinstance(row.get("order"), int) and not isinstance(row.get("order"), bool) else 10 ** 12,
+            row.get("seconds_from_start") or 0,
+            row.get("timestamp") or 0,
+            row.get("signature") or "",
+        ))
+        inventory = Decimal("0")
+        opened = False
+        pnl = Decimal("0")
+        asset = None
+        last_ts = None
+        last_sig = None
+        for row in rows:
+            raw_units = row.get("units")
+            if raw_units in (None, ""):
+                raw_units = row.get("quantity_raw") or row.get("quantity") or 0
+            try:
+                qty = Decimal(str(raw_units))
+            except (InvalidOperation, TypeError, ValueError):
+                continue
+            priced = quote_consideration(row)
+            unit = settlement_of(row) or row.get("settlement_asset") or "SOL"
+            if unit in (USDC, "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"):
+                unit = "USDC"
+            elif unit in (USDT, "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"):
+                unit = "USDT"
+            elif unit in ("SOL", "So11111111111111111111111111111111111111112", "WSOL"):
+                unit = "SOL"
+            if priced is None:
+                for key, guess in (
+                    ("consideration_usdc", "USDC"),
+                    ("amount_usdc", "USDC"),
+                    ("consideration_usdt", "USDT"),
+                    ("amount_usdt", "USDT"),
+                    ("consideration_sol", "SOL"),
+                    ("amount_sol", "SOL"),
+                ):
+                    if row.get(key) not in (None, ""):
+                        try:
+                            priced = Decimal(str(row[key]))
+                        except (InvalidOperation, TypeError, ValueError):
+                            continue
+                        unit = unit if unit in ("SOL", "USDC", "USDT") else guess
+                        break
+            if priced is None:
+                continue
+            if asset is None:
+                asset = unit
+            elif unit != asset:
+                continue
+            last_ts = row.get("timestamp") or row.get("block_time")
+            last_sig = row.get("signature")
+            if row.get("kind") == "buy":
+                inventory += qty
+                opened = True
+                pnl -= priced
+                continue
+            inventory -= qty
+            pnl += priced
+            if opened and inventory == 0:
+                key = (str(mint), str(last_sig or ""))
+                if _in_window(last_ts) and pnl < 0 and key not in ledger_ids:
+                    omitted.append({
+                        "mint": mint,
+                        "net_profit": format(pnl, "f"),
+                        "settlement_asset": asset,
+                        "timestamp": last_ts,
+                        "reason": "app_omitted_losing_flatten",
+                    })
+                opened = False
+                pnl = Decimal("0")
+                inventory = Decimal("0")
+                asset = None
+            elif inventory < 0:
+                opened = False
+                pnl = Decimal("0")
+                inventory = Decimal("0")
+                asset = None
+        # Unclosed losses are included only when leftover inventory is still
+        # open and every lot on the mint was priced. Incomplete decoder rows
+        # must not invent a headline loser (that would un-audit clean wallets).
+        priced_rows = [row for row in rows if quote_consideration(row) is not None
+                       or row.get("consideration_usdc") not in (None, "")
+                       or row.get("consideration_usdt") not in (None, "")
+                       or row.get("consideration_sol") not in (None, "")]
+        if opened and pnl < 0 and _in_window(last_ts) and len(priced_rows) == len(rows) and inventory > 0:
+            omitted.append({
+                "mint": mint,
+                "net_profit": format(pnl, "f"),
+                "settlement_asset": asset or "SOL",
+                "timestamp": last_ts,
+                "reason": "unflattened_losing_inventory",
+            })
+    return omitted
 
 
 def attach_live_independent_audit(report, profile, records, address):
@@ -1049,20 +1217,13 @@ def _attach_live_independent_audit_body(report, profile, records, address):
         base["independently_audited_episode_net"] = headline_net
         base["independently_audited_episode_net_unit"] = headline_unit
         base["included_dropped_losing_pnl"] = included_drops
-        # App silently omitted the same in-window losers (CYrC CdhZy -46.66).
-        # Headline P&L must include them; membership stays not independently audited.
-        if profile is not None and amounts_agree(app_net, net, unit or headline_unit or "USDC"):
-            profile["completed_episode_net"] = headline_net
-            profile["completed_episode_net_unit"] = headline_unit
-            if isinstance(profile.get("completed_episode_net_vector"), dict) and headline_unit:
-                vector = dict(profile["completed_episode_net_vector"])
-                vector[headline_unit] = headline_net
-                profile["completed_episode_net_vector"] = vector
-            base["app_completed_episode_net"] = headline_net
-            base["app_completed_episode_net_unit"] = headline_unit
-            if isinstance(report, dict):
-                report["completed_episode_net"] = headline_net
-                report["completed_episode_net_unit"] = headline_unit
+        # App silently omitted the same in-window losers (CYrC CdhZy -46.66,
+        # 9DkBp3oY -251.13, 9bfcmF unclosed). Headline P&L must include them
+        # even when clean nets already disagreed; membership stays unaudited.
+        if profile is not None:
+            apply_headline_losing_pnl(profile, report, headline_net, headline_unit)
+            base["app_completed_episode_net"] = profile.get("completed_episode_net")
+            base["app_completed_episode_net_unit"] = profile.get("completed_episode_net_unit")
     if in_window_drops:
         return {
             **base,
@@ -1318,15 +1479,15 @@ def qualification_level(report, profile):
             **rate_fields,
         }
     unresolved_accounting = unresolved > 0 or bool(cost_dependency) or not audited
-    clean = (
-        completed >= 3
-        and profit is not None
+    proof_except_episodes = (
+        profit is not None
         and profit > 0
         and gate["passed"]
         and unresolved == 0
         and not cost_dependency
         and audited
     )
+    clean = completed >= 3 and proof_except_episodes
     stronger = (
         clean
         and completed >= 20
@@ -1335,13 +1496,19 @@ def qualification_level(report, profile):
     )
     if stronger:
         level = "stronger_research_shortlist"
+        label = level.replace("_", " ")
     elif clean:
         level = "provisional_research_lead"
+        label = level.replace("_", " ")
+    elif completed in (1, 2) and proof_except_episodes:
+        level = "early_watch"
+        label = early_watch_label(completed)
     else:
         level = "conditional_captured_lot_result"
+        label = level.replace("_", " ")
     return {
         "level": level,
-        "label": level.replace("_", " "),
+        "label": label,
         "clean_episodes": completed,
         "positive_completed_episode_net": bool(profit is not None and profit > 0),
         "positive_scoped_net": bool(profit is not None and profit > 0),
@@ -1352,6 +1519,10 @@ def qualification_level(report, profile):
         "unresolved_accounting": unresolved_accounting,
         "sensitivity_sign_flip": cost_dependency,
         "independently_audited": audited,
+        "lead_eligible": level in ("provisional_research_lead", "stronger_research_shortlist"),
+        "proven": level in ("provisional_research_lead", "stronger_research_shortlist"),
+        "PRODUCT_READY": False,
+        "never_a_research_lead": level == "early_watch",
         "active_trading_days": activity.get("active_trading_days"),
         "span_days": activity.get("span_days"),
         "max_economic_trades_in_one_day": first_defined_int(rate.get("max")),
@@ -1574,6 +1745,10 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     episode_net, episode_unit, episode_vector = episode_net_from_ledger(
         ledger, fallback_unit=settlement if settlement in ("SOL", "USDC", "USDT") else None
     )
+    omitted_losing = app_omitted_losing_episodes(mapped, report, ledger)
+    headline_net, headline_unit, included_drops = _headline_including_dropped_losers(
+        episode_net, episode_unit, omitted_losing,
+    )
     completed = len(ledger)
     if completed >= 1 and episode_vector:
         scoped_by_asset = {
@@ -1736,6 +1911,9 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "completed_episode_net": episode_net,
         "completed_episode_net_unit": episode_unit,
         "completed_episode_net_vector": episode_vector,
+        "included_dropped_losing_pnl": included_drops,
+        "app_omitted_losing_episodes": omitted_losing,
+        "headline_includes_losing_episodes": False,
         "ledger_summary_contradiction": ledger_contradiction,
         "concentration_detail": _concentration_detail(
             {**report, "completed_episode_ledger": ledger, "completed_episode_net_unit": episode_unit},
