@@ -2,6 +2,7 @@
 """Offline coverage before/after the net-balance fallback. No provider HTTP."""
 from __future__ import annotations
 
+import gzip
 import json
 import os
 import sys
@@ -51,11 +52,17 @@ def _iter_records(path: Path):
         return
     files = [path] if path.is_file() else [
         item for item in path.rglob("*")
-        if item.is_file() and item.suffix.lower() in {".json", ".bin"}
+        if item.is_file() and (
+            item.suffix.lower() in {".json", ".bin", ".gz"}
+            or item.name.endswith(".json.gz")
+        )
     ]
     for file in files:
         try:
-            payload = json.loads(file.read_text(encoding="utf-8"))
+            raw = file.read_bytes()
+            if raw[:2] == b"\x1f\x8b":
+                raw = gzip.decompress(raw)
+            payload = json.loads(raw)
         except (OSError, UnicodeDecodeError, json.JSONDecodeError):
             continue
         if isinstance(payload, dict) and payload.get("record"):
