@@ -112,6 +112,7 @@ from scanner.mass_search.qualification_gates import (
     first_defined_int,
     qualifying_profit,
     trade_rate_from,
+    bot_rate_disagreement_blocker,
     with_gt25_blocker,
 )
 from scanner.mass_search.seed_sources import (
@@ -475,15 +476,30 @@ def known_trade_rate_from_state(state, address):
     ):
         if not isinstance(source, dict):
             continue
-        stored = first_defined_int(source.get("max_economic_trades_in_one_day"))
-        if stored is None:
-            stored = first_defined_int(source.get("max_trades_per_day"))
+        nested = source.get("triage_decision") if isinstance(source.get("triage_decision"), dict) else {}
+        stored = first_defined_int(
+            source.get("max_economic_trades_in_one_day"),
+            nested.get("max_economic_trades_in_one_day"),
+            source.get("max_trades_per_day"),
+            nested.get("max_trades_per_day"),
+        )
         if stored is None:
             continue
+        by_day = (
+            source.get("economic_trades_by_utc_day")
+            or nested.get("economic_trades_by_utc_day")
+            or nested.get("economic_trades_by_day")
+            or {}
+        )
         return {
-            "by_day": source.get("economic_trades_by_utc_day") or {},
+            "by_day": by_day,
             "max": stored,
-            "max_on": source.get("max_economic_trades_on") or source.get("max_trades_per_day_on"),
+            "max_on": (
+                source.get("max_economic_trades_on")
+                or nested.get("max_economic_trades_on")
+                or source.get("max_trades_per_day_on")
+                or nested.get("max_trades_per_day_on")
+            ),
         }
     return None
 
@@ -2878,7 +2894,6 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
                 if not rows:
                     break
                 for row in select_nansen_wallets(rows, timeframe=timeframe, seen=seen):
-                    selected.append(row)
                     existing = extras.get(row["address"]) or {}
                     timeframes = dict(existing.get("timeframes") or {})
                     timeframes[str(timeframe)] = {
@@ -2900,6 +2915,8 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
                         }
                     else:
                         extras[row["address"]]["timeframes"] = timeframes
+                    if not row.get("already_seen"):
+                        selected.append(row)
         profile_page = page
         profile_cap = config.get("nansen_profile_cap")
         profiled = 0
@@ -3576,9 +3593,9 @@ def _triage_sample_options(bounds):
     )
 
 
-def _triage_third_sample(bounds, samples):
+def _triage_third_sample(bounds, samples, *, address=None):
     """Retarget the third sample at the densest UTC day already seen."""
-    densest = densest_utc_day_bounds(samples)
+    densest = densest_utc_day_bounds(samples, address=address)
     if densest:
         return ("densest_day", gta_options(
             details="full", limit=GTA_SAMPLE_LIMIT,
@@ -3610,7 +3627,7 @@ async def phase2_prescreen(store, grant, config, state, recorder):
                 specs = list(_triage_sample_options(bounds))
                 for page_index in range(TRIAGE_SAMPLES):
                     if page_index == 2:
-                        name, options = _triage_third_sample(bounds, samples)
+                        name, options = _triage_third_sample(bounds, samples, address=address)
                     else:
                         name, options = specs[page_index]
                     page = await _dispatch_helius(
@@ -3678,6 +3695,7 @@ async def phase2_prescreen(store, grant, config, state, recorder):
                 now_unix=bounds.get("report_end_unix"),
                 bundle=bundle,
                 created_in_range=created,
+                address=address,
             )
             dropped = bool(decision["dropped"])
             drop_reason = ",".join(decision["drop_reasons"]) if dropped else None
@@ -3709,6 +3727,9 @@ async def phase2_prescreen(store, grant, config, state, recorder):
                 "done": True,
                 "triage": True,
                 "triage_decision": decision,
+                "max_economic_trades_in_one_day": decision.get("max_economic_trades_in_one_day"),
+                "max_economic_trades_on": decision.get("max_economic_trades_on"),
+                "economic_trades_by_utc_day": decision.get("economic_trades_by_utc_day") or decision.get("economic_trades_by_day"),
                 "count_kinds": list(COUNT_KINDS),
                 **seed_fields_for_wallet(state, address),
             }
@@ -3981,6 +4002,12 @@ def _phase4_wallet_row(report, profile):
     level = (profile or {}).get("qualification_level") or {}
     fields = wallet_status_fields(report, profile)
     rate = trade_rate_from(report, profile)
+    audit_blob = (profile or {}).get("independent_audit") or (report or {}).get("independent_audit") or {}
+    auditor_rate = {
+        "max": first_defined_int(audit_blob.get("max_economic_trades_in_one_day")),
+        "max_on": audit_blob.get("max_economic_trades_on"),
+    } if audit_blob else None
+    disagree = bot_rate_disagreement_blocker(rate, auditor_rate) if auditor_rate else None
     blocker = fields.get("blocking_reason")
     if level.get("level") in ("provisional_research_lead", "stronger_research_shortlist"):
         blocker = None
@@ -3995,6 +4022,9 @@ def _phase4_wallet_row(report, profile):
         level = {"level": "insufficient_evidence"}
         blocker = history.get("history_complete_reason") or "history_incomplete"
     blocker = with_gt25_blocker(blocker, rate)
+    if disagree:
+        level = {"level": "insufficient_evidence"}
+        blocker = with_gt25_blocker(disagree, rate)
     return {
         "address": report.get("address"),
         "coverage_count_share": shares.get("coverage_count_share"),

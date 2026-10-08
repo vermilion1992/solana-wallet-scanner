@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 from collections import Counter
 from datetime import datetime, timezone
@@ -670,20 +671,48 @@ WSOL_MINT = "So11111111111111111111111111111111111111112"
 USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 USDT_MINT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
 RAW_QUOTE_ASSETS = frozenset({WSOL_MINT, USDC_MINT, USDT_MINT, "SOL"})
-RAW_SOL_NOISE_LAMPORTS = 3_000_000
+RAW_SOL_FLOOR_LAMPORTS = 100_000
+RAW_SOL_NOISE_LAMPORTS = RAW_SOL_FLOOR_LAMPORTS
 
 
 def _event_unix(event):
     stamp = (event or {}).get("block_time") or (event or {}).get("blockTime") or (event or {}).get("timestamp")
-    if type(stamp) is int and not isinstance(stamp, bool):
+    if isinstance(stamp, bool):
+        return None
+    if type(stamp) is int:
         return stamp
-    if isinstance(stamp, float) and stamp == stamp:
-        return int(stamp)
+    if isinstance(stamp, float):
+        if not math.isfinite(stamp):
+            return None
+        try:
+            return int(stamp)
+        except (OverflowError, ValueError):
+            return None
     if isinstance(stamp, str) and stamp:
         try:
             return int(datetime.fromisoformat(stamp.replace("Z", "+00:00")).timestamp())
-        except (TypeError, ValueError):
+        except (TypeError, ValueError, OverflowError):
             return None
+    return None
+
+
+def _utc_day(unix):
+    try:
+        return datetime.fromtimestamp(int(unix), tz=timezone.utc).date().isoformat()
+    except (OverflowError, OSError, ValueError, TypeError):
+        return None
+
+
+def _record_signature(record):
+    raw = _unwrap_raw_record(record) if isinstance(record, dict) else {}
+    if raw.get("signature"):
+        return raw["signature"]
+    tx = raw.get("transaction") if isinstance(raw.get("transaction"), dict) else {}
+    sigs = tx.get("signatures") or []
+    if sigs:
+        return sigs[0]
+    if isinstance(record, dict) and record.get("signature"):
+        return record["signature"]
     return None
 
 
@@ -715,9 +744,39 @@ def with_gt25_blocker(blocker, rate):
         return blocker
     if not blocker:
         return extra
-    if extra in str(blocker):
-        return blocker
-    return f"{blocker}; {extra}"
+    parts = [part.strip() for part in str(blocker).split(";") if part.strip()]
+    kept = []
+    for part in parts:
+        if part == extra or extra in part:
+            continue
+        if part == GT25_ECONOMIC_TRADES_RULE:
+            continue
+        kept.append(part)
+    kept.append(extra)
+    return "; ".join(kept)
+
+
+def bot_rate_disagreement_blocker(app_rate, auditor_rate):
+    """Fail closed when app and auditor disagree on the >25/day gate."""
+    app_max = first_defined_int((app_rate or {}).get("max"))
+    aud_max = first_defined_int((auditor_rate or {}).get("max"))
+    if app_max is None and aud_max is None:
+        return None
+    if app_max is None or aud_max is None:
+        return (
+            f"app_auditor_bot_rate_disagree: app {app_max} on "
+            f"{(app_rate or {}).get('max_on') or 'unknown'} vs auditor {aud_max} on "
+            f"{(auditor_rate or {}).get('max_on') or 'unknown'}"
+        )
+    app_over = app_max > MAX_ECONOMIC_TRADES_PER_UTC_DAY
+    aud_over = aud_max > MAX_ECONOMIC_TRADES_PER_UTC_DAY
+    if app_over == aud_over:
+        return None
+    return (
+        f"app_auditor_bot_rate_disagree: app {app_max} on "
+        f"{(app_rate or {}).get('max_on') or 'unknown'} vs auditor {aud_max} on "
+        f"{(auditor_rate or {}).get('max_on') or 'unknown'}"
+    )
 
 
 def economic_trade_identity(event):
@@ -766,7 +825,10 @@ def _decoded_trade_day_counts(events):
             continue
         if event.get("signature"):
             seen.add(key)
-        day = datetime.fromtimestamp(stamp, tz=timezone.utc).date().isoformat()
+        day = _utc_day(stamp)
+        if day is None:
+            incomplete += 1
+            continue
         counts[day] += 1
     return dict(counts), incomplete
 
@@ -858,6 +920,18 @@ def _token_balance_owner(balance, keys):
     return None
 
 
+def _token_amount_raw(balance):
+    if not isinstance(balance, dict):
+        return 0
+    amount = ((balance.get("uiTokenAmount") or {}).get("amount"))
+    if amount in (None, ""):
+        return 0
+    try:
+        return int(amount)
+    except (TypeError, ValueError):
+        return 0
+
+
 def _parsed_wallet_token_deltas(meta, address):
     """Fallback when token-balance meta is empty: parsed inner SPL transfers."""
     deltas = Counter()
@@ -900,15 +974,15 @@ def _parsed_wallet_token_deltas(meta, address):
 
 
 def wallet_asset_deltas(record, address):
-    """Net wallet asset deltas. SOL nets native+fee+wSOL.
+    """Net wallet asset deltas. SOL is rent-aware then floored at ~1e5 lamports.
 
-    A non-quote token leg plus any non-zero fee-adjusted SOL is a
-    SOL-quoted swap, including sub-0.003 SOL fills the 3e6 noise floor
-    used to drop. That floor stays only for SOL-only or SOL↔stable
-    legs (fee/rent dust). Nested GTA wrappers and transaction.meta
-    are unwrapped. Empty token-balance meta falls back to parsed
-    inner SPL transfers. All captured records count, not only the
-    report window.
+    Token legs are wallet-owned accountIndex rows in pre or post. Created
+    (post-only) and closed (pre-only) wallet token accounts contribute their
+    lamports, minus any wSOL token amount, so ATA rent is not a SOL trade
+    leg. After that back-out, keep a SOL leg only when |sol| exceeds
+    RAW_SOL_FLOOR_LAMPORTS (100_000). Nested GTA wrappers and
+    transaction.meta are unwrapped. Empty token-balance meta falls back to
+    parsed inner SPL transfers.
     """
     if not isinstance(record, dict) or not address:
         return None
@@ -917,37 +991,61 @@ def wallet_asset_deltas(record, address):
     if not isinstance(meta, dict) or meta.get("err") is not None:
         return None
     keys = _tx_account_keys(raw)
-    deltas = Counter()
+    pre_lamports = meta.get("preBalances") or []
+    post_lamports = meta.get("postBalances") or []
+    pre_tok = {}
+    post_tok = {}
     for balance in meta.get("preTokenBalances") or []:
-        if not isinstance(balance, dict) or _token_balance_owner(balance, keys) != address:
-            continue
-        mint = balance.get("mint")
-        amount = ((balance.get("uiTokenAmount") or {}).get("amount"))
-        if mint and amount not in (None, ""):
-            deltas[mint] -= int(amount)
+        if isinstance(balance, dict) and type(balance.get("accountIndex")) is int:
+            pre_tok[balance["accountIndex"]] = balance
     for balance in meta.get("postTokenBalances") or []:
-        if not isinstance(balance, dict) or _token_balance_owner(balance, keys) != address:
-            continue
-        mint = balance.get("mint")
-        amount = ((balance.get("uiTokenAmount") or {}).get("amount"))
-        if mint and amount not in (None, ""):
-            deltas[mint] += int(amount)
+        if isinstance(balance, dict) and type(balance.get("accountIndex")) is int:
+            post_tok[balance["accountIndex"]] = balance
+    mine = set()
+    for index, balance in list(pre_tok.items()) + list(post_tok.items()):
+        if _token_balance_owner(balance, keys) == address:
+            mine.add(index)
+    deltas = Counter()
+    rent = 0
+    for index in mine:
+        before = pre_tok.get(index)
+        after = post_tok.get(index)
+        mint = (after or before).get("mint") if (after or before) else None
+        qty_before = _token_amount_raw(before)
+        qty_after = _token_amount_raw(after)
+        if mint:
+            deltas[mint] += qty_after - qty_before
+        if before is None and after is not None and index < len(post_lamports):
+            rent += int(post_lamports[index]) - (qty_after if mint == WSOL_MINT else 0)
+        if before is not None and after is None and index < len(pre_lamports):
+            rent -= int(pre_lamports[index]) - (qty_before if mint == WSOL_MINT else 0)
+    if not mine:
+        for balance in meta.get("preTokenBalances") or []:
+            if not isinstance(balance, dict) or _token_balance_owner(balance, keys) != address:
+                continue
+            mint = balance.get("mint")
+            if mint:
+                deltas[mint] -= _token_amount_raw(balance)
+        for balance in meta.get("postTokenBalances") or []:
+            if not isinstance(balance, dict) or _token_balance_owner(balance, keys) != address:
+                continue
+            mint = balance.get("mint")
+            if mint:
+                deltas[mint] += _token_amount_raw(balance)
     if not any(qty for qty in deltas.values()):
         for mint, qty in _parsed_wallet_token_deltas(meta, address).items():
             deltas[mint] += qty
     wallet_index = keys.index(address) if address in keys else None
     native = 0
-    if wallet_index is not None:
-        pre = meta.get("preBalances") or []
-        post = meta.get("postBalances") or []
-        if wallet_index < len(pre) and wallet_index < len(post):
-            native = int(post[wallet_index]) - int(pre[wallet_index])
+    if wallet_index is not None and wallet_index < len(pre_lamports) and wallet_index < len(post_lamports):
+        native = int(post_lamports[wallet_index]) - int(pre_lamports[wallet_index])
     fee = int(meta.get("fee") or 0) if keys and keys[0] == address else 0
     wrapped = deltas.pop(WSOL_MINT, 0)
-    sol = native + fee + wrapped
+    sol_raw = native + fee + wrapped
+    apply_rent = (wallet_index is not None and native < 0) or rent < 0
+    sol = sol_raw + (rent if apply_rent else 0)
     legs = {mint: qty for mint, qty in deltas.items() if qty}
-    has_non_quote = any(mint not in RAW_QUOTE_ASSETS for mint in legs)
-    if sol and (has_non_quote or abs(sol) > RAW_SOL_NOISE_LAMPORTS):
+    if abs(sol) > RAW_SOL_FLOOR_LAMPORTS:
         legs["SOL"] = sol
     return legs
 
@@ -983,12 +1081,18 @@ def _record_unix(record):
 
 
 def raw_economic_trades_by_utc_day(records, address):
-    """Independent raw-tx bot-rate over all captured records (not a window)."""
+    """Raw-tx bot-rate over all captured records, one count per signature."""
     counts = Counter()
     incomplete = 0
+    seen = set()
     for record in records or []:
         if not isinstance(record, dict):
             continue
+        signature = _record_signature(record)
+        if signature:
+            if signature in seen:
+                continue
+            seen.add(signature)
         raw = _unwrap_raw_record(record)
         n_keys = raw_economic_keys_for_tx(raw, address)
         if n_keys <= 0:
@@ -997,7 +1101,10 @@ def raw_economic_trades_by_utc_day(records, address):
         if unix is None:
             incomplete += n_keys
             continue
-        day = datetime.fromtimestamp(unix, tz=timezone.utc).date().isoformat()
+        day = _utc_day(unix)
+        if day is None:
+            incomplete += n_keys
+            continue
         counts[day] += n_keys
     return dict(counts), incomplete
 
@@ -1012,12 +1119,15 @@ def merge_trade_rates(*rates):
     by_day = Counter()
     incomplete = False
     uncounted = 0
+    dateless_max = None
     for rate in rates:
         if not rate:
             continue
         incomplete = incomplete or bool(rate.get("incomplete"))
         uncounted += int(rate.get("incomplete_uncounted") or 0)
         for day, count in (rate.get("by_day") or {}).items():
+            if day in (None, "", "stored", "unknown"):
+                continue
             try:
                 by_day[day] = max(by_day[day], int(count))
             except (TypeError, ValueError):
@@ -1026,11 +1136,17 @@ def merge_trade_rates(*rates):
         stored_on = rate.get("max_on")
         if stored_max is None:
             continue
-        if stored_on:
-            by_day[stored_on] = max(by_day[stored_on], stored_max)
-        elif stored_max > (max(by_day.values()) if by_day else -1):
-            by_day["stored"] = stored_max
-    return _rate_from_by_day(by_day, incomplete=incomplete, incomplete_uncounted=uncounted)
+        if stored_on in (None, "", "stored", "unknown"):
+            if dateless_max is None or stored_max > dateless_max:
+                dateless_max = stored_max
+            continue
+        by_day[stored_on] = max(by_day[stored_on], stored_max)
+    payload = _rate_from_by_day(by_day, incomplete=incomplete, incomplete_uncounted=uncounted)
+    if dateless_max is not None and dateless_max > (payload["max"] or 0):
+        payload["max"] = dateless_max
+    if payload.get("max_on") in ("stored", "unknown"):
+        payload["max_on"] = None
+    return payload
 
 
 def combined_economic_trade_rate(events=None, records=None, address=None):

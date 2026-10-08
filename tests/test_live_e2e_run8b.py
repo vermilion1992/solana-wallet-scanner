@@ -95,7 +95,10 @@ def test_seen_set_dedupes_across_timeframes():
     first = select_nansen_wallets([{"address": A}], timeframe=90, seen=seen)
     second = select_nansen_wallets([{"address": A}], timeframe=180, seen=seen)
     assert len(first) == 1
-    assert second == [], "same wallet re-selected from the 180d page"
+    assert first[0].get("already_seen") is False
+    assert len(second) == 1
+    assert second[0]["already_seen"] is True
+    assert second[0]["timeframe"] == 180
     assert A in seen
 
 

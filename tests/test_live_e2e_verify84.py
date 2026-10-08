@@ -208,6 +208,30 @@ def test_d4_oversold_flatten_records_losing_episode():
         assert len(eps_exact) == 1
         assert Decimal(eps_exact[0]["net_profit_sol"]) < 0
         assert omitted_exact == []
+
+        def loss_visible(trades):
+            eps, _u, _k, omitted = auditor._fifo(trades)
+            return any(Decimal(e["net_profit_sol"]) < 0 for e in eps) or bool(omitted)
+
+        case3 = [
+            row("buy", "b1", 1, 100, 10, 100),
+            {**row("sell", "s1", 2, 120, 2, 0), "observed_post_quantity_raw": ""},
+            row("sell", "s2", 3, 30, 0.1, 0),
+        ]
+        case4 = [
+            row("buy", "b1", 1, 100, 10, 100),
+            row("sell", "s1", 2, 120, 2, 30),
+            row("sell", "s2", 3, 30, 0.1, 0),
+        ]
+        case8 = [
+            row("buy", "b1", 1, 100, 10, 100),
+            row("buy", "x", 2, 10, 1, 10),
+            row("sell", "x", 2, 150, 2, 10),
+            row("sell", "s3", 3, 10, 1.5, 0),
+        ]
+        assert loss_visible(case3)
+        assert loss_visible(case4)
+        assert loss_visible(case8)
     finally:
         auditor.REPORT_START, auditor.REPORT_END = original
 
@@ -239,13 +263,27 @@ def test_d5_blocker_always_names_gt25_with_count_and_date():
 
 
 def test_d5_triage_drop_names_known_count(tmp_path):
+    from scanner.mass_search.seed_sources import helius_triage_decision
+
     address = "2M2vLX3411111111111111111111111111111111"
+    day = int(datetime(2025, 3, 2, tzinfo=timezone.utc).timestamp())
+    events = [
+        {"kind": "buy", "signature": f"t{i}", "mint": f"M{i}", "timestamp": day + i}
+        for i in range(45)
+    ]
+    decision = helius_triage_decision(
+        [{"events": events, "records": [], "address": address}],
+        now_unix=day + 86400,
+        address=address,
+    )
+    assert decision["dropped"] is True
+    assert decision["max_economic_trades_in_one_day"] == 45
+    assert decision["max_economic_trades_on"] == "2025-03-02"
     state = {
         "phase2": {
             address: {
                 "dropped": True,
-                "max_economic_trades_in_one_day": 45,
-                "max_economic_trades_on": "2025-03-02",
+                "triage_decision": decision,
             }
         },
         "phase3": {},

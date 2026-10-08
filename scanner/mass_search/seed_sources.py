@@ -16,7 +16,12 @@ from datetime import datetime, timezone
 from decimal import Decimal
 
 from scanner.config import validate_address
-from scanner.mass_search.qualification_gates import economic_trades_by_utc_day
+from scanner.mass_search.qualification_gates import (
+    combined_economic_trade_rate,
+    economic_trades_by_utc_day,
+    first_defined_int,
+    raw_economic_trade_rate,
+)
 
 SEED_BIRDEYE_TOP = "birdeye_top"
 SEED_TOKEN_INTERSECT = "token_intersect"
@@ -889,16 +894,16 @@ def select_nansen_wallets(rows, *, timeframe, seen=None):
         if not isinstance(row, dict):
             continue
         address = _safe_address(row.get("address") or row.get("wallet") or row.get("wallet_address"))
-        if not address or address in seen:
+        if not address:
             continue
-        seen.add(address)
-        selected.append({
+        payload = {
             "address": address,
             "rank": index,
             "timeframe": timeframe,
             "selection_reason": f"nansen_pnl_leaderboard_{timeframe}d",
             "seed_source": SEED_NANSEN,
             "seed_is_not": "evidence",
+            "already_seen": address in seen,
             "vendor_metrics": {
                 "realized_pnl_usd": row.get("realized_pnl_usd"),
                 "unrealized_pnl_usd": row.get("unrealized_pnl_usd"),
@@ -907,7 +912,10 @@ def select_nansen_wallets(rows, *, timeframe, seen=None):
                 "win_rate": row.get("win_rate"),
                 "is_not": "independently_verified_profit_or_copyability",
             },
-        })
+        }
+        if address not in seen:
+            seen.add(address)
+        selected.append(payload)
     return selected
 
 
@@ -1044,12 +1052,25 @@ def cheap_prescreen_decision(signals, *, max_trades_per_day=None, min_history_da
 # not trades; ISO or unix timestamps.
 
 
-def densest_utc_day_bounds(samples):
+def _sample_address(samples, fallback=None):
+    if fallback:
+        return fallback
+    for sample in samples or []:
+        if sample.get("address"):
+            return sample["address"]
+    return None
+
+
+def densest_utc_day_bounds(samples, *, address=None):
     """UTC day with the most economic trades in the samples already fetched."""
     events = []
+    records = []
     for sample in samples or []:
         events.extend(sample.get("events") or [])
-    by_day = economic_trades_by_utc_day(events)
+        records.extend(sample.get("records") or [])
+    wallet = _sample_address(samples, address)
+    rate = combined_economic_trade_rate(events=events, records=records, address=wallet)
+    by_day = rate.get("by_day") or {}
     if not by_day:
         return None
     day = max(by_day, key=lambda item: (by_day[item], item))
@@ -1064,9 +1085,20 @@ def densest_utc_day_bounds(samples):
     }
 
 
-def helius_triage_decision(samples, *, now_unix, bundle=None, created_in_range=False):
+def _triage_record_signature(row):
+    if not isinstance(row, dict):
+        return None
+    if row.get("signature"):
+        return row["signature"]
+    tx = row.get("transaction") if isinstance(row.get("transaction"), dict) else {}
+    sigs = tx.get("signatures") or []
+    return sigs[0] if sigs else None
+
+
+def helius_triage_decision(samples, *, now_unix, bundle=None, created_in_range=False, address=None):
     """Drop only on confirmed >25 economic trades in a UTC day, youth, or bundle.
 
+    Uses the rent-aware raw count (and decoded, taking the per-day max).
     Under 25 economic trades/day proves nothing. Age under 180 days is a
     preference, not a hard drop, unless creation is proven under 30 days.
     """
@@ -1074,9 +1106,10 @@ def helius_triage_decision(samples, *, now_unix, bundle=None, created_in_range=F
     events = []
     seen_sigs = set()
     seen_event_sigs = set()
+    wallet = _sample_address(samples, address)
     for sample in samples or []:
         for row in sample.get("records") or []:
-            sig = row.get("signature") if isinstance(row, dict) else None
+            sig = _triage_record_signature(row)
             if sig and sig in seen_sigs:
                 continue
             if sig:
@@ -1101,14 +1134,17 @@ def helius_triage_decision(samples, *, now_unix, bundle=None, created_in_range=F
         stamp = row.get("blockTime") or row.get("timestamp")
         if stamp is None:
             stamp = ((row.get("transaction") or {}).get("blockTime"))
-        if type(stamp) is int:
+        if type(stamp) is int and not isinstance(stamp, bool):
             times.append(stamp)
     oldest = min(times) if times else None
     history_days = None
     if oldest is not None:
         history_days = (Decimal(int(now_unix) - oldest) / Decimal(86400)).quantize(Decimal("0.0001"))
-    by_day = economic_trades_by_utc_day(events)
-    max_day = max(by_day.values()) if by_day else 0
+    rate = combined_economic_trade_rate(events=events, records=records, address=wallet)
+    raw_only = raw_economic_trade_rate(records, wallet) if wallet else None
+    by_day = rate.get("by_day") or {}
+    max_day = first_defined_int(rate.get("max")) or 0
+    max_on = rate.get("max_on")
     reasons = []
     if max_day > 25:
         reasons.append("triage_gt_25_economic_trades_in_one_day")
@@ -1123,7 +1159,11 @@ def helius_triage_decision(samples, *, now_unix, bundle=None, created_in_range=F
         "prefer_age_days": str(TRIAGE_PREFER_AGE_DAYS),
         "age_preferred": bool(history_days is not None and history_days >= TRIAGE_PREFER_AGE_DAYS),
         "economic_trades_by_day": by_day,
+        "economic_trades_by_utc_day": by_day,
         "max_economic_trades_in_one_day": max_day,
+        "max_economic_trades_on": max_on,
+        "raw_max_economic_trades_in_one_day": None if not raw_only else raw_only.get("max"),
+        "raw_max_economic_trades_on": None if not raw_only else raw_only.get("max_on"),
         "transactions": len(records),
         "economic_trades": sum(by_day.values()),
         "count_kinds": list(COUNT_KINDS),
