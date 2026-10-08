@@ -3107,6 +3107,7 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                         'Missing unsigned RPC integer',
                         'Unsupported token permission',
                         'Unsupported system operation',
+                        'Unreviewed outer program',
                     )
                 )
                 if classified:
