@@ -19,6 +19,7 @@ from decimal import Decimal, InvalidOperation
 
 from scanner.mass_search.canonical_records import unwrap_gta_record
 from scanner.mass_search.record_breakdown import (
+    SOL_SWAP_FLOOR,
     USDC,
     USDT,
     WSOL,
@@ -128,9 +129,12 @@ def _coverage_sol_after_proven_exclusions(raw, address, keys):
             except (InvalidOperation, ValueError, TypeError, OverflowError):
                 continue
     remaining = native + wsol
-    if remaining >= 0:
+    if remaining == 0:
         return Decimal("0")
-    return abs(remaining) / LAMPORTS
+    sol = abs(remaining) / LAMPORTS
+    if sol <= SOL_SWAP_FLOOR:
+        return Decimal("0")
+    return sol
 
 _DISPLAY_QUANTUM = Decimal("0.000000001")
 
