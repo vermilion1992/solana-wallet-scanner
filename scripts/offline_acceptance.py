@@ -151,6 +151,13 @@ def main():
     if live_e2e_14.get("PRODUCT_READY") is not False:
         result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_14_product_ready"}, indent=2), encoding="utf-8")
         return 2
+    live_e2e_16 = json.loads(LIVE_E2E_DRAFT_16.read_text(encoding="utf-8"))
+    if live_e2e_16.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_16_draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if live_e2e_16.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_16_product_ready"}, indent=2), encoding="utf-8")
+        return 2
 
     steps = []
     failed = False
