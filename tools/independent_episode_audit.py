@@ -3565,7 +3565,7 @@ def audit_address(address, pages):
             "trade_count": len(mint_trades),
             "clean_completed_episode": mint in episode_mints,
         })
-    reconstructed_mints.sort(key=lambda row: row["mint"])
+    reconstructed_mints.sort(key=lambda row: row.get("mint") or "")
     episode_net, episode_unit, episode_nets_by_unit = episode_net_totals(episodes)
     by_day = combined_economic_trades_by_utc_day(trades, records, address)
     max_day = max(by_day.values()) if by_day else 0
