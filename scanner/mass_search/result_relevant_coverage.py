@@ -25,6 +25,7 @@ from scanner.mass_search.bundle_detect import (
 )
 from scanner.mass_search.canonical_records import unwrap_gta_record
 from scanner.mass_search.record_breakdown import (
+    READ_KINDS,
     SOL_SWAP_FLOOR,
     USDC,
     USDT,
@@ -36,6 +37,7 @@ from scanner.mass_search.record_breakdown import (
     _owned_asset_deltas,
     _unix,
 )
+TRADE_KINDS = frozenset({"buy", "sell", "conversion"})
 from scanner.mass_search.verified_costs import is_verified_tip_account
 
 SYSTEM_PROGRAM = "11111111111111111111111111111111"
@@ -496,7 +498,7 @@ def coverage_over_relevant(records, decoded, address, membership):
     decoded_by_sig = {}
     for event in (decoded or {}).get("events") or []:
         signature = event.get("signature")
-        if event.get("kind") in ("buy", "sell", "conversion"):
+        if event.get("kind") in READ_KINDS:
             decoded_by_sig.setdefault(signature, []).append(event)
     for record in records or []:
         raw = unwrap_gta_record(record)
@@ -506,11 +508,13 @@ def coverage_over_relevant(records, decoded, address, membership):
             continue
         keys = _account_keys(raw) if isinstance(raw, dict) else []
         kinds = member.get("decoded_kinds") or []
-        decoded_trade = any(kind in ("buy", "sell", "conversion") for kind in kinds)
-        # DC-2: every member of R is counted. Lineage-only rows are unsupported.
+        decoded_trade = any(kind in TRADE_KINDS for kind in kinds)
+        decoded_read = any(kind in READ_KINDS for kind in kinds)
+        # DC-2: every member of R is counted. Lineage-only rows are unsupported
+        # unless C1/C2 classified them as READ.
         event = (decoded_by_sig.get(signature) or [None])[0]
         legs = _consideration_legs(raw, address, keys, event)
-        if decoded_trade:
+        if decoded_read:
             decoded_n += 1
             bucket = "decoded"
         else:
@@ -518,15 +522,19 @@ def coverage_over_relevant(records, decoded, address, membership):
             bucket = "unsupported"
         # Count every R member (DC-2), including lineage-only rows. SOL that
         # left the wallet is unreadable value unless it is a proven fee, an
-        # exact rent-exempt createAccount, or a verified tip. Unknown
-        # instruction shapes (OTC System+Token) stay in the value bucket.
+        # exact rent-exempt createAccount, or a verified tip — or the tx was
+        # READ and its SOL still counts as covered value.
         for asset, amount in legs.items():
             if not asset or not amount:
                 continue
-            if asset == "SOL" and not decoded_trade:
+            if asset == "SOL" and not decoded_read:
                 continue
             consideration[bucket][asset] += amount
-        if not decoded_trade:
+        if decoded_read and not decoded_trade:
+            sol = _coverage_sol_after_proven_exclusions(raw, address, keys)
+            if sol and "SOL" not in legs:
+                consideration[bucket]["SOL"] += sol
+        if not decoded_read:
             sol = _coverage_sol_after_proven_exclusions(raw, address, keys)
             if sol:
                 consideration[bucket]["SOL"] += sol

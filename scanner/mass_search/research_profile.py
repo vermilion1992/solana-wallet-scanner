@@ -1634,6 +1634,10 @@ def _mapped_trade_row(row):
         "role": row.get("role"),
         "window_qualified": row.get("window_qualified"),
         "undecoded_buy": bool(row.get("undecoded_buy") or row.get("kind") == "undecoded_buy"),
+        "unknown_basis": bool(row.get("unknown_basis") or row.get("kind") == "transfer_in"),
+        "unknown_proceeds": bool(row.get("unknown_proceeds") or row.get("kind") == "transfer_out"),
+        "touches_result_relevant_mint": bool(row.get("touches_result_relevant_mint")),
+        "reason": row.get("reason"),
     }
 
 
@@ -1682,7 +1686,11 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     classification = classification or report.get("classification") or {}
     counts = classification.get("counts") or {}
     worksheet = report.get("worksheet") or report.get("independent_worksheet") or {}
-    events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell", "undecoded_buy")]
+    events = [
+        row
+        for row in (report.get("events") or [])
+        if row.get("kind") in ("buy", "sell", "undecoded_buy", "transfer_in", "transfer_out", "lp")
+    ]
     mapped = _merge_decoded_taints([_mapped_trade_row(row) for row in events], decoded)
     known, unresolved = isolate_known_cost_by_mint(mapped) if mapped else ([], [])
     bundle = (report or {}).get("bundle_or_distribution") or {}

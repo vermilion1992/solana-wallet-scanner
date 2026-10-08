@@ -127,7 +127,7 @@ UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 # discriminator in _route. Jupiter/Whirlpool/AMMv4 stay in both sets so an
 # unknown discriminator can still reconstruct when the net is unambiguous.
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v30-d14-top3-net-v1'
+DECODER_VERSION = 'spot-v31-plain-read-v1'
 D14_TOP3_DEFERRED_PROGRAMS = frozenset({OKX_DEX_ROUTER, JUPITER, WHIRLPOOL})
 NET_BALANCE_INSTRUCTION = 'net_balance'
 NET_BALANCE_SOL_DUST_LAMPORTS = 100_000
@@ -495,6 +495,9 @@ def _route(instruction, keys):
         if payload[:8] == DLMM_SWAP2 and len(payload) >= 16 and len(accounts) > 10:
             name, authority, owned_positions = 'swap2', 10, ()
     if name is None:
+        raise ValueError('No reviewed spot swap instruction for this program and discriminator')
+    needed = [authority, *owned_positions]
+    if any(not isinstance(position, int) or position >= len(accounts) or position < -len(accounts) for position in needed):
         raise ValueError('No reviewed spot swap instruction for this program and discriminator')
     return {'program': program, 'instruction': name, 'authority': accounts[authority],
             'owned_accounts': [accounts[position] for position in owned_positions],
@@ -2272,6 +2275,9 @@ def net_balance_reviewed_swap(raw, address):
     """
     if not isinstance(raw, dict) or not address:
         return None
+    from scanner.mass_search.fail_closed_preflight import fail_closed_reason
+    if fail_closed_reason(raw, address, trade=True):
+        return None
     meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
     if meta.get('err') is not None:
         return None
@@ -2430,6 +2436,8 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 continue
             if address not in keys:
                 raise ValueError('Investigated wallet is absent from transaction account keys')
+            from scanner.mass_search.fail_closed_preflight import require_preflight
+            require_preflight(raw, address, trade=False)
             if slots[slot] > 1:
                 tx_index = record.get('transaction_index')
                 if not isinstance(tx_index, int) or isinstance(tx_index, bool) or tx_index < 0:
@@ -3072,7 +3080,6 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 reason.startswith('No reviewed outer spot swap')
                 or reason.startswith('Jupiter route')
                 or reason.startswith('Unrelated token transfer')
-                or reason.startswith('Transaction version has no reviewed')
                 or (
                     reason.startswith('No reviewed spot swap instruction for this program')
                     and first_nb in D14_TOP3_DEFERRED_PROGRAMS
@@ -3085,6 +3092,54 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                     net = None
             if net and reason.startswith('Unrelated token transfer'):
                 unknown(reason)
+            if not net:
+                from scanner.mass_search.plain_tx_read import (
+                    C2_COVERAGE_GAP_PREFIXES,
+                    TRADE_KINDS,
+                    classify_read_tx,
+                )
+                classified = classify_read_tx(raw, address)
+                # Invert: C2 trades run only for an explicit "no reviewed
+                # decoder for this venue" first-path reason. Allocate/assign,
+                # identity mismatch, mixed parsed/opaque, sponsored rent,
+                # nonce, unknown outer, and every other refusal stay unread.
+                allow_c2_trade = any(
+                    reason.startswith(prefix) for prefix in C2_COVERAGE_GAP_PREFIXES
+                )
+                if (
+                    not allow_c2_trade
+                    and reason.startswith('Multiple outer swaps')
+                    and not reason.startswith('Fail-closed preflight')
+                ):
+                    from scanner.mass_search.plain_tx_read import EDGE_SWAP_PROGRAMS
+                    edge_outers = []
+                    for instruction in message_nb.get('instructions') or []:
+                        if not isinstance(instruction, dict):
+                            continue
+                        try:
+                            program = _program(instruction, _keys(message_nb, meta_nb))
+                        except (ValueError, TypeError, KeyError, IndexError):
+                            continue
+                        if program in EDGE_SWAP_PROGRAMS:
+                            edge_outers.append(program)
+                    allow_c2_trade = bool(edge_outers) and len(set(edge_outers)) == 1
+                if classified:
+                    kept = []
+                    for item in classified:
+                        kind = item.get('kind')
+                        if kind in TRADE_KINDS and not allow_c2_trade:
+                            continue
+                        kept.append(item)
+                    if kept:
+                        for item in kept:
+                            kind = item.get('kind')
+                            fields = dict(item.get('fields') or {})
+                            emit(kind, item.get('path') or 'meta.wallet_edge', **fields)
+                            if kind in ('buy', 'sell'):
+                                supported += 1
+                            elif kind == 'conversion':
+                                conversions += 1
+                        continue
             if net:
                 quote_mint = net.get('quote_mint')
                 mint = net['mint']
@@ -3158,7 +3213,13 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 used_routes.add((net['program'], net['instruction']))
                 continue
             unknown(str(exc))
-    decoded_sigs = {event.get('signature') for event in events if event.get('kind') in ('buy', 'sell', 'conversion')}
+    decoded_sigs = {
+        event.get('signature')
+        for event in events
+        if event.get('kind') in (
+            'buy', 'sell', 'conversion', 'non_trade', 'transfer_in', 'transfer_out', 'lp',
+        )
+    }
     unsupported = []
     decoded_unresolved_cash = []
     seen_unsupported = set()

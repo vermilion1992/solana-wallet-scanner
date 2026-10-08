@@ -270,7 +270,11 @@ def test_venue_decoders_on_attached_txs():
         payload = _load(name)
         decoded = decode_supported_swaps(canonical_decode_records([payload["record"]]), payload["address"])
         trades = [row for row in decoded.get("events") or [] if row.get("kind") in ("buy", "sell")]
-        if trades:
+        lps = [row for row in decoded.get("events") or [] if row.get("kind") == "lp"]
+        if program == METEORA_DLMM and lps:
+            assert lps[0].get("never_a_trade") is True
+            assert not trades
+        elif trades:
             assert trades[0].get("program") == program or trades[0].get("source") == program or trades[0].get("venue") == program
             qty = Decimal(str(trades[0].get("quantity_raw") or "0"))
             assert qty > 0

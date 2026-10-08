@@ -38,7 +38,7 @@ def _trades(decoded):
 
 
 def test_decoder_version_bumped_for_net_balance():
-    assert DECODER_VERSION == "spot-v30-d14-top3-net-v1"
+    assert DECODER_VERSION == "spot-v31-plain-read-v1"
     assert RAYDIUM_CLMM in NET_BALANCE_SWAP_PROGRAMS
     assert RAYDIUM_CLMM not in REVIEWED_OUTER_VENUES
     from scanner.investigation import TITAN, TERM9Y, ROUTEU, OKX_DEX_V2

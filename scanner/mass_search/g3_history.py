@@ -447,7 +447,9 @@ def inject_undecoded_buy_taints(decoded, records, address):
     known = {
         event.get("signature")
         for event in events
-        if event.get("kind") in ("buy", "sell") and event.get("signature")
+        if event.get("kind") in (
+            "buy", "sell", "conversion", "transfer_in", "transfer_out", "non_trade", "lp",
+        ) and event.get("signature")
     }
     for record in records or []:
         raw = record
@@ -494,7 +496,10 @@ def inject_undecoded_buy_taints(decoded, records, address):
 
 
 def decoder_events_by_mint(decoded, *, address, window_start, window_end=None, acquisition_start=None):
-    events = [row for row in (decoded.get("events") or []) if row.get("kind") in ("buy", "sell", "undecoded_buy")]
+    events = [
+        row for row in (decoded.get("events") or [])
+        if row.get("kind") in ("buy", "sell", "undecoded_buy", "transfer_in", "transfer_out", "lp")
+    ]
     start = datetime.fromisoformat(window_start.replace("Z", "+00:00"))
     start_unix = start.timestamp()
     acq_unix = None

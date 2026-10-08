@@ -82,7 +82,7 @@ def _replay(tmp_path, records):
 def test_humidifi_published_id_is_reviewed():
     assert HUMIDIFI in WELL_KNOWN_INNER_AMMS
     assert HUMIDIFI in auditor.WELL_KNOWN_INNER_AMMS
-    assert DECODER_VERSION == "spot-v30-d14-top3-net-v1"
+    assert DECODER_VERSION == "spot-v31-plain-read-v1"
 
 
 def test_cyrc_dflow_decodes_and_jup_allocate_2440_stays_blocked(tmp_path):

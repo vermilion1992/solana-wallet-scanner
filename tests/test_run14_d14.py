@@ -724,7 +724,7 @@ def test_d14_12_neighbor_exact_cap_and_quiet_history_still_cannot_fail():
 # --- D14-13 ----------------------------------------------------------------
 
 def test_d14_13_top3_programs_use_exact_net_balance_or_stay_unreadable():
-    assert DECODER_VERSION == "spot-v30-d14-top3-net-v1"
+    assert DECODER_VERSION == "spot-v31-plain-read-v1"
     assert D14_TOP3_DEFERRED_PROGRAMS == frozenset({OKX_DEX_ROUTER, JUPITER, WHIRLPOOL})
     payload = json.loads(
         (ROOT / "tests/fixtures/net-balance-venues/jupiter_v6.json").read_text(encoding="utf-8")

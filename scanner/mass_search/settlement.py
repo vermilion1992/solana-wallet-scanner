@@ -165,6 +165,54 @@ def isolate_known_cost_events(rows):
         if event.get("opening_unknown") or event.get("kind") == "opening_unknown":
             opening_unknown += units
             continue
+        if event.get("kind") == "non_trade":
+            continue
+        if event.get("kind") == "transfer_in":
+            # Unknown-basis lot. Never a priced buy and never lowers cost (DC-9).
+            opening_unknown += units
+            continue
+        if event.get("kind") == "transfer_out":
+            unresolved.append({
+                **event,
+                "unresolved_basis": True,
+                "unknown_quote": True,
+                "unknown_proceeds": True,
+                "never_zero_proceeds": True,
+                "never_completed_profitable_episode": True,
+                "split_part": "unresolved",
+                "whole_sale_pnl_resolved": False,
+                "reason": event.get("reason") or (
+                    "Token transfer-out is a disposal with unknown proceeds; "
+                    "never zero-proceeds and never a completed profitable episode"
+                ),
+            })
+            remaining = units
+            if opening_unknown > 0 and remaining > 0:
+                take = opening_unknown if opening_unknown <= remaining else remaining
+                opening_unknown -= take
+                remaining -= take
+            while remaining > 0 and lots:
+                lot = lots[0]
+                take = lot["units"] if lot["units"] <= remaining else remaining
+                lot["units"] -= take
+                remaining -= take
+                if lot["units"] == 0:
+                    lots.pop(0)
+            continue
+        if event.get("kind") == "lp":
+            if event.get("touches_result_relevant_mint") or event.get("mint"):
+                unresolved.append({
+                    **event,
+                    "unresolved_basis": True,
+                    "lp_action": True,
+                    "never_a_trade": True,
+                    "split_part": "unresolved",
+                    "whole_sale_pnl_resolved": False,
+                    "reason": event.get("reason") or (
+                        "LP action touching a result-relevant mint uses existing LP blocking"
+                    ),
+                })
+            continue
         if event["kind"] == "buy":
             lots.append({
                 "units": units,
