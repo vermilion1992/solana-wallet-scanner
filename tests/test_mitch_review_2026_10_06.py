@@ -670,8 +670,8 @@ def test_auditor_runs_without_scanner_directory_and_nets_match(tmp_path):
         isolated = module.audit_address(address, pages)
         row = expected[address]
         assert isolated["clean_episodes"] == row["auditor_clean_episodes"]
-        iso_nets = [Decimal(item["net_profit_sol"]) for item in isolated["episodes"]]
-        committed_nets = [Decimal(item["net_profit_sol"]) for item in row["auditor_only_episodes"]]
+        iso_nets = [module.episode_profit_amount(item) for item in isolated["episodes"]]
+        committed_nets = [module.episode_profit_amount(item) for item in row["auditor_only_episodes"]]
         assert iso_nets == committed_nets
 
 

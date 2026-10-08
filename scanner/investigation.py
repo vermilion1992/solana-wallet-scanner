@@ -1127,10 +1127,165 @@ def _owned_token_accounts(raw, address, keys):
     return owned
 
 
+_TOKEN_HOP_OK = frozenset({'transfer', 'transferChecked'})
+_TOKEN_HOP_FORBIDDEN = frozenset({
+    'approve', 'approveChecked', 'setAuthority', 'closeAccount',
+    'burn', 'burnChecked', 'mintTo', 'mintToChecked',
+})
+_TOKEN_TAG_KIND = {
+    3: 'transfer',
+    4: 'approve',
+    6: 'setAuthority',
+    7: 'mintTo',
+    8: 'burn',
+    9: 'closeAccount',
+    12: 'transferChecked',
+    13: 'approveChecked',
+    14: 'mintToChecked',
+    15: 'burnChecked',
+}
+
+
+def _has_unreviewed_outer_program(raw, keys):
+    """True when an outer program is neither JUP6 nor reviewed infra."""
+    for instruction in _iter_outer_instructions(raw):
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            return True
+        if program in _INNER_INFRA or program == JUPITER:
+            continue
+        return True
+    return False
+
+
+def _system_transfer_from_wallet(instruction, address, keys):
+    parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+    info = parsed.get('info') if isinstance(parsed, dict) else None
+    kind = parsed.get('type') if isinstance(parsed, dict) else None
+    if kind == 'transfer' and isinstance(info, dict) and info.get('source') == address:
+        return True
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return False
+    if len(payload) >= 4 and int.from_bytes(payload[:4], 'little') == 2:
+        return bool(accounts) and accounts[0] == address
+    return False
+
+
+def _token_hop_fields(instruction, keys):
+    parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+    kind = parsed.get('type') if isinstance(parsed, dict) else None
+    info = parsed.get('info') if isinstance(parsed, dict) else None
+    if not isinstance(info, dict):
+        info = {}
+    if kind:
+        return kind, info
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return None, {}
+    if not payload:
+        return None, {}
+    kind = _TOKEN_TAG_KIND.get(payload[0])
+    if kind == 'transfer' and len(accounts) >= 3:
+        return kind, {
+            'source': accounts[0],
+            'destination': accounts[1],
+            'authority': accounts[2],
+        }
+    if kind == 'transferChecked' and len(accounts) >= 4:
+        return kind, {
+            'source': accounts[0],
+            'destination': accounts[2],
+            'authority': accounts[3],
+        }
+    return kind, {'account': accounts[0]} if accounts else {}
+
+
+def _hop_token_op_ok(instruction, owned, address, keys):
+    kind, info = _token_hop_fields(instruction, keys)
+    touched = _instruction_account_keys(instruction, keys)
+    for field in ('source', 'destination', 'account', 'authority', 'owner', 'wallet', 'newAccount'):
+        value = info.get(field)
+        if isinstance(value, str) and value:
+            touched.add(value)
+    if not touched.intersection(owned):
+        return True
+    if kind in _TOKEN_HOP_FORBIDDEN or kind not in _TOKEN_HOP_OK:
+        return False
+    authority = info.get('authority') or info.get('multisigAuthority')
+    destination = info.get('destination')
+    return authority == address or destination in owned
+
+
+def _jup_hop_children_ok(inners, start, owned, address, keys):
+    for instruction in inners[start:]:
+        if instruction.get('stackHeight') == 2:
+            break
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            return False
+        if program in TOKEN_IDS:
+            if not _hop_token_op_ok(instruction, owned, address, keys):
+                return False
+        elif program == SYSTEM_ID and _system_transfer_from_wallet(instruction, address, keys):
+            return False
+    return True
+
+
+def _jupiter_hop_inner_ok(raw, address, keys):
+    """Allow a direct JUP6 prop-AMM hop that only moves wallet assets as transfers.
+
+    Unknown hop program ids stay off WELL_KNOWN_INNER_AMMS. The wallet net
+    still has to pass classify_net_balance_assets on the net-balance path.
+    """
+    if not isinstance(raw, dict) or not address or not keys:
+        return False
+    if _has_unreviewed_outer_program(raw, keys):
+        return False
+    owned = {address, *_owned_token_accounts(raw, address, keys)}
+    meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
+    message = ((raw.get('transaction') or {}).get('message')
+               if isinstance(raw.get('transaction'), dict) else {}) or {}
+    outers = message.get('instructions') or []
+    for group in meta.get('innerInstructions') or []:
+        if not isinstance(group, dict):
+            continue
+        outer_index = group.get('index')
+        outer_program = None
+        if (type(outer_index) is int and not isinstance(outer_index, bool)
+                and 0 <= outer_index < len(outers) and isinstance(outers[outer_index], dict)):
+            try:
+                outer_program = _program(outers[outer_index], keys)
+            except (ValueError, TypeError, KeyError, IndexError):
+                outer_program = None
+        inners = [ix for ix in (group.get('instructions') or []) if isinstance(ix, dict)]
+        for idx, instruction in enumerate(inners):
+            try:
+                program = _program(instruction, keys)
+            except (ValueError, TypeError, KeyError, IndexError):
+                continue
+            if program in REVIEWED_INNER_PROGRAMS:
+                continue
+            if not _instruction_account_keys(instruction, keys).intersection(owned):
+                continue
+            if outer_program != JUPITER or instruction.get('stackHeight') != 2:
+                return False
+            if not _jup_hop_children_ok(inners, idx + 1, owned, address, keys):
+                return False
+    return True
+
+
 def _net_balance_unknown_inner_blocks(raw, address, keys):
     """D3: unknown inner that touches a wallet-owned account stays unresolved."""
     owned = {address, *_owned_token_accounts(raw, address, keys)}
     meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
+    unknown_touch = False
     for group in meta.get('innerInstructions') or []:
         if not isinstance(group, dict):
             continue
@@ -1144,8 +1299,13 @@ def _net_balance_unknown_inner_blocks(raw, address, keys):
             if program in REVIEWED_INNER_PROGRAMS:
                 continue
             if _instruction_account_keys(instruction, keys).intersection(owned):
-                return True
-    return False
+                unknown_touch = True
+                break
+        if unknown_touch:
+            break
+    if not unknown_touch:
+        return False
+    return not _jupiter_hop_inner_ok(raw, address, keys)
 
 
 def _parsed_tip_lamports(raw, address, owned_accounts):
@@ -2074,6 +2234,19 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 or reason.startswith('No reviewed spot swap instruction for this program')
                 or reason.startswith('Jupiter route')
             )
+            if (
+                not coverage_gap
+                and reason.startswith('Unknown inner program touches a wallet-owned account')
+            ):
+                try:
+                    gap_meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
+                    gap_message = ((raw.get('transaction') or {}).get('message')
+                                   if isinstance(raw.get('transaction'), dict) else {}) or {}
+                    coverage_gap = _jupiter_hop_inner_ok(
+                        raw, address, _keys(gap_message, gap_meta),
+                    )
+                except (ValueError, KeyError, IndexError, TypeError, OverflowError):
+                    coverage_gap = False
             if allow_net_balance and coverage_gap:
                 try:
                     net = net_balance_reviewed_swap(raw, address)

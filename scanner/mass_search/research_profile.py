@@ -926,9 +926,17 @@ def attach_live_independent_audit(report, profile, records, address):
         max(base["economic_trades_by_utc_day"], key=lambda item: (base["economic_trades_by_utc_day"][item], item))
         if base["economic_trades_by_utc_day"] else None
     )
+    def _drop_in_report_window(row):
+        if row.get("reason") == "not_in_window_or_unresolved":
+            return False
+        ts = row.get("timestamp")
+        if ts is None:
+            return True
+        return auditor.REPORT_START <= ts < auditor.REPORT_END
+
     in_window_drops = [
         row for row in (omitted_losing or [])
-        if row.get("reason") != "not_in_window_or_unresolved"
+        if _drop_in_report_window(row)
     ]
     base["dropped_losing_episodes"] = in_window_drops
     base["dropped_losers"] = bool(in_window_drops)
@@ -1002,7 +1010,12 @@ def attach_live_independent_audit(report, profile, records, address):
             "basis": aud_ep.get("basis_sol"),
             "proceeds": aud_ep.get("proceeds_sol"),
             "verified_costs": aud_ep.get("verified_costs_sol"),
-            "net": aud_ep.get("net_profit_sol"),
+            "net": (
+                aud_ep.get("net_profit")
+                or aud_ep.get("net_profit_usdc")
+                or aud_ep.get("net_profit_usdt")
+                or aud_ep.get("net_profit_sol")
+            ),
         }
         bridge = component_bridge(app_norm, aud_norm, ep_unit)
         bridges.append(bridge)

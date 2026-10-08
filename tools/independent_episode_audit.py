@@ -782,27 +782,173 @@ def _first_net_balance_program(raw, keys):
     return None
 
 
+_TOKEN_HOP_OK = frozenset({"transfer", "transferChecked"})
+_TOKEN_HOP_FORBIDDEN = frozenset({
+    "approve", "approveChecked", "setAuthority", "closeAccount",
+    "burn", "burnChecked", "mintTo", "mintToChecked",
+})
+_TOKEN_TAG_KIND = {
+    3: "transfer",
+    4: "approve",
+    6: "setAuthority",
+    7: "mintTo",
+    8: "burn",
+    9: "closeAccount",
+    12: "transferChecked",
+    13: "approveChecked",
+    14: "mintToChecked",
+    15: "burnChecked",
+}
+
+
+def _touched_accounts(instruction, keys):
+    touched = set(_accounts(instruction, keys))
+    parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
+    info = parsed.get("info") if isinstance(parsed, dict) else None
+    if isinstance(info, dict):
+        for field in ("source", "destination", "account", "newAccount", "owner", "authority", "wallet"):
+            value = info.get(field)
+            if isinstance(value, str) and value:
+                touched.add(value)
+    return touched
+
+
+def _has_unreviewed_outer_program(raw, keys):
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    for instruction in message.get("instructions") or []:
+        if not isinstance(instruction, dict):
+            continue
+        program = _program(instruction, keys)
+        if not program:
+            return True
+        if program in _INNER_INFRA or program == JUPITER:
+            continue
+        return True
+    return False
+
+
+def _system_transfer_from_wallet(instruction, address, keys):
+    parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
+    info = parsed.get("info") if isinstance(parsed, dict) else None
+    kind = parsed.get("type") if isinstance(parsed, dict) else None
+    if kind == "transfer" and isinstance(info, dict) and info.get("source") == address:
+        return True
+    payload = _b58decode(instruction.get("data"))
+    accounts = _accounts(instruction, keys)
+    if len(payload) >= 4 and int.from_bytes(payload[:4], "little") == 2:
+        return bool(accounts) and accounts[0] == address
+    return False
+
+
+def _token_hop_fields(instruction, keys):
+    parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
+    kind = parsed.get("type") if isinstance(parsed, dict) else None
+    info = parsed.get("info") if isinstance(parsed, dict) else None
+    if not isinstance(info, dict):
+        info = {}
+    if kind:
+        return kind, info
+    payload = _b58decode(instruction.get("data"))
+    accounts = _accounts(instruction, keys)
+    if not payload:
+        return None, {}
+    kind = _TOKEN_TAG_KIND.get(payload[0])
+    if kind == "transfer" and len(accounts) >= 3:
+        return kind, {
+            "source": accounts[0],
+            "destination": accounts[1],
+            "authority": accounts[2],
+        }
+    if kind == "transferChecked" and len(accounts) >= 4:
+        return kind, {
+            "source": accounts[0],
+            "destination": accounts[2],
+            "authority": accounts[3],
+        }
+    return kind, {"account": accounts[0]} if accounts else {}
+
+
+def _hop_token_op_ok(instruction, owned, address, keys):
+    kind, info = _token_hop_fields(instruction, keys)
+    touched = _touched_accounts(instruction, keys)
+    for field in ("source", "destination", "account", "authority", "owner", "wallet", "newAccount"):
+        value = info.get(field)
+        if isinstance(value, str) and value:
+            touched.add(value)
+    if not touched.intersection(owned):
+        return True
+    if kind in _TOKEN_HOP_FORBIDDEN or kind not in _TOKEN_HOP_OK:
+        return False
+    authority = info.get("authority") or info.get("multisigAuthority")
+    destination = info.get("destination")
+    return authority == address or destination in owned
+
+
+def _jup_hop_children_ok(inners, start, owned, address, keys):
+    for instruction in inners[start:]:
+        if instruction.get("stackHeight") == 2:
+            break
+        program = _program(instruction, keys)
+        if not program:
+            return False
+        if program in TOKEN_PROGRAMS:
+            if not _hop_token_op_ok(instruction, owned, address, keys):
+                return False
+        elif program == SYSTEM and _system_transfer_from_wallet(instruction, address, keys):
+            return False
+    return True
+
+
+def _jupiter_hop_inner_ok(raw, address, keys):
+    """Independent JUP6 stackHeight-2 hop predicate. Does not import the app."""
+    if not isinstance(raw, dict) or not address or not keys:
+        return False
+    if _has_unreviewed_outer_program(raw, keys):
+        return False
+    accounts = _token_accounts(raw, address, keys)
+    owned = {address, *accounts}
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    outers = message.get("instructions") or []
+    for group in meta.get("innerInstructions") or []:
+        if not isinstance(group, dict):
+            continue
+        outer_index = group.get("index")
+        outer_program = None
+        if (type(outer_index) is int and not isinstance(outer_index, bool)
+                and 0 <= outer_index < len(outers) and isinstance(outers[outer_index], dict)):
+            outer_program = _program(outers[outer_index], keys)
+        inners = [ix for ix in (group.get("instructions") or []) if isinstance(ix, dict)]
+        for idx, instruction in enumerate(inners):
+            program = _program(instruction, keys)
+            if not program or program in REVIEWED_INNER_PROGRAMS:
+                continue
+            if not _touched_accounts(instruction, keys).intersection(owned):
+                continue
+            if outer_program != JUPITER or instruction.get("stackHeight") != 2:
+                return False
+            if not _jup_hop_children_ok(inners, idx + 1, owned, address, keys):
+                return False
+    return True
+
+
 def _net_balance_unknown_inner_blocks(raw, keys, address):
     """Independent D3: unknown inner touching wallet assets fails closed."""
     accounts = _token_accounts(raw, address, keys)
     wallet_assets = {address, *accounts}
+    unknown_touch = False
     for _outer, _path, instruction, nested in _iter_instructions(raw):
         if not nested:
             continue
         program = _program(instruction, keys)
         if not program or program in REVIEWED_INNER_PROGRAMS:
             continue
-        touched = set(_accounts(instruction, keys))
-        parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
-        info = parsed.get("info") if isinstance(parsed, dict) else None
-        if isinstance(info, dict):
-            for field in ("source", "destination", "account", "newAccount", "owner", "authority", "wallet"):
-                value = info.get(field)
-                if isinstance(value, str) and value:
-                    touched.add(value)
-        if touched.intersection(wallet_assets):
-            return True
-    return False
+        if _touched_accounts(instruction, keys).intersection(wallet_assets):
+            unknown_touch = True
+            break
+    if not unknown_touch:
+        return False
+    return not _jupiter_hop_inner_ok(raw, address, keys)
 
 
 def _net_balance_reconstruct(raw, address, keys):
@@ -992,6 +1138,8 @@ def reconstruct_record(record, address):
         return None
     inner_venues, inner_ok = _inner_venues(raw, keys, route, address, set(accounts))
     if not inner_ok:
+        if _jupiter_hop_inner_ok(raw, address, keys):
+            return _net_balance_reconstruct(raw, address, keys)
         return None
     # Isolate the swap quote: wallet SOL+wSOL minus tips/other transfers, ATA rent,
     # and IDL-located PumpSwap user-volume. Those are costs or residuals, not
@@ -1113,6 +1261,47 @@ def _load_pages(address, pages):
                 seen.add(signature)
             records.append(item)
     return records
+
+
+def _profit_fields(pnl, asset):
+    """Emit settlement-aware profit keys. USDC/USDT are not net_profit_sol."""
+    amount = _canonical(pnl)
+    unit = asset or "SOL"
+    fields = {"settlement_asset": unit, "net_profit": amount}
+    if unit == "USDC":
+        fields["net_profit_usdc"] = amount
+    elif unit == "USDT":
+        fields["net_profit_usdt"] = amount
+    else:
+        fields["net_profit_sol"] = amount
+    return fields
+
+
+def episode_profit_amount(item):
+    """Read a FIFO episode/drop net in its settlement unit."""
+    if not isinstance(item, dict):
+        raise TypeError("episode row must be a dict")
+    if item.get("net_profit") not in (None, ""):
+        return Decimal(item["net_profit"])
+    unit = item.get("settlement_asset") or "SOL"
+    keyed = {"USDC": "net_profit_usdc", "USDT": "net_profit_usdt"}.get(unit, "net_profit_sol")
+    if item.get(keyed) not in (None, ""):
+        return Decimal(item[keyed])
+    return Decimal(item["net_profit_sol"])
+
+
+def _fifo_timestamp_in_window(timestamp):
+    return timestamp is not None and REPORT_START <= timestamp < REPORT_END
+
+
+def _losing_drop(mint, pnl, asset, timestamp, reason):
+    in_window = _fifo_timestamp_in_window(timestamp)
+    return {
+        "mint": mint,
+        "timestamp": timestamp,
+        **_profit_fields(pnl, asset),
+        "reason": reason if in_window else "not_in_window_or_unresolved",
+    }
 
 
 def _fifo(trades):
@@ -1238,11 +1427,10 @@ def _fifo(trades):
                 # dust used to merge 319/321 into a mint-wide 583/640).
                 if opened and flattened and remaining > 0 and opening == 0:
                     if episode_pnl < 0:
-                        omitted_losing.append({
-                            "mint": mint,
-                            "net_profit_sol": _canonical(episode_pnl),
-                            "reason": "oversold_flatten_reset",
-                        })
+                        omitted_losing.append(_losing_drop(
+                            mint, episode_pnl, episode_asset, row.get("timestamp"),
+                            "oversold_flatten_reset",
+                        ))
                     opened = False
                     episode_consumed_opening = False
                     episode_pnl = Decimal("0")
@@ -1264,18 +1452,17 @@ def _fifo(trades):
                             "close_signature": row["signature"],
                             "venue": row.get("program"),
                             "instruction": row.get("instruction"),
-                            "settlement_asset": episode_asset or row.get("settlement_asset") or "SOL",
+                            "timestamp": timestamp,
                             "basis_sol": _canonical(episode_basis),
                             "proceeds_sol": _canonical(episode_proceeds),
                             "verified_costs_sol": _canonical(episode_costs),
-                            "net_profit_sol": _canonical(episode_pnl),
+                            **_profit_fields(episode_pnl, episode_asset or row.get("settlement_asset") or "SOL"),
                         })
                     elif episode_pnl < 0:
-                        omitted_losing.append({
-                            "mint": mint,
-                            "net_profit_sol": _canonical(episode_pnl),
-                            "reason": "opening_inventory" if episode_consumed_opening else "not_in_window_or_unresolved",
-                        })
+                        omitted_losing.append(_losing_drop(
+                            mint, episode_pnl, episode_asset, timestamp,
+                            "opening_inventory" if episode_consumed_opening else "not_in_window_or_unresolved",
+                        ))
                     opened = False
                     episode_consumed_opening = False
                     episode_pnl = Decimal("0")
@@ -1287,11 +1474,11 @@ def _fifo(trades):
             # Opening inventory consumed before captured buys; leftover opening is not a clean episode.
             pass
         if episode_pnl < 0 and opened:
-            omitted_losing.append({
-                "mint": mint,
-                "net_profit_sol": _canonical(episode_pnl),
-                "reason": "unflattened_losing_inventory",
-            })
+            last_ts = rows[-1].get("timestamp") if rows else None
+            omitted_losing.append(_losing_drop(
+                mint, episode_pnl, episode_asset, last_ts,
+                "unflattened_losing_inventory",
+            ))
     return episodes, unresolved, known_sales, omitted_losing
 
 
@@ -1625,7 +1812,7 @@ def episode_net_totals(episodes):
     by_unit = {}
     for item in episodes:
         unit = item.get("settlement_asset") or "SOL"
-        by_unit[unit] = by_unit.get(unit, Decimal("0")) + Decimal(item["net_profit_sol"])
+        by_unit[unit] = by_unit.get(unit, Decimal("0")) + episode_profit_amount(item)
     canonical = {unit: _canonical(value) for unit, value in by_unit.items()}
     if len(canonical) == 1:
         unit = next(iter(canonical))
@@ -1641,7 +1828,7 @@ def audit_address(address, pages):
         if event:
             trades.append(event)
     episodes, unresolved, known_sales, omitted_losing = _fifo(trades)
-    wins = sum(1 for item in episodes if Decimal(item["net_profit_sol"]) > 0)
+    wins = sum(1 for item in episodes if episode_profit_amount(item) > 0)
     episode_mints = {item["mint"] for item in episodes}
     reconstructed_mints = []
     by_mint = defaultdict(list)
