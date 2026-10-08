@@ -1185,11 +1185,21 @@ def _iter_record_instructions(record):
 
 
 def _has_reviewed_swap_instruction(record):
-    """True when a reviewed swap/route program is present as an instruction."""
+    """True when a reviewed swap/route program is present as a swap.
+
+    A Whirlpool/Meteora program that only opens or changes an LP position is
+    not a swap instruction. A Jupiter route that also logs AddLiquidity2 is.
+    """
     raw = _unwrap_raw_record(record)
     keys = _tx_account_keys(raw)
     programs = _reviewed_swap_route_programs()
-    return any(_ix_program_id(instruction, keys) in programs for instruction in _iter_record_instructions(record))
+    if not any(_ix_program_id(instruction, keys) in programs for instruction in _iter_record_instructions(record)):
+        return False
+    if _has_swap_like_log(record):
+        return True
+    if LP_LOG_RE.search(_logs_text(record)):
+        return False
+    return True
 
 
 def _has_jupiter_route_instruction(record):

@@ -1082,8 +1082,10 @@ def _iter_all_instructions(raw):
 
 
 def _iter_outer_instructions(raw):
-    message = ((raw.get('transaction') or {}).get('message')
-               if isinstance(raw.get('transaction'), dict) else {}) or {}
+    transaction = raw.get('transaction') if isinstance(raw, dict) else None
+    message = transaction.get('message') if isinstance(transaction, dict) else None
+    if not isinstance(message, dict):
+        message = {}
     for instruction in message.get('instructions') or []:
         if isinstance(instruction, dict):
             yield instruction
@@ -2645,31 +2647,38 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 uncertain_cash('Outside native movement may be a trading fee, tip or capital flow; its economic role remains unresolved',
                     movement['path'], amount=canonical(Decimal(movement['lamports']) / LAMPORTS),
                     direction=movement['direction'], facts={'source': movement['source'], 'destination': movement['destination']})
-        except (ValueError, KeyError, IndexError, TypeError, OverflowError) as exc:
+        except (ValueError, KeyError, IndexError, TypeError, OverflowError, AttributeError) as exc:
             net = None
             reason = str(exc)
+            # Net-balance recovers venues with no pinned layout, not txs whose
+            # layout already failed closed on wrap/nonce/funding proofs.
+            first_nb = None
+            try:
+                meta_nb = raw.get('meta') if isinstance(raw, dict) and isinstance(raw.get('meta'), dict) else {}
+                tx_nb = raw.get('transaction') if isinstance(raw, dict) else None
+                message_nb = tx_nb.get('message') if isinstance(tx_nb, dict) else {}
+                if not isinstance(message_nb, dict):
+                    message_nb = {}
+                first_nb = _first_net_balance_program(raw, _keys(message_nb, meta_nb))
+            except (ValueError, TypeError, KeyError, IndexError, AttributeError):
+                first_nb = None
             coverage_gap = (
                 reason.startswith('No reviewed outer spot swap')
-                or reason.startswith('No reviewed spot swap instruction for this program')
                 or reason.startswith('Jupiter route')
                 or reason.startswith('Unrelated token transfer')
-                or reason.startswith('Unreviewed outer program may bundle')
-                or reason.startswith('Associated account creation for another wallet')
-                or reason.startswith('Unsupported system operation')
-                or reason.startswith('Isolated native consideration')
                 or reason.startswith('Transaction version has no reviewed')
-                or reason.startswith('Temporary wrapped SOL')
-                or reason.startswith('Token account closes to another recipient')
-                or reason.startswith('System allocate space')
-                or reason.startswith('Unparsed associated account')
-                or reason.startswith('Recognized swap authority is not')
-                or reason.startswith('Unknown inner program touches a wallet-owned account')
+                or (
+                    reason.startswith('No reviewed spot swap instruction for this program')
+                    and first_nb == JUPITER
+                )
             )
             if allow_net_balance and coverage_gap:
                 try:
                     net = net_balance_reviewed_swap(raw, address)
-                except (ValueError, KeyError, IndexError, TypeError, OverflowError):
+                except (ValueError, KeyError, IndexError, TypeError, OverflowError, AttributeError):
                     net = None
+            if net and reason.startswith('Unrelated token transfer'):
+                unknown(reason)
             if net:
                 quote_mint = net.get('quote_mint')
                 mint = net['mint']

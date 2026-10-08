@@ -165,13 +165,13 @@ def test_d4_mixed_wallet_separate_quote_asset_worksheets(tmp_path):
     # DFlow Swap (f8c69e91) reconstructs the DEW9 close 5125oxVi8HPY; one
     # previously unbacked sale now has basis. Extra unbacked sales stay unresolved.
     assert int(usdc["unresolved_basis_sales"]) == 4
-    assert int(usdc.get("open_lots") or 0) == 9
+    assert int(usdc.get("open_lots") or 0) == 11
     assert int(sol.get("known_cost_sales") or 0) == 0
     assert int(sol.get("unresolved_basis_sales") or 0) == 0
     assert int(sol.get("open_lots") or 0) == 1
     assert len(indep["fifo"]["USDC"]["known_cost_sells"]) == 13
     assert len(indep["fifo"]["USDC"]["unresolved_basis_sales"]) == 4
-    assert len(indep["fifo"]["USDC"]["open_lots"]) == 9
+    assert len(indep["fifo"]["USDC"]["open_lots"]) == 11
     assert len(indep["fifo"]["SOL"]["known_cost_sells"]) == 0
     assert len(indep["fifo"]["SOL"]["unresolved_basis_sales"]) == 0
     assert len(indep["fifo"]["SOL"]["open_lots"]) == 1

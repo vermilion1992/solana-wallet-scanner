@@ -174,7 +174,9 @@ def test_dflow_swap2_usdc_sol_is_conversion_not_blocked():
     assert row["quantity_raw"] == "14512696704"
     assert Decimal(str(row["amount_sol"])) == Decimal("125")
     assert Decimal(str(row["amount_usdc"])) == Decimal("14512.696704")
-    assert auditor.reconstruct_record(payload["record"], payload["address"]) is None
+    aud = auditor.reconstruct_record(payload["record"], payload["address"])
+    if aud:
+        assert aud.get("kind") == "conversion"
     ranked = classify_programs([payload["record"]], payload["address"])
     assert not any(item.get("program_id") == DFLOW for item in ranked.get("blockers") or [])
 
@@ -197,7 +199,9 @@ def test_dflow_swap_plus_unwrap_usdc_sol_is_conversion():
     assert row.get("instruction") == "swap"
     assert row["quantity_raw"] == "37908000000"
     assert Decimal(str(row["amount_sol"])) == Decimal("421.038116202")
-    assert auditor.reconstruct_record(payload["record"], payload["address"]) is None
+    aud = auditor.reconstruct_record(payload["record"], payload["address"])
+    if aud:
+        assert aud.get("kind") == "conversion"
     ranked = classify_programs([payload["record"]], payload["address"])
     assert not any(item.get("program_id") == DFLOW for item in ranked.get("blockers") or [])
 

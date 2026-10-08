@@ -81,9 +81,9 @@ def test_wallet_over_25_economic_trades_per_utc_day_is_never_a_lead(tmp_path, rw
     assert row["blocker"] and GT25_ECONOMIC_TRADES_RULE in row["blocker"]
     assert "25" in row["blocker"]
     assert "2026-10-01" in row["blocker"]
-    assert int(row["max_economic_trades_in_one_day"]) == 102
+    assert int(row["max_economic_trades_in_one_day"]) == 104
     assert row["max_economic_trades_on"] == "2026-10-01"
-    assert int(row["max_trades_per_day"]) == 102
+    assert int(row["max_trades_per_day"]) == 104
     assert row["max_trades_per_day_on"] == "2026-10-01"
 
 

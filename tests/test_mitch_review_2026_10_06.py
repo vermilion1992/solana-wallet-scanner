@@ -1000,8 +1000,11 @@ def test_auditor_rejects_opening_inventory_close_4dyknedb():
     # 4dyknEdb is a clean close of known-cost inventory, not opening stock.
     # Independent DFlow swap reconstructs 4X6ssNRT (DEW9 USDC buy), which
     # closes 3QKBQnyvdSvi as an eighth clean episode.
+    # Independent JUP6 net-balance recovers the CTPoy USDC buys that pinned
+    # RouteV2 layout missed (gas-station System transfers). 2uLD88YA then
+    # closes as a ninth known-cost episode.
     assert BVZT_OPENING_CLOSE in closes
-    assert isolated["clean_episodes"] == 8
+    assert isolated["clean_episodes"] == 9
     payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
     by_address = {row["address"]: row for row in payload["wallets"]}
     bvzt = by_address[BVZT]

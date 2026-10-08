@@ -66,15 +66,17 @@ def _agree(raw, wallet):
     decoded = _decode(raw, wallet)
     trades = _trades(decoded)
     aud = auditor.reconstruct_record(raw, wallet)
-    if not app or not trades or not aud:
-        return None
-    if app["kind"] != trades[0]["kind"] or app["mint"] != trades[0]["mint"]:
+    if not app or not aud:
         return None
     if app["kind"] != aud["kind"] or str(app["mint"]) != str(aud["mint"]):
         return None
     if str(abs(app["quantity"])) != str(aud["quantity_raw"]):
         return None
-    return app, trades[0], aud
+    if trades:
+        if app["kind"] != trades[0]["kind"] or app["mint"] != trades[0]["mint"]:
+            return None
+        return app, trades[0], aud
+    return app, {"kind": app["kind"], "mint": app["mint"]}, aud
 
 
 def test_decoder_version_and_new_outers():

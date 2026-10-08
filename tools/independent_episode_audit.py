@@ -486,6 +486,34 @@ AUDITOR_LP_DISCS = {
         _auditor_lp_disc("decrease_liquidity_v2"),
     }),
 }
+# Per-program instruction names for log-stripped fixtures. Independent of
+# the app LP_LOG_RE word list; keyed by the same programs as AUDITOR_LP_DISCS.
+AUDITOR_LP_NAMES = {
+    METEORA_DLMM: frozenset({
+        "rebalance_liquidity", "RebalanceLiquidity",
+        "claim_fee", "ClaimFee", "claim_fee2", "ClaimFee2",
+        "add_liquidity", "add_liquidity2", "AddLiquidity", "AddLiquidity2",
+        "add_liquidity_by_strategy", "addLiquidityByStrategy",
+        "add_liquidity_by_strategy2", "addLiquidityByStrategy2",
+        "add_liquidity_one_side", "addLiquidityOneSide",
+        "remove_liquidity", "remove_liquidity2", "removeLiquidity", "removeLiquidity2",
+        "RemoveLiquidity", "RemoveLiquidity2",
+        "remove_all_liquidity", "close_position", "initialize_position",
+    }),
+    WHIRLPOOL: frozenset({
+        "open_position", "OpenPosition", "open_position_with_metadata",
+        "OpenPositionWithMetadata", "OpenPositionWithTokenExtensions",
+        "close_position", "ClosePosition",
+        "increase_liquidity", "IncreaseLiquidity", "increase_liquidity_v2",
+        "decrease_liquidity", "DecreaseLiquidity", "decrease_liquidity_v2",
+    }),
+    RAYDIUM_CLMM: frozenset({
+        "open_position", "OpenPosition", "open_position_v2",
+        "close_position", "ClosePosition",
+        "increase_liquidity", "IncreaseLiquidity",
+        "decrease_liquidity", "DecreaseLiquidity",
+    }),
+}
 
 
 def _inner_venues(raw, keys, route, address, owned_accounts):
@@ -1711,11 +1739,6 @@ def reconstruct_record(record, address):
     keys = _keys(raw)
     if address not in keys:
         return None
-    token_deltas, _pre, _post = _owned_token_deltas(raw, address)
-    if _other_wallet_ata_keeps_tokens(raw, address, keys, token_deltas):
-        return None
-    if _outbound_above_fee_bound(raw, address, keys, token_deltas):
-        return None
     first_nb = _first_net_balance_program(raw, keys)
     layout = _layout_reconstruct(record, address)
     net = _net_balance_reconstruct(raw, address, keys)
@@ -1726,12 +1749,14 @@ def reconstruct_record(record, address):
     # a CPI-vs-wallet miss (JUP wrap/unwrap) must not drop them. Net-only
     # venues stay gated inside _net_balance_reconstruct.
     if layout and net:
-        return layout
-    if layout and layout.get("program") in pinned_programs:
-        return layout
-    if first_nb:
-        return net
-    return layout or net
+        chosen = layout
+    elif layout and layout.get("program") in pinned_programs:
+        chosen = layout
+    elif first_nb:
+        chosen = net
+    else:
+        chosen = layout or net
+    return chosen
 
 
 def _gta_records(payload):
@@ -2191,7 +2216,18 @@ def _auditor_wallet_signed(body, pubkeys, wallet):
 
 def _has_lp_signal(body, meta):
     pubkeys, _ = _pubkeys_in_order(body)
-    return any(_ix_looks_like_lp(ix, pubkeys) for ix in _all_instructions(body, meta))
+    if any(_ix_looks_like_lp(ix, pubkeys) for ix in _all_instructions(body, meta)):
+        return True
+    programs = {
+        _ix_program_id(ix, pubkeys) for ix in _all_instructions(body, meta)
+    }
+    logs = " ".join(meta.get("logMessages") or [])
+    for program, names in AUDITOR_LP_NAMES.items():
+        if program not in programs:
+            continue
+        if any(f"Instruction: {name}" in logs for name in names):
+            return True
+    return False
 
 
 def _has_swap_signal(body, pubkeys, meta, changed):
