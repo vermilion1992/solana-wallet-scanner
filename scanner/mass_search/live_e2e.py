@@ -29,6 +29,7 @@ import json
 import logging
 import math
 import os
+import shutil
 import sys
 import time
 import uuid
@@ -104,9 +105,14 @@ from scanner.mass_search.live_e2e_ledger import (
     verify_receipt_chain,
 )
 from scanner.mass_search.qualification_gates import (
+    BOT_RULE_DEFINITION,
     coverage_shares,
+    combined_economic_trade_rate,
     economic_trade_rate,
+    first_defined_int,
     qualifying_profit,
+    trade_rate_from,
+    with_gt25_blocker,
 )
 from scanner.mass_search.seed_sources import (
     ALLOWED_NANSEN_PATHS,
@@ -237,6 +243,10 @@ FATAL_SEED_STATES = frozenset({
 PINNED_LEDGER_REL = ".scanner/live-e2e-ledgers"
 COMMITTED_LEDGER_ABSOLUTE = "/home/box/.scanner/live-e2e-ledgers"
 PINNED_LEDGER_ABSOLUTE = COMMITTED_LEDGER_ABSOLUTE
+MIN_FREE_DISK_MB = 2048
+MIN_FREE_DISK_ENV = "SCANNER_MIN_FREE_DISK_MB"
+PHASE4_RESULT_VERSION = "phase4-raw-bot-rate-v1"
+DRY_RUN_LEDGER_DIRNAME = ".dry-run-ledger"
 BIRDEYE_KEY_ENV = "BIRDEYE_API_KEY"
 HELIUS_KEY_ENV = "HELIUS_API_KEY"
 NANSEN_KEY_ENV = "NANSEN_API_KEY"
@@ -354,6 +364,120 @@ SEARCH_B_COHORT = (
 
 class LiveE2EError(ValueError):
     """Bad params or invariant violation. CLI maps this to exit 2."""
+
+
+def armed_ledger_homes():
+    """Real grant-ledger roots only. Test pins of PINNED_LEDGER_ABSOLUTE are not armed."""
+    homes = []
+    for raw in (DEFAULT_LEDGER_ROOT, COMMITTED_LEDGER_ABSOLUTE, "/home/box/.scanner/live-e2e-ledgers"):
+        try:
+            homes.append(Path(raw).expanduser().resolve())
+        except (OSError, RuntimeError, ValueError):
+            homes.append(Path(raw))
+    return homes
+
+
+def is_armed_ledger_home(path):
+    if path is None:
+        return False
+    try:
+        resolved = Path(path).expanduser().resolve()
+    except (OSError, RuntimeError, ValueError):
+        resolved = Path(path)
+    for home in armed_ledger_homes():
+        if resolved == home:
+            return True
+        try:
+            resolved.relative_to(home)
+            return True
+        except ValueError:
+            continue
+    return False
+
+
+def resolve_dry_run_ledger_home(output_dir, explicit=None):
+    """Scratch ledger only. Never the pinned/armed grant ledger."""
+    env_home = os.environ.get(LEDGER_HOME_ENV) or os.environ.get(LEDGER_ENV)
+    if explicit:
+        candidate = Path(explicit).expanduser().resolve()
+    elif env_home:
+        candidate = Path(env_home).expanduser().resolve()
+    else:
+        candidate = Path(output_dir).expanduser().resolve() / DRY_RUN_LEDGER_DIRNAME
+    if is_armed_ledger_home(candidate):
+        raise LiveE2EError(
+            "dry-run refuses to touch an armed grant ledger "
+            f"({candidate}); set SCANNER_LIVE_LEDGER_HOME to a scratch dir "
+            "or omit it to use <output>/.dry-run-ledger"
+        )
+    return candidate
+
+
+def min_free_disk_mb():
+    text = os.environ.get(MIN_FREE_DISK_ENV)
+    if text not in (None, ""):
+        return max(0, int(text))
+    return MIN_FREE_DISK_MB
+
+
+def assert_free_disk_before_paid_requests(*paths):
+    """Refuse before any paid request. Mid-run crash is not acceptable."""
+    reserve = min_free_disk_mb()
+    if reserve <= 0:
+        return reserve
+    seen = set()
+    for raw in paths:
+        if raw in (None, ""):
+            continue
+        path = Path(raw)
+        probe = path if path.exists() else path.parent
+        if not probe.exists():
+            probe = Path.cwd()
+        key = str(probe.resolve())
+        if key in seen:
+            continue
+        seen.add(key)
+        free = shutil.disk_usage(probe).free
+        if free < reserve * 1024 * 1024:
+            raise LiveE2EError(
+                f"Free disk space is below the {reserve} MB reserve "
+                f"({free} bytes free at {probe}); refusing before any paid request"
+            )
+    return reserve
+
+
+def phase4_result_fingerprint(config):
+    payload = {
+        "version": PHASE4_RESULT_VERSION,
+        "bot_rule": BOT_RULE_DEFINITION,
+        "report_window_days": (
+            (config.get("bounds") or {}).get("report_window_days")
+            or config.get("report_window_days")
+        ),
+        "window_days": config.get("window_days"),
+        "history_to_first": bool(config.get("history_to_first")),
+    }
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()
+
+
+def known_trade_rate_from_state(state, address):
+    for source in (
+        (state.get("phase3") or {}).get(address),
+        (state.get("phase2") or {}).get(address),
+    ):
+        if not isinstance(source, dict):
+            continue
+        stored = first_defined_int(source.get("max_economic_trades_in_one_day"))
+        if stored is None:
+            stored = first_defined_int(source.get("max_trades_per_day"))
+        if stored is None:
+            continue
+        return {
+            "by_day": source.get("economic_trades_by_utc_day") or {},
+            "max": stored,
+            "max_on": source.get("max_economic_trades_on") or source.get("max_trades_per_day_on"),
+        }
+    return None
 
 
 def _iso_to_unix(value):
@@ -3414,8 +3538,10 @@ async def phase3_history(store, grant, config, state, recorder):
                 page_events = list(decoded.get("events") or [])
             except Exception:
                 page_events = []
-            rate = economic_trade_rate(page_events)
-            if rate["max"] > 25:
+            rate = combined_economic_trade_rate(
+                events=page_events, records=records, address=address,
+            )
+            if first_defined_int(rate.get("max")) is not None and rate["max"] > 25:
                 cursor["done"] = True
                 cursor["history_complete"] = False
                 cursor["history_complete_reason"] = "gt_25_economic_trades_in_one_day"
@@ -3475,6 +3601,7 @@ def _phase4_wallet_row(report, profile):
     profit, unit, vector = qualifying_profit(profile, report)
     level = (profile or {}).get("qualification_level") or {}
     fields = wallet_status_fields(report, profile)
+    rate = trade_rate_from(report, profile)
     blocker = fields.get("blocking_reason")
     if level.get("level") in ("provisional_research_lead", "stronger_research_shortlist"):
         blocker = None
@@ -3488,6 +3615,7 @@ def _phase4_wallet_row(report, profile):
     if history.get("history_complete") is False:
         level = {"level": "insufficient_evidence"}
         blocker = history.get("history_complete_reason") or "history_incomplete"
+    blocker = with_gt25_blocker(blocker, rate)
     return {
         "address": report.get("address"),
         "coverage_count_share": shares.get("coverage_count_share"),
@@ -3506,25 +3634,29 @@ def _phase4_wallet_row(report, profile):
         "independently_audited": independently_audited(report, profile),
         "lead_level": level.get("level") or "insufficient_evidence",
         "blocker": blocker,
-        "max_economic_trades_in_one_day": (
-            (profile or {}).get("max_economic_trades_in_one_day")
-            or (report or {}).get("max_economic_trades_in_one_day")
-            or level.get("max_economic_trades_in_one_day")
+        "max_economic_trades_in_one_day": first_defined_int(
+            (profile or {}).get("max_economic_trades_in_one_day"),
+            (report or {}).get("max_economic_trades_in_one_day"),
+            level.get("max_economic_trades_in_one_day"),
+            rate.get("max"),
         ),
         "max_economic_trades_on": (
             (profile or {}).get("max_economic_trades_on")
             or (report or {}).get("max_economic_trades_on")
             or level.get("max_economic_trades_on")
+            or rate.get("max_on")
         ),
-        "max_trades_per_day": (
-            (profile or {}).get("max_trades_per_day")
-            or (report or {}).get("max_trades_per_day")
-            or level.get("max_trades_per_day")
+        "max_trades_per_day": first_defined_int(
+            (profile or {}).get("max_trades_per_day"),
+            (report or {}).get("max_trades_per_day"),
+            level.get("max_trades_per_day"),
+            rate.get("max"),
         ),
         "max_trades_per_day_on": (
             (profile or {}).get("max_trades_per_day_on")
             or (report or {}).get("max_trades_per_day_on")
             or level.get("max_trades_per_day_on")
+            or rate.get("max_on")
         ),
         "coverage_status": fields.get("coverage_status"),
         "program_blockers": ((report.get("prescreen") or {}).get("program_blockers")),
@@ -3635,6 +3767,7 @@ def phase4_offline(store, config, state):
                 leftover_token = token
                 records.extend(data)
         if missing_page:
+            known = known_trade_rate_from_state(state, address)
             rows.append({
                 "address": address,
                 "coverage_count_share": None,
@@ -3645,10 +3778,12 @@ def phase4_offline(store, config, state):
                 "audit_status": "not_independently_audited",
                 "independently_audited": False,
                 "lead_level": "insufficient_evidence",
-                "blocker": page_blocker,
+                "blocker": with_gt25_blocker(page_blocker, known),
+                "max_economic_trades_in_one_day": None if not known else known.get("max"),
+                "max_economic_trades_on": None if not known else known.get("max_on"),
                 "history_pages_fetched": expected_pages,
                 "history_reached_window_start": False,
-                "not_audited_reason": page_blocker,
+                "not_audited_reason": with_gt25_blocker(page_blocker, known),
                 "coverage_status": "blocked",
                 "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
                 **seed_fields_for_wallet(state, address),
@@ -3656,6 +3791,7 @@ def phase4_offline(store, config, state):
             })
             continue
         if not records:
+            known = known_trade_rate_from_state(state, address)
             rows.append({
                 "address": address,
                 "coverage_count_share": None,
@@ -3666,10 +3802,12 @@ def phase4_offline(store, config, state):
                 "audit_status": "not_independently_audited",
                 "independently_audited": False,
                 "lead_level": "insufficient_evidence",
-                "blocker": "no captured history in this run",
+                "blocker": with_gt25_blocker("no captured history in this run", known),
+                "max_economic_trades_in_one_day": None if not known else known.get("max"),
+                "max_economic_trades_on": None if not known else known.get("max_on"),
                 "history_pages_fetched": expected_pages,
                 "history_reached_window_start": False,
-                "not_audited_reason": "no captured history in this run",
+                "not_audited_reason": with_gt25_blocker("no captured history in this run", known),
                 "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
                 **seed_fields_for_wallet(state, address),
                 "PRODUCT_READY": False,
@@ -3728,17 +3866,22 @@ def phase4_offline(store, config, state):
         report["bundle_or_distribution"] = bundle
         report["history"] = history
         report["history_complete"] = history.get("history_complete")
-        profile = build_research_profile(report, filters=default_filters(), decoded=decoded)
+        profile = build_research_profile(
+            report, filters=default_filters(), decoded=decoded, records=records, address=address,
+        )
         audit = attach_live_independent_audit(report, profile, records, address)
         report["independent_audit"] = audit
         if audit and audit.get("status") == "independently_audited":
-            profile = build_research_profile(report, filters=default_filters(), decoded=decoded)
+            profile = build_research_profile(
+                report, filters=default_filters(), decoded=decoded, records=records, address=address,
+            )
         else:
             profile["independent_audit"] = audit
             from scanner.mass_search.research_profile import qualification_level
             profile["qualification_level"] = qualification_level(report, profile)
         report["research_profile"] = profile
-        store.put("reports", report["id"], report)
+        if not config.get("dry_run"):
+            store.put("reports", report["id"], report)
         row = _phase4_wallet_row(report, _authoritative_saved_profile(report) or profile)
         rows.append(row)
     return {"wallets": rows}
@@ -3924,8 +4067,13 @@ def validate_config(raw):
     output_dir = Path(raw["output_dir"])
     authorization_id = grant.get("authorization_id")
     ledger_dir = raw.get("ledger_dir")
+    ledger_home_override = None
+    if raw["mode"] == "dry-run":
+        isolated = resolve_dry_run_ledger_home(output_dir, ledger_dir)
+        ledger_dir = str(isolated)
+        ledger_home_override = isolated
     try:
-        store_path = grant_ledger_path(authorization_id, ledger_dir)
+        store_path = grant_ledger_path(authorization_id, ledger_dir, home=ledger_home_override)
     except ValueError as error:
         raise LiveE2EError(str(error)) from error
     phases = parse_phases(raw.get("phases"))
@@ -4001,6 +4149,7 @@ def validate_config(raw):
         "authorization_id": authorization_id,
         "output_dir": str(output_dir),
         "ledger_dir": str(ledger_dir) if ledger_dir else None,
+        "ledger_home": str(ledger_home_override) if ledger_home_override is not None else None,
         "store_path": str(store_path),
         "phases": phases,
         "wallets": wallets,
@@ -4041,8 +4190,17 @@ async def run_live_e2e(raw):
     output_dir = Path(config["output_dir"])
     output_dir.mkdir(parents=True, exist_ok=True)
     _write_json(output_dir / GTA_DOCS_NAME, gta_page_size_note())
+    if not config.get("dry_run"):
+        assert_free_disk_before_paid_requests(
+            output_dir,
+            config.get("store_path") or config.get("ledger_dir") or DEFAULT_LEDGER_ROOT,
+        )
     try:
-        store, ledger_path = open_grant_store(config["authorization_id"], config.get("ledger_dir"))
+        store, ledger_path = open_grant_store(
+            config["authorization_id"],
+            config.get("ledger_dir"),
+            home=config.get("ledger_home"),
+        )
     except ValueError as error:
         raise LiveE2EError(str(error)) from error
     grant_lock = ExclusiveLock(ledger_path / "GRANT.lock")
@@ -4190,33 +4348,26 @@ async def run_live_e2e(raw):
                 done = set(state["phases_done"])
                 save_state(output_dir, state)
             wanted4 = phase4_targets(config, state)
-            already4 = {
-                row.get("address")
-                for row in (state.get("phase4_wallets") or [])
-                if isinstance(row, dict) and row.get("address")
-            }
-            pending4 = [addr for addr in wanted4 if addr not in already4]
-            if 4 in config["phases"] and (4 not in done or pending4):
+            fingerprint = phase4_result_fingerprint(config)
+            stale4 = state.get("phase4_fingerprint") != fingerprint
+            if 4 in config["phases"]:
+                # Always recompute Phase 4. Stale rows from an older
+                # code/config fingerprint must never be served.
+                if stale4:
+                    state["phase4_wallets"] = []
+                    state["phases_done"] = [phase for phase in (state.get("phases_done") or []) if phase != 4]
+                    done = set(state["phases_done"])
                 if not wanted4:
                     phase4 = {"wallets": [], "processed": 0}
                     state["phase4_wallets"] = []
-                    # Never mark Phase 4 done when nothing was processed.
+                    state["phase4_fingerprint"] = fingerprint
                 else:
-                    prior = {
-                        row.get("address"): row
-                        for row in (state.get("phase4_wallets") or [])
-                        if isinstance(row, dict) and row.get("address")
-                    }
                     replay_config = dict(config)
                     replay_config["wallets"] = wanted4
                     phase4 = phase4_offline(store, replay_config, state)
-                    processed = phase4.get("wallets") or []
-                    for row in processed:
-                        if row.get("address"):
-                            prior[row["address"]] = row
-                    state["phase4_wallets"] = list(prior.values())
-                    phase4 = {"wallets": state["phase4_wallets"]}
-                    if processed:
+                    state["phase4_wallets"] = list(phase4.get("wallets") or [])
+                    state["phase4_fingerprint"] = fingerprint
+                    if state["phase4_wallets"]:
                         state["phases_done"] = sorted(set(done) | {4})
                         done = set(state["phases_done"])
                 save_state(output_dir, state)

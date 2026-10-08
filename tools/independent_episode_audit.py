@@ -24,6 +24,8 @@ WSOL = "So11111111111111111111111111111111111111112"
 USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 USDT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
 QUOTE_MINTS = frozenset({USDC, USDT})
+RAW_QUOTE_ASSETS = frozenset({WSOL, USDC, USDT, "SOL"})
+RAW_SOL_NOISE_LAMPORTS = 3_000_000
 QUOTE_ASSET = {USDC: "USDC", USDT: "USDT"}
 PUMP = "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
 PUMP_SWAP = "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
@@ -980,6 +982,12 @@ def _fifo(trades):
             # and do not glue the next flat on (AX5FaYB3 4k3Dyjzv 58590 raw
             # dust used to merge 319/321 into a mint-wide 583/640).
             if opened and flattened and remaining > 0 and opening == 0:
+                if episode_pnl < 0 and matched > 0:
+                    omitted_losing.append({
+                        "mint": mint,
+                        "net_profit_sol": _canonical(episode_pnl),
+                        "reason": "oversold_flatten_reset",
+                    })
                 opened = False
                 episode_consumed_opening = False
                 episode_pnl = Decimal("0")
@@ -1056,8 +1064,104 @@ def independent_economic_trade_keys(events):
     return keys
 
 
+def _event_unix(event):
+    stamp = (event or {}).get("block_time") or (event or {}).get("blockTime") or (event or {}).get("timestamp")
+    if type(stamp) is int and not isinstance(stamp, bool):
+        return stamp
+    if isinstance(stamp, float) and stamp == stamp:
+        return int(stamp)
+    if isinstance(stamp, str) and stamp:
+        try:
+            return int(datetime.fromisoformat(stamp.replace("Z", "+00:00")).timestamp())
+        except (TypeError, ValueError):
+            return None
+    return None
+
+
+def _tx_account_keys(record):
+    tx = record.get("transaction") if isinstance(record.get("transaction"), dict) else {}
+    msg = tx.get("message") if isinstance(tx.get("message"), dict) else {}
+    keys = []
+    for key in msg.get("accountKeys") or []:
+        keys.append(key["pubkey"] if isinstance(key, dict) else key)
+    meta = record.get("meta") if isinstance(record.get("meta"), dict) else {}
+    loaded = meta.get("loadedAddresses") or {}
+    keys.extend(list(loaded.get("writable") or []))
+    keys.extend(list(loaded.get("readonly") or []))
+    return keys
+
+
+def wallet_asset_deltas(record, address):
+    if not isinstance(record, dict) or not address:
+        return None
+    meta = record.get("meta")
+    if not isinstance(meta, dict) or meta.get("err") is not None:
+        return None
+    deltas = Counter()
+    for balance in meta.get("preTokenBalances") or []:
+        if not isinstance(balance, dict) or balance.get("owner") != address:
+            continue
+        mint = balance.get("mint")
+        amount = ((balance.get("uiTokenAmount") or {}).get("amount"))
+        if mint and amount not in (None, ""):
+            deltas[mint] -= int(amount)
+    for balance in meta.get("postTokenBalances") or []:
+        if not isinstance(balance, dict) or balance.get("owner") != address:
+            continue
+        mint = balance.get("mint")
+        amount = ((balance.get("uiTokenAmount") or {}).get("amount"))
+        if mint and amount not in (None, ""):
+            deltas[mint] += int(amount)
+    keys = _tx_account_keys(record)
+    wallet_index = keys.index(address) if address in keys else None
+    native = 0
+    if wallet_index is not None:
+        pre = meta.get("preBalances") or []
+        post = meta.get("postBalances") or []
+        if wallet_index < len(pre) and wallet_index < len(post):
+            native = int(post[wallet_index]) - int(pre[wallet_index])
+    fee = int(meta.get("fee") or 0) if keys and keys[0] == address else 0
+    wrapped = deltas.pop(WSOL, 0)
+    sol = native + fee + wrapped
+    legs = {mint: qty for mint, qty in deltas.items() if qty}
+    if abs(sol) > RAW_SOL_NOISE_LAMPORTS:
+        legs["SOL"] = sol
+    return legs
+
+
+def raw_economic_keys_for_tx(record, address):
+    legs = wallet_asset_deltas(record, address)
+    if not legs:
+        return 0
+    ups = [mint for mint, qty in legs.items() if qty > 0]
+    downs = [mint for mint, qty in legs.items() if qty < 0]
+    if not ups or not downs:
+        return 0
+    tokens = [mint for mint in legs if mint not in RAW_QUOTE_ASSETS]
+    return len(tokens) if tokens else 1
+
+
+def raw_economic_trades_by_utc_day(records, address):
+    """Independent raw-tx count. Does not import scanner/."""
+    counts = Counter()
+    incomplete = 0
+    for record in records or []:
+        if not isinstance(record, dict):
+            continue
+        n_keys = raw_economic_keys_for_tx(record, address)
+        if n_keys <= 0:
+            continue
+        unix = _event_unix({"timestamp": record.get("blockTime") or record.get("block_time") or record.get("timestamp")})
+        if unix is None:
+            incomplete += n_keys
+            continue
+        day = datetime.fromtimestamp(unix, tz=timezone.utc).date().isoformat()
+        counts[day] += n_keys
+    return dict(counts), incomplete
+
+
 def economic_trades_by_utc_day(events):
-    """Same bot-rule count as the app. Does not import scanner/."""
+    """Same decoded bot-rule count as the app. Does not import scanner/."""
     counts = Counter()
     seen = set()
     for event in events or []:
@@ -1068,22 +1172,20 @@ def economic_trades_by_utc_day(events):
             continue
         if key in seen:
             continue
-        seen.add(key)
-        stamp = event.get("timestamp") or event.get("block_time") or event.get("blockTime")
+        stamp = _event_unix(event)
         if stamp is None:
             continue
-        if isinstance(stamp, str):
-            try:
-                stamp = datetime.fromisoformat(stamp.replace("Z", "+00:00")).timestamp()
-            except ValueError:
-                continue
-        try:
-            stamp = int(stamp)
-        except (TypeError, ValueError):
-            continue
+        seen.add(key)
         day = datetime.fromtimestamp(stamp, tz=timezone.utc).date().isoformat()
         counts[day] += 1
     return dict(counts)
+
+
+def combined_economic_trades_by_utc_day(events, records, address):
+    decoded = economic_trades_by_utc_day(events)
+    raw, _incomplete = raw_economic_trades_by_utc_day(records, address)
+    days = set(decoded) | set(raw)
+    return {day: max(int(decoded.get(day) or 0), int(raw.get(day) or 0)) for day in days}
 
 
 def episode_net_totals(episodes):
@@ -1133,7 +1235,7 @@ def audit_address(address, pages):
         })
     reconstructed_mints.sort(key=lambda row: row["mint"])
     episode_net, episode_unit, episode_nets_by_unit = episode_net_totals(episodes)
-    by_day = economic_trades_by_utc_day(trades)
+    by_day = combined_economic_trades_by_utc_day(trades, records, address)
     max_day = max(by_day.values()) if by_day else 0
     max_on = max(by_day, key=lambda item: (by_day[item], item)) if by_day else None
     return {

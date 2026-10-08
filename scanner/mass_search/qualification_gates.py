@@ -666,16 +666,58 @@ def trading_activity(events):
     }
 
 
+WSOL_MINT = "So11111111111111111111111111111111111111112"
+USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+USDT_MINT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+RAW_QUOTE_ASSETS = frozenset({WSOL_MINT, USDC_MINT, USDT_MINT, "SOL"})
+RAW_SOL_NOISE_LAMPORTS = 3_000_000
+
+
 def _event_unix(event):
     stamp = (event or {}).get("block_time") or (event or {}).get("blockTime") or (event or {}).get("timestamp")
-    if type(stamp) is int:
+    if type(stamp) is int and not isinstance(stamp, bool):
         return stamp
+    if isinstance(stamp, float) and stamp == stamp:
+        return int(stamp)
     if isinstance(stamp, str) and stamp:
         try:
             return int(datetime.fromisoformat(stamp.replace("Z", "+00:00")).timestamp())
         except (TypeError, ValueError):
             return None
     return None
+
+
+def first_defined_int(*values):
+    """Treat 0 as a real max. None/'' are missing."""
+    for value in values:
+        if value in (None, ""):
+            continue
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            continue
+    return None
+
+
+def gt25_blocker_text(rate):
+    if not rate:
+        return None
+    maximum = first_defined_int(rate.get("max"))
+    if maximum is None or maximum <= MAX_ECONOMIC_TRADES_PER_UTC_DAY:
+        return None
+    day = rate.get("max_on") or "unknown"
+    return f"{GT25_ECONOMIC_TRADES_RULE}: {maximum} on {day}"
+
+
+def with_gt25_blocker(blocker, rate):
+    extra = gt25_blocker_text(rate)
+    if not extra:
+        return blocker
+    if not blocker:
+        return extra
+    if extra in str(blocker):
+        return blocker
+    return f"{blocker}; {extra}"
 
 
 def economic_trade_identity(event):
@@ -703,6 +745,32 @@ def independent_economic_trade_keys(events):
     return keys
 
 
+def _decoded_trade_day_counts(events):
+    """Decoded (signature, kind, mint) counts plus uncountable-timestamp tally."""
+    counts = Counter()
+    seen = set()
+    incomplete = 0
+    for event in events or []:
+        if not isinstance(event, dict):
+            continue
+        key = economic_trade_identity(event)
+        if key is None:
+            if event.get("kind") not in ("buy", "sell"):
+                continue
+            key = (None, event.get("kind"), event.get("mint"), id(event))
+        if event.get("signature") and key in seen:
+            continue
+        stamp = _event_unix(event)
+        if stamp is None:
+            incomplete += 1
+            continue
+        if event.get("signature"):
+            seen.add(key)
+        day = datetime.fromtimestamp(stamp, tz=timezone.utc).date().isoformat()
+        counts[day] += 1
+    return dict(counts), incomplete
+
+
 def economic_trades_by_utc_day(events):
     """Count every economic swap as a trade, including token-to-token.
 
@@ -711,50 +779,165 @@ def economic_trades_by_utc_day(events):
     in one tx is one trade, not one per hop. An independent unique-
     (signature, kind, mint) count must match. Fee events are not trades.
     Overlapping samples collapse. Timestamps may be unix seconds or ISO-8601.
+    Float timestamps count. Missing timestamps are not silently dropped:
+    economic_trade_rate marks the day set incomplete (fail closed).
     """
-    counts = Counter()
-    seen = set()
-    for event in events or []:
-        if not isinstance(event, dict):
-            continue
-        stamp = _event_unix(event)
-        if stamp is None:
-            continue
-        key = economic_trade_identity(event)
-        if key is None:
-            # Unsigned synthetic events still count once (tests use no signature).
-            if event.get("kind") not in ("buy", "sell"):
-                continue
-            key = (None, event.get("kind"), event.get("mint"), id(event))
-        if event.get("signature") and key in seen:
-            continue
-        if event.get("signature"):
-            seen.add(key)
-        day = datetime.fromtimestamp(stamp, tz=timezone.utc).date().isoformat()
-        counts[day] += 1
-    return dict(counts)
+    counts, _incomplete = _decoded_trade_day_counts(events)
+    return counts
+
+
+def _rate_from_by_day(by_day, *, incomplete=False, incomplete_uncounted=0):
+    payload = {
+        "by_day": dict(by_day or {}),
+        "max": 0,
+        "max_on": None,
+        "incomplete": bool(incomplete or incomplete_uncounted),
+        "incomplete_uncounted": int(incomplete_uncounted or 0),
+    }
+    if by_day:
+        day = max(by_day, key=lambda item: (by_day[item], item))
+        payload["max"] = int(by_day[day])
+        payload["max_on"] = day
+    return payload
 
 
 def economic_trade_rate(events):
-    by_day = economic_trades_by_utc_day(events)
-    if not by_day:
-        return {"by_day": {}, "max": 0, "max_on": None}
-    day = max(by_day, key=lambda item: (by_day[item], item))
-    return {"by_day": by_day, "max": int(by_day[day]), "max_on": day}
+    by_day, incomplete = _decoded_trade_day_counts(events)
+    return _rate_from_by_day(by_day, incomplete_uncounted=incomplete)
 
 
-def trade_rate_from(report=None, profile=None):
-    """Full-captured-history rate when attached; else best available events."""
-    for source in (profile, report):
-        if not source:
+def _tx_account_keys(record):
+    tx = record.get("transaction") if isinstance(record.get("transaction"), dict) else {}
+    msg = tx.get("message") if isinstance(tx.get("message"), dict) else {}
+    keys = []
+    for key in msg.get("accountKeys") or []:
+        keys.append(key["pubkey"] if isinstance(key, dict) else key)
+    meta = record.get("meta") if isinstance(record.get("meta"), dict) else {}
+    loaded = meta.get("loadedAddresses") or {}
+    keys.extend(list(loaded.get("writable") or []))
+    keys.extend(list(loaded.get("readonly") or []))
+    return keys
+
+
+def wallet_asset_deltas(record, address):
+    """Net wallet asset deltas. SOL nets native+fee+wSOL; rent/fee noise is dropped."""
+    if not isinstance(record, dict) or not address:
+        return None
+    meta = record.get("meta")
+    if not isinstance(meta, dict) or meta.get("err") is not None:
+        return None
+    deltas = Counter()
+    for balance in meta.get("preTokenBalances") or []:
+        if not isinstance(balance, dict) or balance.get("owner") != address:
             continue
-        stored = source.get("max_economic_trades_in_one_day")
-        if stored not in (None, ""):
-            return {
-                "by_day": source.get("economic_trades_by_utc_day") or {},
-                "max": int(stored),
-                "max_on": source.get("max_economic_trades_on") or source.get("max_trades_per_day_on"),
-            }
+        mint = balance.get("mint")
+        amount = ((balance.get("uiTokenAmount") or {}).get("amount"))
+        if mint and amount not in (None, ""):
+            deltas[mint] -= int(amount)
+    for balance in meta.get("postTokenBalances") or []:
+        if not isinstance(balance, dict) or balance.get("owner") != address:
+            continue
+        mint = balance.get("mint")
+        amount = ((balance.get("uiTokenAmount") or {}).get("amount"))
+        if mint and amount not in (None, ""):
+            deltas[mint] += int(amount)
+    keys = _tx_account_keys(record)
+    wallet_index = keys.index(address) if address in keys else None
+    native = 0
+    if wallet_index is not None:
+        pre = meta.get("preBalances") or []
+        post = meta.get("postBalances") or []
+        if wallet_index < len(pre) and wallet_index < len(post):
+            native = int(post[wallet_index]) - int(pre[wallet_index])
+    fee = int(meta.get("fee") or 0) if keys and keys[0] == address else 0
+    wrapped = deltas.pop(WSOL_MINT, 0)
+    sol = native + fee + wrapped
+    legs = {mint: qty for mint, qty in deltas.items() if qty}
+    if abs(sol) > RAW_SOL_NOISE_LAMPORTS:
+        legs["SOL"] = sol
+    return legs
+
+
+def raw_economic_keys_for_tx(record, address):
+    """One successful economic-swap tx: count once per (kind, mint).
+
+    Opposite-direction asset legs (including token-to-token and stable legs)
+    make a swap. Non-quote tokens each contribute one key; a pure
+    SOL↔USDC/USDT conversion counts 1. Multi-hop nets to the wallet's
+    legs, so one route is one tx.
+    """
+    legs = wallet_asset_deltas(record, address)
+    if not legs:
+        return 0
+    ups = [mint for mint, qty in legs.items() if qty > 0]
+    downs = [mint for mint, qty in legs.items() if qty < 0]
+    if not ups or not downs:
+        return 0
+    tokens = [mint for mint in legs if mint not in RAW_QUOTE_ASSETS]
+    return len(tokens) if tokens else 1
+
+
+def raw_economic_trades_by_utc_day(records, address):
+    """Independent raw-tx bot-rate. Decoder-blind venues still count."""
+    counts = Counter()
+    incomplete = 0
+    for record in records or []:
+        if not isinstance(record, dict):
+            continue
+        n_keys = raw_economic_keys_for_tx(record, address)
+        if n_keys <= 0:
+            continue
+        stamp = record.get("blockTime")
+        if stamp is None:
+            stamp = record.get("block_time") or record.get("timestamp")
+        unix = _event_unix({"timestamp": stamp})
+        if unix is None:
+            incomplete += n_keys
+            continue
+        day = datetime.fromtimestamp(unix, tz=timezone.utc).date().isoformat()
+        counts[day] += n_keys
+    return dict(counts), incomplete
+
+
+def raw_economic_trade_rate(records, address):
+    by_day, incomplete = raw_economic_trades_by_utc_day(records, address)
+    return _rate_from_by_day(by_day, incomplete_uncounted=incomplete)
+
+
+def merge_trade_rates(*rates):
+    """Per-day max across raw, decoded, and stored. Fail closed if any is incomplete."""
+    by_day = Counter()
+    incomplete = False
+    uncounted = 0
+    for rate in rates:
+        if not rate:
+            continue
+        incomplete = incomplete or bool(rate.get("incomplete"))
+        uncounted += int(rate.get("incomplete_uncounted") or 0)
+        for day, count in (rate.get("by_day") or {}).items():
+            try:
+                by_day[day] = max(by_day[day], int(count))
+            except (TypeError, ValueError):
+                continue
+        stored_max = first_defined_int(rate.get("max"))
+        stored_on = rate.get("max_on")
+        if stored_max is None:
+            continue
+        if stored_on:
+            by_day[stored_on] = max(by_day[stored_on], stored_max)
+        elif stored_max > (max(by_day.values()) if by_day else -1):
+            by_day["stored"] = stored_max
+    return _rate_from_by_day(by_day, incomplete=incomplete, incomplete_uncounted=uncounted)
+
+
+def combined_economic_trade_rate(events=None, records=None, address=None):
+    """Larger of raw balance-leg count and decoded (signature, kind, mint)."""
+    decoded = economic_trade_rate(events)
+    raw = raw_economic_trade_rate(records, address) if records is not None and address else None
+    return merge_trade_rates(decoded, raw)
+
+
+def _events_from_report_or_profile(report, profile):
     events = []
     if report:
         events = list(report.get("captured_history_events") or [])
@@ -762,18 +945,50 @@ def trade_rate_from(report=None, profile=None):
             events = list(report.get("events") or [])
     if profile and not events:
         events = list(profile.get("captured_history_events") or [])
-    return economic_trade_rate(events)
+    return events
 
 
-def attach_economic_trade_rate(target, events):
-    """Write max trades/day + date onto a report or profile. Independent of window."""
-    rate = economic_trade_rate(events)
+def _stored_trade_rate(source):
+    if not source:
+        return None
+    stored = first_defined_int(source.get("max_economic_trades_in_one_day"))
+    if stored is None:
+        stored = first_defined_int(source.get("max_trades_per_day"))
+    if stored is None and not source.get("economic_trades_by_utc_day"):
+        return None
+    return {
+        "by_day": source.get("economic_trades_by_utc_day") or {},
+        "max": stored if stored is not None else 0,
+        "max_on": source.get("max_economic_trades_on") or source.get("max_trades_per_day_on"),
+        "incomplete": bool(source.get("economic_trade_rate_incomplete")),
+        "incomplete_uncounted": int(source.get("economic_trade_rate_incomplete_uncounted") or 0),
+    }
+
+
+def trade_rate_from(report=None, profile=None, records=None, address=None):
+    """Larger of stored, decoded-event, and raw-tx counts. 0 is a real max."""
+    events = _events_from_report_or_profile(report, profile)
+    decoded = economic_trade_rate(events)
+    raw = raw_economic_trade_rate(records, address) if records is not None and address else None
+    stored = merge_trade_rates(_stored_trade_rate(profile), _stored_trade_rate(report))
+    return merge_trade_rates(stored, decoded, raw)
+
+
+def apply_trade_rate(target, rate):
     target["economic_trades_by_utc_day"] = rate["by_day"]
     target["max_economic_trades_in_one_day"] = rate["max"]
     target["max_economic_trades_on"] = rate["max_on"]
     target["max_trades_per_day"] = rate["max"]
     target["max_trades_per_day_on"] = rate["max_on"]
+    target["economic_trade_rate_incomplete"] = bool(rate.get("incomplete"))
+    target["economic_trade_rate_incomplete_uncounted"] = int(rate.get("incomplete_uncounted") or 0)
     return rate
+
+
+def attach_economic_trade_rate(target, events, records=None, address=None):
+    """Write max trades/day + date. Uses the larger of raw and decoded counts."""
+    rate = combined_economic_trade_rate(events=events, records=records, address=address)
+    return apply_trade_rate(target, rate)
 
 
 def stronger_shortlist_activity_ok(activity, max_economic_trades_in_one_day=None):

@@ -142,13 +142,13 @@ def ledger_root(explicit=None):
     return ledger_home()
 
 
-def grant_ledger_path(authorization_id, explicit=None):
+def grant_ledger_path(authorization_id, explicit=None, *, home=None):
     ident = str(authorization_id or "unknown").replace("/", "_").replace("..", "_")
-    home = ledger_home()
+    home = Path(home).expanduser().resolve() if home is not None else ledger_home()
     canonical = home / ident
     if explicit:
-        requested = Path(explicit)
-        if requested.resolve() != home.resolve():
+        requested = Path(explicit).expanduser().resolve()
+        if requested != home:
             raise ValueError(
                 f"refusing second ledger dir {requested} for {ident}; "
                 f"grant ledger is {canonical}"
@@ -156,8 +156,8 @@ def grant_ledger_path(authorization_id, explicit=None):
     return canonical
 
 
-def open_grant_store(authorization_id, explicit=None):
-    path = grant_ledger_path(authorization_id, explicit)
+def open_grant_store(authorization_id, explicit=None, *, home=None):
+    path = grant_ledger_path(authorization_id, explicit, home=home)
     if path.exists() and path.is_file():
         raise ValueError("grant ledger path must be a directory")
     path.mkdir(parents=True, exist_ok=True)
