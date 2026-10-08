@@ -496,6 +496,9 @@ def _route(instruction, keys):
             name, authority, owned_positions = 'swap2', 10, ()
     if name is None:
         raise ValueError('No reviewed spot swap instruction for this program and discriminator')
+    needed = [authority, *owned_positions]
+    if any(not isinstance(position, int) or position >= len(accounts) or position < -len(accounts) for position in needed):
+        raise ValueError('No reviewed spot swap instruction for this program and discriminator')
     return {'program': program, 'instruction': name, 'authority': accounts[authority],
             'owned_accounts': [accounts[position] for position in owned_positions],
             'accounts': accounts, 'expected_kind': expected}

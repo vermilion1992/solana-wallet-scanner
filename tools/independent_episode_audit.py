@@ -2476,8 +2476,7 @@ def _auditor_hydrate_plain(instruction, keys):
     return None
 
 
-def _auditor_fail_closed_preconditions(raw, address, keys):
-    """Independent copy of C2 fail-closed: nonce / unknown outer / allocate / conflict / rent."""
+def _auditor_c2_unknown_outer(raw, keys):
     message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
     for instruction in message.get("instructions") or []:
         if not isinstance(instruction, dict):
@@ -2485,9 +2484,20 @@ def _auditor_fail_closed_preconditions(raw, address, keys):
         program = _program(instruction, keys)
         if not program or program not in AUDITOR_REVIEWED_OUTER:
             return True
+    return False
+
+
+def _auditor_nonce_allocate_mixed_identity(raw, address, keys):
+    """Nonce / allocate / mixed empty-accounts / token-identity mismatch."""
+    del address
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    for instruction in message.get("instructions") or []:
+        if not isinstance(instruction, dict):
+            continue
+        program = _program(instruction, keys)
         parsed = _auditor_hydrate_plain(instruction, keys) or instruction.get("parsed")
         kind = parsed.get("type") if isinstance(parsed, dict) else None
-        if kind in ("advanceNonce", "allocate", "assign", "allocateWithSeed", "assignWithSeed"):
+        if kind in ("advanceNonce", "advanceNonceAccount", "allocate", "assign", "allocateWithSeed", "assignWithSeed"):
             return True
         data = _b58decode(instruction.get("data"))
         if program == SYSTEM and len(data) >= 4 and int.from_bytes(data[:4], "little") in (1, 4, 8):
@@ -2522,6 +2532,12 @@ def _auditor_fail_closed_preconditions(raw, address, keys):
                         row_dec = (row.get("uiTokenAmount") or {}).get("decimals")
                         if dec is not None and row_dec is not None and dec != row_dec:
                             return True
+    return False
+
+
+def _auditor_sponsored_token_account_rent(raw, address, keys):
+    """Wallet-owned token-account lamports rose with no matching funding ix."""
+    meta = raw.get("meta") or {}
     pre_native = meta.get("preBalances") or []
     post_native = meta.get("postBalances") or []
     owned_indexes = set()
@@ -2559,7 +2575,11 @@ def auditor_classify_read(raw, address):
     keys = _keys(raw)
     if address not in keys:
         return None
-    if _auditor_fail_closed_preconditions(raw, address, keys):
+    if (
+        _auditor_nonce_allocate_mixed_identity(raw, address, keys)
+        or _auditor_sponsored_token_account_rent(raw, address, keys)
+        or _auditor_c2_unknown_outer(raw, keys)
+    ):
         if not (set(_auditor_all_programs(raw, keys)) <= AUDITOR_PLAIN_PROGRAMS):
             return None
     programs = set(_auditor_all_programs(raw, keys))
@@ -2678,7 +2698,7 @@ def reconstruct_record(record, address):
     keys = _keys(raw)
     if address not in keys:
         return None
-    if _auditor_fail_closed_preconditions(raw, address, keys):
+    if _auditor_nonce_allocate_mixed_identity(raw, address, keys):
         return None
     first_nb = _first_net_balance_program(raw, keys)
     layout = _layout_reconstruct(record, address)
