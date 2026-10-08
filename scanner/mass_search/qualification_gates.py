@@ -1705,6 +1705,11 @@ def qualifying_profit(profile, report=None):
     if not validated["ok"] or validated.get("empty"):
         return None, None, {}
     amount = _decimal(validated["net"])
+    if (profile or {}).get("headline_pnl_blocked"):
+        return None, None, {}
+    omitted = (profile or {}).get("app_omitted_losing_episodes")
+    if omitted and not (profile or {}).get("headline_includes_losing_episodes"):
+        return None, None, {}
     if (profile or {}).get("headline_includes_losing_episodes"):
         headline = _decimal((profile or {}).get("completed_episode_net"))
         unit = (profile or {}).get("completed_episode_net_unit") or validated["unit"]

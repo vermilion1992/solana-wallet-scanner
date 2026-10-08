@@ -952,28 +952,36 @@ def apply_headline_losing_pnl(profile, report, headline_net, headline_unit):
     return profile
 
 
+def _normalize_headline_unit(unit):
+    if unit in (USDC, "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"):
+        return "USDC"
+    if unit in (USDT, "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"):
+        return "USDT"
+    if unit in ("SOL", "So11111111111111111111111111111111111111112", "WSOL"):
+        return "SOL"
+    return unit
+
+
 def _headline_including_dropped_losers(clean_net, clean_unit, dropped):
     """Add in-window same-unit dropped-loser PnL so headlines are not overstated.
 
     CYrC CdhZy (−46.66 USDC) was excluded from both app and auditor headlines.
     Membership still fails independently_audited when losers were dropped.
+    A loser in another quote currency, or a mixed headline, cannot be folded
+    without mixing units: return a blocked (None, None) headline rather than
+    the overstated clean number.
     """
+    rows = [row for row in (dropped or []) if isinstance(row, dict)]
     if clean_unit in (None, "", "mixed"):
+        if rows:
+            return None, None, []
         return clean_net, clean_unit, []
     included = []
     total = Decimal(str(clean_net)) if clean_net not in (None, "") else None
-    for row in dropped or []:
-        if not isinstance(row, dict):
-            continue
-        unit = row.get("settlement_asset") or "SOL"
-        if unit in (USDC, "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"):
-            unit = "USDC"
-        elif unit in (USDT, "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"):
-            unit = "USDT"
-        elif unit in ("SOL", "So11111111111111111111111111111111111111112", "WSOL"):
-            unit = "SOL"
+    for row in rows:
+        unit = _normalize_headline_unit(row.get("settlement_asset") or "SOL")
         if unit != clean_unit:
-            continue
+            return None, None, []
         try:
             amount = Decimal(str(row.get("net_profit") if row.get("net_profit") not in (None, "") else (
                 row.get("net_profit_usdc") if unit == "USDC" else
@@ -981,7 +989,7 @@ def _headline_including_dropped_losers(clean_net, clean_unit, dropped):
                 row.get("net_profit_sol")
             )))
         except (InvalidOperation, TypeError, ValueError):
-            continue
+            return None, None, []
         included.append(row)
         total = amount if total is None else total + amount
     if not included:
@@ -990,6 +998,24 @@ def _headline_including_dropped_losers(clean_net, clean_unit, dropped):
     if text and "." in text:
         text = text.rstrip("0").rstrip(".")
     return text, clean_unit, included
+
+
+def apply_blocked_headline_pnl(profile, report):
+    """Blank ranking/filter surfaces when losers cannot be folded in-unit."""
+    if profile is None:
+        return profile
+    profile["completed_episode_net"] = None
+    profile["completed_episode_net_unit"] = None
+    profile["scoped_pnl"] = None
+    profile["scoped_pnl_unit"] = None
+    profile["headline_includes_losing_episodes"] = False
+    profile["headline_pnl_blocked"] = True
+    if isinstance(report, dict):
+        report["completed_episode_net"] = None
+        report["completed_episode_net_unit"] = None
+        report["headline_includes_losing_episodes"] = False
+        report["headline_pnl_blocked"] = True
+    return profile
 
 
 def early_watch_label(completed):
@@ -1215,7 +1241,7 @@ def _attach_live_independent_audit_body(report, profile, records, address):
     headline_net, headline_unit, included_drops = _headline_including_dropped_losers(
         net, unit, in_window_drops,
     )
-    if included_drops:
+    if included_drops and len(included_drops) == len(in_window_drops) and headline_net not in (None, ""):
         base["independently_audited_episode_net"] = headline_net
         base["independently_audited_episode_net_unit"] = headline_unit
         base["included_dropped_losing_pnl"] = included_drops
@@ -1224,6 +1250,14 @@ def _attach_live_independent_audit_body(report, profile, records, address):
         # even when clean nets already disagreed; membership stays unaudited.
         if profile is not None:
             apply_headline_losing_pnl(profile, report, headline_net, headline_unit)
+            base["app_completed_episode_net"] = profile.get("completed_episode_net")
+            base["app_completed_episode_net_unit"] = profile.get("completed_episode_net_unit")
+    elif in_window_drops:
+        base["independently_audited_episode_net"] = None
+        base["independently_audited_episode_net_unit"] = None
+        base["headline_pnl_blocked"] = True
+        if profile is not None:
+            apply_blocked_headline_pnl(profile, report)
             base["app_completed_episode_net"] = profile.get("completed_episode_net")
             base["app_completed_episode_net_unit"] = profile.get("completed_episode_net_unit")
     if in_window_drops:
@@ -1374,6 +1408,10 @@ def independently_audited(report, profile=None):
     Saved profile copies are not an authoritative audit source.
     """
     audit = (report or {}).get("independent_audit") or {}
+    if (profile or {}).get("app_omitted_losing_episodes") or (report or {}).get("app_omitted_losing_episodes"):
+        return False
+    if (profile or {}).get("headline_pnl_blocked") or (report or {}).get("headline_pnl_blocked"):
+        return False
     if not audit:
         return False
     if audit.get("status") == "not_independently_audited":
@@ -1916,6 +1954,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "included_dropped_losing_pnl": included_drops,
         "app_omitted_losing_episodes": omitted_losing,
         "headline_includes_losing_episodes": False,
+        "headline_pnl_blocked": False,
         "ledger_summary_contradiction": ledger_contradiction,
         "concentration_detail": _concentration_detail(
             {**report, "completed_episode_ledger": ledger, "completed_episode_net_unit": episode_unit},
@@ -1962,6 +2001,16 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         profile["sensitivity_evidence_state"] = "measured" if report.get("sensitivity_unverified_debits_sol") not in (None, "") else "not_established"
     else:
         profile["sensitivity_evidence_state"] = "not_established"
+    if omitted_losing:
+        if (
+            included_drops
+            and len(included_drops) == len(omitted_losing)
+            and headline_net not in (None, "")
+            and headline_unit not in (None, "", "mixed")
+        ):
+            apply_headline_losing_pnl(profile, report, headline_net, headline_unit)
+        else:
+            apply_blocked_headline_pnl(profile, report)
     profile["worksheet_episode_bridge"] = worksheet_episode_bridge(scoped_pnl, episode_net, episode_unit or settlement)
     profile["exposure_outside_completed_episodes"] = exposure_outside_completed_episodes(report, profile)
     profile["requested_history_interval"] = requested_history_interval(report)

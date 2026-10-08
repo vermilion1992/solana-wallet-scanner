@@ -1592,6 +1592,115 @@ def _auditor_quote_has_two_non_sol(token_deltas):
     return len(others) >= 2
 
 
+def _auditor_token_owners(raw, keys):
+    """SPL owner per token account from the auditor's balance rows."""
+    owners = {}
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    for field in ("preTokenBalances", "postTokenBalances"):
+        for row in meta.get(field) or []:
+            if not isinstance(row, dict):
+                continue
+            index = row.get("accountIndex")
+            owner = row.get("owner")
+            if (
+                type(index) is int and not isinstance(index, bool)
+                and 0 <= index < len(keys) and isinstance(owner, str) and owner
+            ):
+                account = keys[index]
+                if account in owners and owners[account] != owner:
+                    owners.pop(account, None)
+                else:
+                    owners[account] = owner
+    return owners
+
+
+def _auditor_signers(raw, keys):
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    header = message.get("header") if isinstance(message.get("header"), dict) else {}
+    needed = header.get("numRequiredSignatures")
+    if type(needed) is not int or isinstance(needed, bool) or needed < 1:
+        needed = 1
+    return set(keys[:needed])
+
+
+def _auditor_outer_route_accounts(raw, keys):
+    """Outer net-balance program accounts. Distinct from the app's helper."""
+    accounts = set()
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    for outer in message.get("instructions") or []:
+        if not isinstance(outer, dict):
+            continue
+        program = _program(outer, keys)
+        if program not in NET_BALANCE_SWAP_PROGRAMS:
+            continue
+        payload = _b58decode(outer.get("data"))
+        if program == DFLOW and payload[:8] not in {
+            DFLOW_SWAP, DFLOW_SWAP2, DFLOW_SWAP_WITH_DESTINATION, DFLOW_WRAP,
+        }:
+            continue
+        if program == PUMP and payload[:8] in PUMP_NON_SWAP_DISCS:
+            continue
+        accounts.add(program)
+        accounts.update(_accounts(outer, keys))
+    return accounts
+
+
+def _auditor_third_party_pool_leg(raw, address, keys):
+    """Independent refuse: non-wallet account or authority funds a pool/vault.
+
+    At least as strict as the app. Vault-to-vault hops (source also a pool
+    account or a non-signer-owned token account) stay allowed. A co-signer's
+    ATA funding the pool, or a third party adding tokens/quote so sell
+    proceeds rise, fails closed.
+    """
+    if not isinstance(raw, dict) or not address or not keys:
+        return False
+    if _auditor_token_owner_unreadable(raw):
+        return True
+    owned = _lifecycle_owned_accounts(raw, address, keys)
+    signers = _auditor_signers(raw, keys)
+    owners = _auditor_token_owners(raw, keys)
+    vaults = set()
+    for account in _auditor_outer_route_accounts(raw, keys):
+        if account not in owned:
+            vaults.add(account)
+    for account, owner in owners.items():
+        if account in owned or owner == address or owner in signers:
+            continue
+        vaults.add(account)
+    if not vaults:
+        return False
+    for _outer, _path, instruction, _nested in _iter_instructions(raw):
+        program = _program(instruction, keys)
+        if program == SYSTEM:
+            leg = _system_transfer_leg(instruction, keys)
+            if not leg:
+                continue
+            source, dest, _lamports = leg
+            if dest not in vaults:
+                continue
+            if source in vaults:
+                continue
+            if source not in owned:
+                return True
+            continue
+        if program not in TOKEN_PROGRAMS:
+            continue
+        kind, info = _token_hop_fields(instruction, keys)
+        if kind not in ("transfer", "transferChecked", "transferCheckedWithFee"):
+            continue
+        source, dest = info.get("source"), info.get("destination")
+        if dest not in vaults:
+            continue
+        if source in vaults:
+            continue
+        if source not in owned:
+            return True
+        if info.get("authority") != address:
+            return True
+    return False
+
+
 def _route_cpi_disagrees_with_wallet(raw, address, keys):
     """Fail closed when route CPI sums disagree with wallet balance deltas."""
     if _auditor_token_owner_unreadable(raw):
@@ -1673,6 +1782,8 @@ def _net_balance_reconstruct(raw, address, keys):
     if _other_wallet_ata_keeps_tokens(raw, address, keys, token_deltas):
         return None
     if _outbound_above_fee_bound(raw, address, keys, token_deltas):
+        return None
+    if _auditor_third_party_pool_leg(raw, address, keys):
         return None
     if _route_cpi_disagrees_with_wallet(raw, address, keys):
         return None
@@ -1853,6 +1964,8 @@ def _layout_reconstruct(record, address):
         return None
     route = _route(raw, address, keys)
     if not route:
+        return None
+    if _auditor_third_party_pool_leg(raw, address, keys):
         return None
     token_deltas, pre, post = _owned_token_deltas(raw, address)
     accounts = _token_accounts(raw, address, keys)

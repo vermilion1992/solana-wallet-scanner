@@ -14,6 +14,7 @@ from scanner.mass_search.live_e2e import (
     AUTHORIZATION_ID_16,
     DRAFT_REL_16,
     HARD_CEILINGS,
+    LiveE2EError,
     PINNED_DRAFT_HASHES,
     ROOT,
     _account_spend,
@@ -291,10 +292,62 @@ def test_only_early_watch_filter_keeps_that_tier():
             {"address": "ew", "qualification_level": {"level": "early_watch"}, "shortlisted": True, "capture_available": True, "trade_count": 3},
             {"address": "lead", "qualification_level": {"level": "provisional_research_lead"}, "shortlisted": True, "capture_available": True, "trade_count": 3},
             {"address": "none", "qualification_level": {"level": "insufficient_evidence"}, "shortlisted": True, "capture_available": True, "trade_count": 3},
+            {"address": "unscored", "shortlisted": True, "capture_available": True, "trade_count": 3},
+            {"address": "blank", "qualification_level": {}, "shortlisted": True, "capture_available": True, "trade_count": 3},
         ],
         {"provider_proxy": {"only_early_watch": True}},
     )
     assert [row["address"] for row in kept] == ["ew"]
+
+
+def test_new7_other_unit_loser_blocks_headline():
+    headline, unit, included = _headline_including_dropped_losers(
+        "10", "SOL",
+        [{"net_profit": "-50", "settlement_asset": "USDC", "mint": "LoserX", "reason": "app_omitted_losing_flatten"}],
+    )
+    assert headline is None
+    assert unit is None
+    assert included == []
+    mixed, mixed_unit, mixed_incl = _headline_including_dropped_losers(
+        "10", "mixed",
+        [{"net_profit": "-3", "settlement_asset": "SOL", "mint": "LoserY"}],
+    )
+    assert mixed is None
+    assert mixed_unit is None
+    assert mixed_incl == []
+
+
+def test_new7_app_omitted_blocks_without_auditor():
+    profile = {
+        "completed_episode_net": "10",
+        "completed_episode_net_unit": "SOL",
+        "completed_episode_ledger": [
+            {"mint": "Win", "close_signature": "c1", "net": "10", "unit": "SOL",
+             "acquisition": "1", "proceeds": "11", "costs": "0"},
+        ],
+        "app_omitted_losing_episodes": [
+            {"net_profit": "-4", "settlement_asset": "SOL", "mint": "Lose", "reason": "app_omitted_losing_flatten"},
+        ],
+        "headline_includes_losing_episodes": False,
+    }
+    report = {"independent_audit": {"status": "independently_audited", "independently_audited": True}}
+    assert independently_audited(report, profile) is False
+    amount, unit, _vector = qualifying_profit(profile, {"completed_episode_ledger": profile["completed_episode_ledger"]})
+    assert amount is None
+    assert unit is None
+    profile["headline_includes_losing_episodes"] = True
+    profile["completed_episode_net"] = "6"
+    amount, unit, _vector = qualifying_profit(profile, {"completed_episode_ledger": profile["completed_episode_ledger"]})
+    assert amount == Decimal("6")
+    assert unit == "SOL"
+
+
+def test_new9_parse_run_caps_rejects_unknown_keys():
+    with pytest.raises(LiveE2EError):
+        parse_run_caps("helius_request=2")
+    with pytest.raises(LiveE2EError):
+        parse_run_caps({"helius_request": 2})
+    assert parse_run_caps("helius_requests=2") == {"helius_requests": 2}
 
 
 def test_funnel_report_has_its_own_early_watch_section():

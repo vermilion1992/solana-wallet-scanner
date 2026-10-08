@@ -1833,6 +1833,102 @@ def _route_wallet_flows(raw, address, keys):
     return saw, sol, tokens
 
 
+def _token_account_owners(raw, keys):
+    """SPL owner for every token account that published a balance row."""
+    owners = {}
+    meta = raw.get('meta') if isinstance(raw.get('meta'), dict) else {}
+    for field in ('preTokenBalances', 'postTokenBalances'):
+        for row in meta.get(field) or []:
+            if not isinstance(row, dict):
+                continue
+            index = row.get('accountIndex')
+            owner = row.get('owner')
+            if (
+                type(index) is int and not isinstance(index, bool)
+                and 0 <= index < len(keys) and isinstance(owner, str) and owner
+            ):
+                account = keys[index]
+                if account in owners and owners[account] != owner:
+                    owners.pop(account, None)
+                else:
+                    owners[account] = owner
+    return owners
+
+
+def _swap_route_vaults(raw, address, keys):
+    """Pool/vault accounts the wallet's swap legs must reconcile against.
+
+    Outer swap accounts that the wallet does not own, plus token accounts
+    whose SPL owner is neither the wallet nor a transaction signer (PDA /
+    pool / protocol). A co-signer's ATA is not a vault.
+    """
+    owned = _lifecycle_owned_accounts(raw, address, keys)
+    message = ((raw.get('transaction') or {}).get('message')
+               if isinstance(raw.get('transaction'), dict) else {}) or {}
+    signers = _message_signers(message, keys)
+    owners = _token_account_owners(raw, keys)
+    vaults = set()
+    for account in _net_balance_route_accounts(raw, keys):
+        if account not in owned:
+            vaults.add(account)
+    for account, owner in owners.items():
+        if account in owned or owner == address or owner in signers:
+            continue
+        vaults.add(account)
+    return owned, vaults
+
+
+def _third_party_pool_leg(raw, address, keys):
+    """True when a non-wallet account or authority funds a pool or vault.
+
+    Pool-side inflow must be the wallet's own legs. A transfer into a route
+    pool/vault from an account the wallet does not own, or under an authority
+    that is not the wallet, fails closed. Vault-to-vault hops are the pool's
+    own movement. The sell-side mirror (a third party adding tokens or quote
+    so proceeds rise) is the same inbound shape.
+    """
+    if not isinstance(raw, dict) or not address or not keys:
+        return False
+    owned, vaults = _swap_route_vaults(raw, address, keys)
+    if not vaults:
+        return False
+    mints = _account_mint_map(raw, keys)
+    for instruction in _iter_all_instructions(raw):
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        if program == SYSTEM_ID:
+            leg = _system_transfer_leg(instruction, keys)
+            if not leg:
+                continue
+            source, dest, _lamports = leg
+            if dest not in vaults:
+                continue
+            if source in vaults:
+                continue
+            if source not in owned:
+                return True
+            continue
+        if program not in TOKEN_IDS:
+            continue
+        kind, info = _token_hop_fields(instruction, keys)
+        if kind not in ('transfer', 'transferChecked', 'transferCheckedWithFee'):
+            continue
+        source, dest = info.get('source'), info.get('destination')
+        if dest not in vaults:
+            continue
+        if source in vaults:
+            continue
+        if source not in owned:
+            return True
+        if info.get('authority') != address:
+            return True
+        if _token_transfer_leg(instruction, keys, mints) is None:
+            return True
+    return False
+
+
 def _unknown_inner_touches_wallet(raw, address, keys):
     """True when a non-reviewed inner program touches a wallet-owned account."""
     if not isinstance(raw, dict) or not address or not keys:
@@ -2206,6 +2302,8 @@ def net_balance_reviewed_swap(raw, address):
         return None
     if _non_route_wallet_flow(raw, address, keys):
         return None
+    if _third_party_pool_leg(raw, address, keys):
+        return None
     if _route_flow_disagrees_with_wallet(raw, address, keys, assets):
         return None
     documented = _documented_route_sol(raw, address, keys)
@@ -2319,6 +2417,8 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 raise ValueError('Missing transaction metadata or success state')
             keys = _keys(message, meta)
             signers = _message_signers(message, keys)
+            if _third_party_pool_leg(raw, address, keys):
+                raise ValueError('Third-party transfer into a pool or vault')
             fee = _integer(meta.get('fee'))
             paid = keys[0] == address
             fee_sol = canonical(Decimal(fee) / LAMPORTS)

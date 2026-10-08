@@ -179,7 +179,7 @@ def apply_local_filters(rows, filters, *, user_shortlist=None):
             continue
         if only_early_watch:
             level = _qualification_level_name(row.get("qualification_level"))
-            if level and level != "early_watch":
+            if level != "early_watch":
                 continue
         if min_trades is not None:
             trades = _safe_int(row.get("trade_count") or 0)

@@ -18,10 +18,15 @@ from scanner.mass_search.readable_first import merge_funnel_reports
 from scanner.mass_search.result_relevant_coverage import wallet_touched_mints
 import tools.independent_episode_audit as auditor
 from tests.test_d377_verify_fixes import (
+    MINT as CLMM_MINT,
+    POOL_TOK,
+    POOL_WSOL,
     THIRD,
     THIRD_ATA,
     TOKEN,
+    TOKEN_ATA,
     WALLET as CLMM_WALLET,
+    WSOL,
     WSOL_ATA,
     _clmm_buy,
 )
@@ -348,3 +353,169 @@ def test_dc11_out_of_window_spam_stays_out():
     assert extra["signature"] not in rr["signatures"]
     assert extra["signature"] not in aud["signatures"]
     assert gate["passed"] is True
+
+
+THIRD_WSOL = "PrbThirdWsol1111111111111111111111111112"
+THIRD_TOK = "PrbThirdTok11111111111111111111111111112"
+
+
+def _add_account(raw, key, pre, post, *, mint, owner, token_pre, token_post, decimals=9):
+    keys = raw["transaction"]["message"]["accountKeys"]
+    keys.append(key)
+    raw["meta"]["preBalances"].append(pre)
+    raw["meta"]["postBalances"].append(post)
+    index = len(keys) - 1
+    raw["meta"]["preTokenBalances"].append({
+        "accountIndex": index, "mint": mint, "owner": owner,
+        "uiTokenAmount": {"amount": token_pre, "decimals": decimals},
+    })
+    raw["meta"]["postTokenBalances"].append({
+        "accountIndex": index, "mint": mint, "owner": owner,
+        "uiTokenAmount": {"amount": token_post, "decimals": decimals},
+    })
+    return index
+
+
+def _copay_third_wsol(raw, amt=500_000_000):
+    """Co-signer pays `amt` wSOL into the pool; wallet pays 1-amt, gets the fill."""
+    _cosign(raw)
+    _add_account(
+        raw, THIRD_WSOL, TOKEN_RENT + amt, TOKEN_RENT,
+        mint=WSOL, owner=THIRD, token_pre=str(amt), token_post="0", decimals=9,
+    )
+    inner = raw["meta"]["innerInstructions"][0]["instructions"]
+    inner.append({
+        "programId": TOKEN,
+        "parsed": {
+            "type": "transfer",
+            "info": {
+                "source": THIRD_WSOL,
+                "destination": POOL_WSOL,
+                "authority": THIRD,
+                "amount": str(amt),
+                "mint": WSOL,
+            },
+        },
+    })
+    wallet_pay = 1_000_000_000 - amt
+    for row in raw["meta"]["preTokenBalances"]:
+        if row["mint"] == WSOL and row["owner"] == CLMM_WALLET:
+            row["uiTokenAmount"]["amount"] = str(wallet_pay)
+    for ix in inner:
+        info = (ix.get("parsed") or {}).get("info") or {}
+        if info.get("destination") == POOL_WSOL and info.get("source") == WSOL_ATA:
+            info["amount"] = str(wallet_pay)
+    wsol_idx = raw["transaction"]["message"]["accountKeys"].index(WSOL_ATA)
+    raw["meta"]["preBalances"][wsol_idx] -= amt
+    return raw
+
+
+def _clmm_sell():
+    raw = _clmm_buy(
+        token_pre="1000000000",
+        token_post="0",
+        wsol_pre="0",
+        wsol_post="1000000000",
+        native_post=1_999_995_000,
+    )
+    raw["meta"]["preBalances"][1] = TOKEN_RENT
+    raw["meta"]["postBalances"][1] = TOKEN_RENT + 1_000_000_000
+    inner = raw["meta"]["innerInstructions"][0]["instructions"]
+    inner[0] = {
+        "programId": TOKEN,
+        "parsed": {
+            "type": "transfer",
+            "info": {
+                "source": TOKEN_ATA,
+                "destination": POOL_TOK,
+                "authority": CLMM_WALLET,
+                "amount": "1000000000",
+                "mint": CLMM_MINT,
+            },
+        },
+    }
+    inner[1] = {
+        "programId": TOKEN,
+        "parsed": {
+            "type": "transfer",
+            "info": {
+                "source": POOL_WSOL,
+                "destination": WSOL_ATA,
+                "authority": "pool",
+                "amount": "1000000000",
+                "mint": WSOL,
+            },
+        },
+    }
+    return raw
+
+
+def _third_adds_to_pool_on_sell(raw, amt=500_000_000):
+    """Third party adds tokens to the pool so the wallet's sell proceeds rise."""
+    _cosign(raw)
+    _add_account(
+        raw, THIRD_TOK, TOKEN_RENT, TOKEN_RENT,
+        mint=CLMM_MINT, owner=THIRD, token_pre=str(amt), token_post="0", decimals=6,
+    )
+    inner = raw["meta"]["innerInstructions"][0]["instructions"]
+    inner.append({
+        "programId": TOKEN,
+        "parsed": {
+            "type": "transfer",
+            "info": {
+                "source": THIRD_TOK,
+                "destination": POOL_TOK,
+                "authority": THIRD,
+                "amount": str(amt),
+                "mint": CLMM_MINT,
+            },
+        },
+    })
+    extra = amt
+    for row in raw["meta"]["postTokenBalances"]:
+        if row["mint"] == WSOL and row["owner"] == CLMM_WALLET:
+            row["uiTokenAmount"]["amount"] = str(1_000_000_000 + extra)
+    for ix in inner:
+        info = (ix.get("parsed") or {}).get("info") or {}
+        if info.get("source") == POOL_WSOL and info.get("destination") == WSOL_ATA:
+            info["amount"] = str(1_000_000_000 + extra)
+    return raw
+
+
+def _decoded_trade(raw, wallet=CLMM_WALLET):
+    decoded = decode_supported_swaps(canonical_decode_records([raw]), wallet)
+    return _trades(decoded)
+
+
+def test_new6_third_party_copay_refused_on_reviewed_routes_and_net_balance():
+    for program in (RAYDIUM_CLMM, TITAN, OKX_DEX_V2, JUPITER):
+        for amt in (5_000, 100_000_000, 500_000_000):
+            raw = _copay_third_wsol(_programize(_clmm_buy(), program), amt)
+            app, aud = _consideration(raw)
+            assert app is None, (program, amt, app)
+            assert aud is None, (program, amt, aud)
+            assert _decoded_trade(raw) == [], (program, amt)
+
+
+def test_new6_sell_side_third_party_pool_add_refused():
+    for program in (RAYDIUM_CLMM, TITAN, OKX_DEX_V2, JUPITER):
+        raw = _third_adds_to_pool_on_sell(_programize(_clmm_sell(), program))
+        app, aud = _consideration(raw)
+        assert app is None, (program, app)
+        assert aud is None, (program, aud)
+        assert _decoded_trade(raw) == [], program
+
+
+def test_new6_control_buy_and_sell_still_price():
+    buy = _clmm_buy()
+    app, aud = _consideration(buy)
+    assert app and aud
+    assert abs(Decimal(app["settlement"])) == Decimal(1_000_000_000)
+    assert Decimal(str(aud["consideration_sol"])) == Decimal("1")
+    assert _decoded_trade(buy)
+    sell = _clmm_sell()
+    app, aud = _consideration(sell)
+    assert app and aud
+    assert app["kind"] == "sell"
+    assert abs(Decimal(app["settlement"])) == Decimal(1_000_000_000)
+    assert Decimal(str(aud["consideration_sol"])) == Decimal("1")

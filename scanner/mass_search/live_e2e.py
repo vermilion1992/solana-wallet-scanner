@@ -2157,8 +2157,19 @@ def reconcile_state_spend(store, state):
     return state
 
 
+_RUN_CAP_KEYS = (
+    "birdeye_requests", "birdeye_units",
+    "helius_requests", "helius_units",
+    "nansen_requests", "nansen_units",
+)
+
+
 def parse_run_caps(value):
-    """D12-3: per-run caps from the CLI (`helius_units=1000,nansen_requests=20`)."""
+    """D12-3: per-run caps from the CLI (`helius_units=1000,nansen_requests=20`).
+
+    Unknown keys are an error so a typo such as `helius_request=2` cannot
+    silently mean no per-run cap.
+    """
     if value in (None, ""):
         return None
     if isinstance(value, dict):
@@ -2166,7 +2177,10 @@ def parse_run_caps(value):
         for key, raw in value.items():
             if raw in (None, ""):
                 continue
-            parsed[str(key)] = int(raw)
+            name = str(key).strip()
+            if name not in _RUN_CAP_KEYS:
+                raise LiveE2EError(f"unknown run_caps key: {name}")
+            parsed[name] = int(raw)
         return parsed or None
     parsed = {}
     for part in str(value).split(","):
@@ -2176,7 +2190,10 @@ def parse_run_caps(value):
         key, sep, raw = item.partition("=")
         if not sep or not key.strip():
             raise LiveE2EError("run_caps must be comma-separated key=int pairs")
-        parsed[key.strip()] = int(raw.strip())
+        name = key.strip()
+        if name not in _RUN_CAP_KEYS:
+            raise LiveE2EError(f"unknown run_caps key: {name}")
+        parsed[name] = int(raw.strip())
     return parsed or None
 
 
