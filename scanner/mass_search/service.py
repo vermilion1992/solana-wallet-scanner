@@ -382,10 +382,10 @@ class MassSearchService:
             raise RuntimeError("Refilter issued external requests")
         return self.run_view(child["run_id"])
 
-    def reconstruct_candidate(self, run_id, candidate_id, events, *, corpus_kind=None, mint="Mint1111111111111111111111111111111111111"):
+    def reconstruct_candidate(self, run_id, candidate_id, events, *, corpus_kind=None, mint="Mint1111111111111111111111111111111111111", window_start=None, window_end=None):
         run = _load_run(self.store, run_id)
         kind = corpus_kind or run["corpus_kind"]
-        start, end = run["window_start"], run["window_end"]
+        start, end = window_start or run["window_start"], window_end or run["window_end"]
         accounting_events = events_to_accounting(events, mint=mint, start=start)
         evidence = self.store.archive({
             "kind": "mass-search-reconstruction-v1",
@@ -463,6 +463,12 @@ class MassSearchService:
         elif worksheet and worksheet.get("total_profit_usdc") not in (None, "") and worksheet.get("settlement_asset") == "USDC":
             profit = worksheet["total_profit_usdc"]
             profit_unit = "USDC"
+        elif worksheet and (
+            worksheet.get("settlement_asset") == "USDT"
+            or worksheet.get("total_profit_usdt") not in (None, "")
+        ):
+            profit = worksheet.get("total_profit_usdt") or worksheet.get("total_profit_usdc")
+            profit_unit = "USDT"
         elif worksheet and worksheet.get("total_profit_sol") not in (None, ""):
             profit = worksheet["total_profit_sol"]
             profit_unit = "SOL"
@@ -472,6 +478,7 @@ class MassSearchService:
             if profit_unit == "mixed":
                 by_asset = (worksheet or {}).get("by_quote_asset") or {}
                 usdc_ws = by_asset.get("USDC") or {}
+                usdt_ws = by_asset.get("USDT") or {}
                 sol_ws = by_asset.get("SOL") or {}
                 if usdc_ws.get("total_profit_usdc") not in (None, ""):
                     pnl = build_metric(
@@ -482,6 +489,18 @@ class MassSearchService:
                         observed_at=observed, evidence_sha256=[evidence], missing_dependencies=[],
                         source_provider="local-reconstruction",
                         notes=["USDC-settled subset of a mixed wallet; no FX into SOL."],
+                    )
+                    _insert_metric(self.store, run_id, pnl)
+                if (usdt_ws.get("total_profit_usdt") or usdt_ws.get("total_profit_usdc")) not in (None, ""):
+                    pnl = build_metric(
+                        metric_key="subset_realised_pnl_usdt", candidate_id=candidate_id,
+                        value=usdt_ws.get("total_profit_usdt") or usdt_ws.get("total_profit_usdc"),
+                        unit="USDT",
+                        state="KNOWN", basis="INDEPENDENTLY_RECONCILED_SUBSET", window=window,
+                        population="supported_closed_subset", population_count=len(holds) or len(events),
+                        observed_at=observed, evidence_sha256=[evidence], missing_dependencies=[],
+                        source_provider="local-reconstruction",
+                        notes=["USDT-settled subset of a mixed wallet; no FX into SOL."],
                     )
                     _insert_metric(self.store, run_id, pnl)
                 if sol_ws.get("total_profit_sol") not in (None, ""):
@@ -530,6 +549,25 @@ class MassSearchService:
                     missing_dependencies=["usdc_settlement_not_converted"],
                     source_provider="local-reconstruction",
                     notes=["USDC-settled subset; no fake FX into SOL."],
+                )
+            elif profit_unit == "USDT":
+                pnl = build_metric(
+                    metric_key="subset_realised_pnl_usdt", candidate_id=candidate_id, value=profit, unit="USDT",
+                    state="KNOWN", basis="INDEPENDENTLY_RECONCILED_SUBSET", window=window,
+                    population="supported_closed_subset", population_count=len(holds) or len(events),
+                    observed_at=observed, evidence_sha256=[evidence], missing_dependencies=[],
+                    source_provider="local-reconstruction",
+                    notes=["USDT-settled subset; SOL P&L is not converted. Not a wallet-wide MATCH."],
+                )
+                _insert_metric(self.store, run_id, pnl)
+                pnl = build_metric(
+                    metric_key="subset_realised_pnl_sol", candidate_id=candidate_id, value=None, unit="SOL",
+                    state="UNKNOWN", basis="RAW_DERIVED_SUBSET", window=window,
+                    population="supported_closed_subset", population_count=0,
+                    observed_at=observed, evidence_sha256=[evidence],
+                    missing_dependencies=["usdt_settlement_not_converted"],
+                    source_provider="local-reconstruction",
+                    notes=["USDT-settled subset; no fake FX into SOL."],
                 )
             else:
                 pnl = build_metric(
@@ -955,8 +993,20 @@ def events_to_accounting(events, *, mint, start):
             "seconds_from_start": event.get("seconds_from_start"),
             "units": str(event.get("units") or "0"),
         }
-        from .settlement import USDC, settlement_of
-        if settlement_of(event) == USDC:
+        from .settlement import USDC, USDT, settlement_of
+        if settlement_of(event) == USDT:
+            amount = event.get("consideration_usdt")
+            if amount in (None, ""):
+                amount = event.get("amount_usdt")
+            if amount in (None, ""):
+                row["unknown_quote"] = True
+                row["amount_usdt"] = None
+            else:
+                row["amount_usdt"] = str(amount)
+            row["settlement_mint"] = USDT
+            row["settlement_asset"] = "USDT"
+            row["market_classification"] = event.get("classification") or "market"
+        elif settlement_of(event) == USDC:
             row["amount_usdc"] = str(event.get("consideration_usdc") or event.get("amount_usdc") or "0")
             row["settlement_mint"] = USDC
             row["settlement_asset"] = "USDC"

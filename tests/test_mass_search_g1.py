@@ -21,8 +21,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_g1_grant_enabled_and_non_grants_stay_disabled():
+    raw = json.loads(GRANT_PATH.read_text(encoding="utf-8"))
+    assert raw["enabled"] is False
     grant = load_grant(GRANT_PATH)
-    assert grant["enabled"] is True
+    assert grant["enabled"] is False
+    assert grant.get("reason") == "Authorization file is disabled"
     assert grant["authorization_id"] == "live-g1-vertical-slice-2026-10-05-mitch"
     assert grant["max_additional_spend_usd"] == "0"
     assert grant["overages_enabled"] is False
@@ -68,6 +71,12 @@ def test_g1_grant_enabled_and_non_grants_stay_disabled():
     assert nxt.get("authorization_id") == "live-ranked100-next-candidates-2026-10-06-mitch"
     assert nxt.get("authorized_by_user_at") is None
     assert nxt.get("expires_at") is None
+    live_e2e = validate_live_authorization(json.loads(
+        (ROOT / "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json").read_text()
+    ))
+    assert live_e2e["enabled"] is False
+    assert live_e2e.get("authorization_id") == "live-e2e-proof-2026-10-07-mitch"
+    assert live_e2e.get("authorized_by_user_at") is None
 
 
 def test_independent_fifo_oracle_does_not_import_production_helper():
@@ -99,10 +108,10 @@ def test_g1_blocks_without_provider_keys(tmp_path, monkeypatch):
         hardware={"test": True},
     ))
     assert result["status"] == "BLOCKED"
-    assert result["blocker"] == "missing_provider_credentials"
+    assert result["blocker"] == "grant_disabled"
     assert result["authorization_id"] == "live-g1-vertical-slice-2026-10-05-mitch"
     assert store.usage("helius", "setup-pilot", 200)["remaining"] == 0
-    assert (tmp_path / "evidence" / result["run_id"] / "PRE_RUN_FREEZE.json").is_file()
+    assert not (tmp_path / "evidence" / result["run_id"] / "PRE_RUN_FREEZE.json").is_file()
     assert (tmp_path / "evidence" / result["run_id"] / "G1_RESULT.json").is_file()
     store.close()
 
@@ -140,12 +149,21 @@ def test_g1_mocked_supported_pair_does_not_touch_setup_pilot(tmp_path, monkeypat
             "coverage": {"decoded_swaps": 2},
         }
 
+    armed = json.loads(GRANT_PATH.read_text(encoding="utf-8"))
+    armed["enabled"] = True
+    armed["expires_at"] = "2099-01-01T00:00:00Z"
+    for entry in armed["providers"]:
+        entry["existing_plan_confirmed"] = True
+        entry["remaining_quota_confirmed_at"] = armed["authorized_by_user_at"]
+    grant_path = tmp_path / "g1-armed-test.json"
+    grant_path.write_text(json.dumps(armed), encoding="utf-8")
     result = asyncio.run(run_g1(
         store,
         evidence_dir=tmp_path / "evidence",
         application_sha="test",
         hardware={"test": True},
         transports={"birdeye": birdeye, "helius": helius, "decode": decode, "skip_credential_check": True},
+        grant_path=grant_path,
     ))
     assert result["status"] == "PASS"
     assert result["address"] == address

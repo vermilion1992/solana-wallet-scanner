@@ -401,9 +401,9 @@ def test_partial_match_cases_agree_with_independent_tool(store):
 
 def test_rank1_and_g1_unchanged_after_partial_match_and_research_screen():
     rank1 = reconcile_rank1()
-    assert rank1["market_trades"] == 6
+    assert rank1["market_trades"] == 8
     assert Decimal(rank1["fifo"]["total_profit"]) == Decimal("376.028087")
-    assert len(rank1["fifo"]["open_lots"]) == 3
+    assert len(rank1["fifo"]["open_lots"]) == 5
     assert len(rank1["fifo"]["unresolved_basis_sales"]) == 1
     g1 = reconcile_g1()
     assert Decimal(g1["fifo"]["total_profit"]) == Decimal("-0.167725526")
@@ -494,7 +494,8 @@ def test_cache_key_includes_window():
     assert ANALYSIS_VERSION == (
         "analysis-v6-research-screen-v2+sol-isolate-v1+mixed-quote-v1+"
         "sig-keyed-v1+quote-conversion-v1+fees-tips-v1+coverage-v1+mitch-review-v1+"
-        "chatgpt-review-2026-10-07-v1+rereview-0346-v1+rereview-0547-v1+rereview-0714-v1+rereview-0842-v1+rereview-2fe60bd-v1"
+        "chatgpt-review-2026-10-07-v1+rereview-0346-v1+rereview-0547-v1+rereview-0714-v1+rereview-0842-v1+rereview-2fe60bd-v1+"
+        "result-relevant-coverage-v1+gt15-v1"
     )
 
 
@@ -518,7 +519,11 @@ def test_research_screen_is_inconclusive_for_99_without_history(store):
     assert screen_after["counts"]["inconclusive"] >= 89
     profile = store.list("reports")[0]["research_profile"]
     assert profile["evidence_class"]["account"]["class"] == 5
-    assert profile["evidence_class"]["position"]["class"] in (1, 2)
+    # Rank-1 has an in-window unflattened USDC loser. Folding it makes the
+    # headline negative, so the position is not a positive known-basis result.
+    assert profile["evidence_class"]["position"]["class"] == 5
+    assert profile["headline_includes_losing_episodes"] is True
+    assert Decimal(str(profile["completed_episode_net"])) < 0
     assert profile["candidate_assessment"]["net_realised"] is None
     assert profile["qualification_category"]["category"] == "analysed_incomplete"
     assert profile["qualification_category"]["screening_separate"] is True

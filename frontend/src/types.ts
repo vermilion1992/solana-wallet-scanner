@@ -846,6 +846,7 @@ export type RankedWorkflowView = {
   rows?: RankedWorkflowRow[];
   engineering_fixtures?: RankedWorkflowRow[];
   control_archives?: RankedWorkflowRow[];
+  early_watch?: Array<{ address?: string; label?: string; qualification_level?: string }>;
   ranked_count?: number;
   visible_count?: number;
   budget_enabled?: boolean;
@@ -861,6 +862,7 @@ export type RankedWorkflowView = {
       only_shortlist?: boolean;
       only_user_shortlist?: boolean;
       only_captured?: boolean;
+      only_early_watch?: boolean;
     };
     units?: Record<string, string>;
   };
@@ -892,6 +894,7 @@ export type RankedWorkflowView = {
       qualification_level?: {
         insufficient_evidence?: number;
         conditional_captured_lot_result?: number;
+        early_watch?: number;
         provisional_research_lead?: number;
         stronger_research_shortlist?: number;
       };

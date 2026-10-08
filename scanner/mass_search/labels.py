@@ -19,6 +19,7 @@ from scanner.mass_search.research_profile import (
 QUALIFICATION_LEVELS = (
     "insufficient_evidence",
     "conditional_captured_lot_result",
+    "early_watch",
     "provisional_research_lead",
     "stronger_research_shortlist",
 )
@@ -54,12 +55,33 @@ def _empty_coverage_counts():
     return {name: 0 for name in COVERAGE_STATUSES}
 
 
+def auditor_confirmed_unresolved(report, profile):
+    """Prefer the independent auditor's unmatched-sale count when it ran.
+
+    App FIFO can under-count reconstructed sells the decoder missed. The
+    blocker reports the auditor-confirmed figure so the text matches the
+    audit blob.
+    """
+    audit = None
+    if isinstance(report, dict):
+        audit = report.get("independent_audit")
+    if not isinstance(audit, dict) and isinstance(profile, dict):
+        audit = profile.get("independent_audit")
+    if isinstance(audit, dict) and audit.get("unresolved_basis_sales") not in (None, ""):
+        return int(audit["unresolved_basis_sales"])
+    return int((profile or {}).get("unresolved_basis_sales") or 0)
+
+
 def blocking_reason(report, profile, *, coverage_status, level):
     """Explicit why this wallet is not a stronger/provisional lead."""
     completed = int(profile.get("completed_known_cost_positions") or 0)
     open_lots = int(profile.get("open_buys_in_sample") or 0)
-    unresolved = int(profile.get("unresolved_basis_sales") or 0)
+    unresolved = auditor_confirmed_unresolved(report, profile)
     reasons = []
+    level_reason = (level or {}).get("reason") or (level or {}).get("blocker") or ""
+    from scanner.mass_search.qualification_gates import GT_ECONOMIC_TRADES_RULE
+    if GT_ECONOMIC_TRADES_RULE in str(level_reason):
+        reasons.append(str(level_reason))
     if completed < 1:
         reasons.append("0 completed episodes")
     elif completed < MIN_SAMPLE_POSITIONS:
@@ -93,11 +115,15 @@ def blocking_reason(report, profile, *, coverage_status, level):
     elif coverage_status == "coverage_eligibility_pending_reassessment":
         if not any("unresolved-basis" in item or "sensitivity" in item for item in reasons):
             reasons.append("coverage_eligibility_pending_reassessment")
+    if _level_name(level) == "early_watch":
+        from scanner.mass_search.research_profile import early_watch_label
+        return early_watch_label(completed)
     if _level_name(level) in ("provisional_research_lead", "stronger_research_shortlist"):
         return None
     if not reasons:
         reasons.append("does not meet provisional_research_lead gates")
-    return "; ".join(reasons)
+    from scanner.mass_search.qualification_gates import trade_rate_from, with_gt25_blocker
+    return with_gt25_blocker("; ".join(reasons), trade_rate_from(report, profile))
 
 
 def wallet_status_fields(report, profile=None):

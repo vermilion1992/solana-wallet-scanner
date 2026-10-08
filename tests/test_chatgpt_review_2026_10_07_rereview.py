@@ -43,7 +43,14 @@ from scanner.mass_search.research_profile import (
 
 
 def _coverage():
-    return {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}}
+    from tests.result_relevant_fixtures import attach_result_relevant
+
+    # Eligible-machinery fixtures must present a versioned R. Whole-span
+    # 100% without R is blocked_unknown_denominator, which hides the
+    # fingerprint / lead-level assertions this file exists to guard.
+    return attach_result_relevant(
+        {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+    )
 
 
 def _eligible_report():

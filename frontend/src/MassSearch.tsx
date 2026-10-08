@@ -49,6 +49,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   const [onlyShortlist, setOnlyShortlist] = useState(false);
   const [onlyUser, setOnlyUser] = useState(false);
   const [onlyCaptured, setOnlyCaptured] = useState(false);
+  const [onlyEarlyWatch, setOnlyEarlyWatch] = useState(false);
   const [minCompleted, setMinCompleted] = useState<string>("");
   const [minSample, setMinSample] = useState<string>("");
   const [minCoverage, setMinCoverage] = useState<string>("");
@@ -75,6 +76,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
         setOnlyShortlist(!!proxy.only_shortlist);
         setOnlyUser(!!proxy.only_user_shortlist);
         setOnlyCaptured(!!proxy.only_captured);
+        setOnlyEarlyWatch(!!proxy.only_early_watch);
         setMinCompleted(view.filters?.thresholds?.min_completed_known_cost || "");
         setMinSample(view.filters?.thresholds?.min_sample_positions || "");
         setMinCoverage(view.filters?.thresholds?.min_coverage_share || "");
@@ -87,6 +89,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
     only_shortlist?: boolean;
     only_user_shortlist?: boolean;
     only_captured?: boolean;
+    only_early_watch?: boolean;
     min_completed_known_cost?: string;
     min_sample_positions?: string;
     min_coverage_share?: string;
@@ -99,6 +102,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
         only_shortlist: next.only_shortlist ?? onlyShortlist,
         only_user_shortlist: next.only_user_shortlist ?? onlyUser,
         only_captured: next.only_captured ?? onlyCaptured,
+        only_early_watch: next.only_early_watch ?? onlyEarlyWatch,
       },
       thresholds: {
         ...(ranked?.filters?.thresholds || {}),
@@ -328,6 +332,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
               only_shortlist: onlyShortlist,
               only_user_shortlist: onlyUser,
               only_captured: onlyCaptured,
+              only_early_watch: onlyEarlyWatch,
               min_completed_known_cost: minCompleted,
               min_sample_positions: minSample,
               min_coverage_share: minCoverage,
@@ -358,6 +363,10 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
             <label>
               <input type="checkbox" checked={onlyCaptured} onChange={(event) => setOnlyCaptured(event.target.checked)} />
               Cached history only
+            </label>
+            <label>
+              <input type="checkbox" checked={onlyEarlyWatch} onChange={(event) => setOnlyEarlyWatch(event.target.checked)} />
+              Early watch only – not proven
             </label>
           </fieldset>
           <fieldset data-filter-group="reconstructed_evidence">
@@ -456,7 +465,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
             . Thresholds were fixed before evaluation. Unknown never passes.
             {` Coverage policy: ≥99% resolved by count and measurable notional with no unresolved dependency is provisionally eligible; 95–99% with understood dependencies is watchlist / incomplete evidence; below 95%, unknown denominator, material unknown notional, or a decision-changing dependency is coverage blocked.`}
             {` Qualification (evidence quality, not screen pass/fail): not evaluated ${count(ranked.research_screen.counts?.qualification?.not_evaluated ?? 0)} · analysed-incomplete ${count(ranked.research_screen.counts?.qualification?.analysed_incomplete ?? 0)} · matched-position ${count(ranked.research_screen.counts?.qualification?.positive_matched_position_evidence ?? 0)} · net realised ${count(ranked.research_screen.counts?.qualification?.positive_net_realised_over_window ?? 0)} · account performance ${count(ranked.research_screen.counts?.qualification?.profitable_account_performance ?? 0)}.`}
-            {` qualification_level: insufficient_evidence ${count(ranked.research_screen.counts?.qualification_level?.insufficient_evidence ?? 0)} · conditional_captured_lot_result ${count(ranked.research_screen.counts?.qualification_level?.conditional_captured_lot_result ?? 0)} · provisional_research_lead ${count(ranked.research_screen.counts?.qualification_level?.provisional_research_lead ?? 0)} · stronger_research_shortlist ${count(ranked.research_screen.counts?.qualification_level?.stronger_research_shortlist ?? 0)}.`}
+            {` qualification_level: insufficient_evidence ${count(ranked.research_screen.counts?.qualification_level?.insufficient_evidence ?? 0)} · conditional_captured_lot_result ${count(ranked.research_screen.counts?.qualification_level?.conditional_captured_lot_result ?? 0)} · early_watch ${count(ranked.research_screen.counts?.qualification_level?.early_watch ?? 0)} · provisional_research_lead ${count(ranked.research_screen.counts?.qualification_level?.provisional_research_lead ?? 0)} · stronger_research_shortlist ${count(ranked.research_screen.counts?.qualification_level?.stronger_research_shortlist ?? 0)}.`}
             {` coverage_status: provisional_eligible ${count(ranked.research_screen.counts?.coverage_status?.provisional_eligible ?? 0)} · coverage_eligibility_pending_reassessment ${count(ranked.research_screen.counts?.coverage_status?.coverage_eligibility_pending_reassessment ?? 0)} · watchlist_incomplete_evidence ${count(ranked.research_screen.counts?.coverage_status?.watchlist_incomplete_evidence ?? 0)} · coverage_blocked ${count(ranked.research_screen.counts?.coverage_status?.coverage_blocked ?? 0)}. These are different fields.`}
           </p>
         )}
@@ -473,6 +482,19 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   <span>{item.status === "history_required" ? "History required — not analysed" : item.status}</span>
                   {item.detail && <small>{item.detail}</small>}
                   {item.report_id && <Button variant="secondary" onClick={() => void inspect(item.report_id!)}>Open report</Button>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {!!ranked?.early_watch?.length && (
+          <div data-early-watch="true">
+            <SectionHeading title="Early watch – not proven" subtitle="1–2 completed rounds. Never a research lead." />
+            <ul className="mass-search-cards">
+              {ranked.early_watch.map((row) => (
+                <li key={`early-watch-${row.address}`}>
+                  <strong className="mono">{shorten(row.address || "")}</strong>
+                  <p>{row.label || "Early watch – not proven"}</p>
                 </li>
               ))}
             </ul>
