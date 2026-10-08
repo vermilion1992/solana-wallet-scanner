@@ -126,8 +126,11 @@ from scanner.mass_search.readable_first import (
     attach_sample,
     format_dry_run_plan,
     readable_first_plan,
+    readable_first_target_n,
+    readable_first_walk_cap,
     select_deep_pull,
     walk_ranked,
+    write_dry_run_plan,
     write_funnel_report,
 )
 from scanner.mass_search.qualification_gates import (
@@ -1652,8 +1655,19 @@ def phase3_wallets(config, state=None):
         -float(row.get("coverability_rank_key") or 0),
         row.get("address") or "",
     ))
-    if config.get("readable_first"):
-        return select_deep_pull(kept_rows, n=config.get("readable_first_n") or 0)
+    if config.get("readable_first") or config.get("batch"):
+        walked = (state or {}).get("funnel_walk") or {}
+        if walked:
+            return [
+                row.get("address")
+                for row in (walked.get("kept") or [])
+                if row.get("address") and row.get("address") not in blocked
+            ]
+        return select_deep_pull(
+            kept_rows,
+            n=readable_first_target_n(config),
+            cap=readable_first_walk_cap(config),
+        )
     kept = [row["address"] for row in kept_rows]
     if phase2:
         if config.get("wallets_supplied"):
@@ -1869,9 +1883,10 @@ def plan_request_counts(config, state=None):
             discovered_wallets=n,
             dex_pages=config.get("nansen_dex_trades_max_pages") or 0,
             sample_pages=config.get("readable_first_sample_pages") or SAMPLE_PAGES_DEFAULT,
-            deep_n=config.get("readable_first_n") or 0,
+            deep_n=readable_first_target_n(config),
             history_cap=config.get("helius_signatures_history_cap"),
             nansen_profile_cap=config.get("nansen_profile_cap") or 0,
+            walk_cap=readable_first_walk_cap(config),
         )
         payload = {
             **payload,
@@ -4703,14 +4718,24 @@ def _phase2_finish(config, state, rows):
     ))
     kept = [row["address"] for row in ranked if not row.get("dropped") and not row.get("deferred")]
     if config.get("readable_first") or config.get("batch"):
-        walked = walk_ranked(ranked, n=config.get("readable_first_n") or 0)
+        n = readable_first_target_n(config)
+        cap = readable_first_walk_cap(config)
+        walked = walk_ranked(ranked, n=n, cap=cap)
         extra = {
             "phase2_kept": kept,
-            "readable_first_n": config.get("readable_first_n"),
+            "readable_first_n": n,
+            "readable_first_cap": cap,
             "throughput_version": THROUGHPUT_VERSION,
             "batch": bool(config.get("batch")),
         }
         write_funnel_report(config["output_dir"], walked, extra=extra)
+        for row in walked.get("unscreened") or []:
+            if (row.get("funnel_reason") or "") == "cap_reached" and row.get("address"):
+                record_unscreened(
+                    state, [row["address"]],
+                    reason="cap_reached",
+                    screen="readable_first_walk",
+                )
         kept = [row.get("address") for row in walked["kept"] if row.get("address")]
         state["funnel_walk"] = walked
     return {"wallets": ranked, "kept": kept}
@@ -6001,6 +6026,11 @@ def validate_config(raw):
             if raw.get("readable_first_n") not in (None, "")
             else 10
         ),
+        "readable_first_cap": (
+            int(raw["readable_first_cap"])
+            if raw.get("readable_first_cap") not in (None, "")
+            else None
+        ),
         "readable_first_sample_pages": (
             int(raw["readable_first_sample_pages"])
             if raw.get("readable_first_sample_pages") not in (None, "")
@@ -6139,6 +6169,9 @@ async def run_live_e2e(raw):
         plan["gta_page_size"] = gta_page_size_note()
         plan["phase3_wallets"] = phase3_wallets(config, state)
         _write_json(output_dir / PLAN_NAME, plan)
+        if config.get("readable_first") or config.get("batch"):
+            dry_text = write_dry_run_plan(output_dir, plan.get("readable_first_plan") or {})
+            print(dry_text, end="" if str(dry_text).endswith("\n") else "\n", flush=True)
         if not plan["within_caps"] and not config["dry_run"]:
             raise LiveE2EError("planned requests exceed grant/runner caps")
         phase4 = {"wallets": state.get("phase4_wallets") or []}
@@ -6530,6 +6563,16 @@ def build_arg_parser():
         type=int,
         default=10,
         help="Deep-pull at most this many wallets that pass the readable sample (default 10).",
+    )
+    parser.add_argument(
+        "--readable-first-cap",
+        dest="readable_first_cap",
+        type=int,
+        default=None,
+        help=(
+            "Walk at most this many ranked wallets before leaving the rest "
+            "unscreened (default: --nansen-dex-trades-wallet-cap; 0 = off)."
+        ),
     )
     parser.add_argument(
         "--readable-first-sample-pages",

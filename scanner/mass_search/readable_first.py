@@ -5,6 +5,7 @@ deep pull of the top N survivors. A seed is never evidence.
 """
 from __future__ import annotations
 
+import json
 from collections import Counter
 from decimal import Decimal
 from pathlib import Path
@@ -363,10 +364,40 @@ def walk_ranked(rows, *, n, cap=None):
     }
 
 
-def select_deep_pull(rows, *, n):
+def readable_first_target_n(config):
+    """Deep-pull N. Prefer --readable-first-n, else the per-run wallet cap."""
+    raw = config or {}
+    try:
+        n = raw.get("readable_first_n")
+        if n not in (None, ""):
+            return max(0, int(n))
+    except (TypeError, ValueError):
+        pass
+    cap = readable_first_walk_cap(raw)
+    return cap or 0
+
+
+def readable_first_walk_cap(config):
+    """Examination budget. 0 / missing = unlimited (walk until N pass)."""
+    raw = config or {}
+    for key in ("readable_first_cap", "nansen_dex_trades_wallet_cap"):
+        value = raw.get(key)
+        if value in (None, "", 0, "0"):
+            continue
+        try:
+            parsed = int(value)
+        except (TypeError, ValueError):
+            continue
+        if parsed > 0:
+            return parsed
+    return None
+
+
+def select_deep_pull(rows, *, n, cap=None):
     walked = walk_ranked(
         [row for row in (rows or []) if isinstance(row, dict) and not row.get("dropped")],
         n=n,
+        cap=cap,
     )
     return [row.get("address") for row in walked["kept"] if row.get("address")]
 
@@ -407,6 +438,7 @@ def readable_first_plan(
     deep_n=10,
     history_cap=None,
     nansen_profile_cap=0,
+    walk_cap=None,
 ):
     """Dry-run request and credit cost per stage. Plan ≥ runtime."""
     frames = tuple(timeframes) if timeframes else NANSEN_TIMEFRAMES_FUNNEL
@@ -471,9 +503,14 @@ def readable_first_plan(
     deep = {
         "stage": "deep_pull",
         "wallets": target,
+        "walk_cap": walk_cap,
         "helius_requests": 0,
         "helius_units": 0,
-        "note": f"Top {target} readable survivors only. Phase 4 isolation unchanged.",
+        "note": (
+            f"Top {target} readable survivors only. "
+            f"Walk cap {walk_cap if walk_cap is not None else 'off'}. "
+            "Phase 4 isolation unchanged."
+        ),
     }
     stages = [discovery, rule_a, bot, sample, deep]
     totals = {
@@ -517,6 +554,19 @@ def format_dry_run_plan(plan):
         f"helius {totals.get('helius_requests') or 0} / {totals.get('helius_units') or 0}."
     )
     return "\n".join(lines) + "\n"
+
+
+def write_dry_run_plan(output_dir, plan):
+    """Write READABLE_FIRST_PLAN.md/.json. Call before any live request."""
+    root = Path(output_dir)
+    root.mkdir(parents=True, exist_ok=True)
+    text = format_dry_run_plan(plan)
+    (root / "READABLE_FIRST_PLAN.md").write_text(text, encoding="utf-8")
+    (root / "READABLE_FIRST_PLAN.json").write_text(
+        json.dumps(plan, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return text
 
 
 def funnel_report(walked, *, extra=None):
@@ -600,7 +650,7 @@ def write_funnel_report(output_dir, walked, *, extra=None):
     root = Path(output_dir)
     root.mkdir(parents=True, exist_ok=True)
     (root / "READABLE_FIRST_FUNNEL.json").write_text(
-        __import__("json").dumps(report, indent=2, sort_keys=True) + "\n",
+        json.dumps(report, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     (root / "READABLE_FIRST_FUNNEL.md").write_text(format_funnel_markdown(report), encoding="utf-8")
