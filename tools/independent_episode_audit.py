@@ -2487,8 +2487,44 @@ def _auditor_c2_unknown_outer(raw, keys):
     return False
 
 
-def _auditor_nonce_allocate_mixed_identity(raw, address, keys):
-    """Nonce / allocate / mixed empty-accounts / token-identity mismatch."""
+def _auditor_has_durable_nonce(raw, keys):
+    """True when any instruction is System advanceNonce (parsed or compiled)."""
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    for instruction in message.get("instructions") or []:
+        if not isinstance(instruction, dict):
+            continue
+        program = _program(instruction, keys)
+        parsed = _auditor_hydrate_plain(instruction, keys) or instruction.get("parsed")
+        kind = parsed.get("type") if isinstance(parsed, dict) else None
+        if kind in ("advanceNonce", "advanceNonceAccount"):
+            return True
+        data = _b58decode(instruction.get("data"))
+        if program == SYSTEM and len(data) >= 4 and int.from_bytes(data[:4], "little") == 4:
+            return True
+    meta = raw.get("meta") or {}
+    for group in meta.get("innerInstructions") or []:
+        if not isinstance(group, dict):
+            continue
+        for instruction in group.get("instructions") or []:
+            if not isinstance(instruction, dict):
+                continue
+            parsed = instruction.get("parsed")
+            kind = parsed.get("type") if isinstance(parsed, dict) else None
+            if kind in ("advanceNonce", "advanceNonceAccount"):
+                return True
+            program = _program(instruction, keys)
+            data = _b58decode(instruction.get("data"))
+            if program == SYSTEM and len(data) >= 4 and int.from_bytes(data[:4], "little") == 4:
+                return True
+    return False
+
+
+def _auditor_allocate_mixed_identity(raw, address, keys):
+    """Allocate/assign / mixed empty-accounts / token-identity mismatch.
+
+    Durable nonce is not included: first-path layout still reconstructs
+    nonce-administered swaps. C2 classify refuses nonce separately.
+    """
     del address
     message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
     for instruction in message.get("instructions") or []:
@@ -2497,10 +2533,10 @@ def _auditor_nonce_allocate_mixed_identity(raw, address, keys):
         program = _program(instruction, keys)
         parsed = _auditor_hydrate_plain(instruction, keys) or instruction.get("parsed")
         kind = parsed.get("type") if isinstance(parsed, dict) else None
-        if kind in ("advanceNonce", "advanceNonceAccount", "allocate", "assign", "allocateWithSeed", "assignWithSeed"):
+        if kind in ("allocate", "assign", "allocateWithSeed", "assignWithSeed"):
             return True
         data = _b58decode(instruction.get("data"))
-        if program == SYSTEM and len(data) >= 4 and int.from_bytes(data[:4], "little") in (1, 4, 8):
+        if program == SYSTEM and len(data) >= 4 and int.from_bytes(data[:4], "little") in (1, 8):
             return True
     meta = raw.get("meta") or {}
     for group in meta.get("innerInstructions") or []:
@@ -2512,10 +2548,8 @@ def _auditor_nonce_allocate_mixed_identity(raw, address, keys):
             parsed = instruction.get("parsed")
             if isinstance(parsed, dict) and instruction.get("accounts") == []:
                 return True
-            kind = parsed.get("type") if isinstance(parsed, dict) else None
-            if kind in ("advanceNonce", "advanceNonceAccount"):
-                return True
             info = parsed.get("info") if isinstance(parsed, dict) else {}
+            kind = parsed.get("type") if isinstance(parsed, dict) else None
             if kind in ("transferChecked", "transferCheckedWithFee") and isinstance(info, dict):
                 mint = info.get("mint")
                 dec = (info.get("tokenAmount") or {}).get("decimals") if isinstance(info.get("tokenAmount"), dict) else None
@@ -2576,7 +2610,8 @@ def auditor_classify_read(raw, address):
     if address not in keys:
         return None
     if (
-        _auditor_nonce_allocate_mixed_identity(raw, address, keys)
+        _auditor_allocate_mixed_identity(raw, address, keys)
+        or _auditor_has_durable_nonce(raw, keys)
         or _auditor_sponsored_token_account_rent(raw, address, keys)
         or _auditor_c2_unknown_outer(raw, keys)
     ):
@@ -2698,7 +2733,7 @@ def reconstruct_record(record, address):
     keys = _keys(raw)
     if address not in keys:
         return None
-    if _auditor_nonce_allocate_mixed_identity(raw, address, keys):
+    if _auditor_allocate_mixed_identity(raw, address, keys):
         return None
     first_nb = _first_net_balance_program(raw, keys)
     layout = _layout_reconstruct(record, address)
